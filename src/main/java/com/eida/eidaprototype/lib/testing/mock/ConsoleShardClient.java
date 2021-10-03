@@ -12,7 +12,7 @@ public class ConsoleShardClient implements EidaShardClient {
     @Override
     public <ID> String select(String shardUrl, String tableName, ID id) {
         log.info(indentedFormat("query select {} from {}", "to {}"), id, tableName, shardUrl);
-        return "(1)";
+        return "id,name\n\r1,testName";
     }
 
     @Override

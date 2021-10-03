@@ -12,7 +12,7 @@ class TestEidaEntityTest {
     @DisplayName("엔티티는 getId()를 구현하여야 한다.")
     void entityShouldImplGetId(){
         Long givenId = 1L;
-        TestEidaEntity entity = new TestEidaEntity(givenId);
+        TestEidaEntity entity = new TestEidaEntity(givenId, "name");
 
         Long id = entity.getId();
 
@@ -22,7 +22,7 @@ class TestEidaEntityTest {
     @Test
     @DisplayName("엔티티는 tableName으로 className을 갖는다.")
     void entityHasTableNameByClassName(){
-        TestEidaEntity entity = new TestEidaEntity(1L);
+        TestEidaEntity entity = new TestEidaEntity(1L, "name");
 
         String tableName = entity.getTableName();
 

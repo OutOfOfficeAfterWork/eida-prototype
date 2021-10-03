@@ -7,8 +7,10 @@ public interface EidaEntity<ID> {
 
     ID getId();
 
+    void setId(ID id);
+
     default String getTableName() {
-        return toTableName(getClass());
+        return toTableName((Class<? extends EidaEntity<ID>>) getClass());
     }
 
 }

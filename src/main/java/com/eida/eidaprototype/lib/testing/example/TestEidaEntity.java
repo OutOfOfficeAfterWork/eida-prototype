@@ -1,17 +1,19 @@
 package com.eida.eidaprototype.lib.testing.example;
 
 import com.eida.eidaprototype.lib.core.EidaEntity;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+
+import static lombok.AccessLevel.PRIVATE;
+import static lombok.AccessLevel.PUBLIC;
 
 
-@RequiredArgsConstructor
-@EqualsAndHashCode @ToString
+@NoArgsConstructor(access = PRIVATE)
+@AllArgsConstructor(access = PUBLIC)
+@Getter @Setter @EqualsAndHashCode @ToString
 public class TestEidaEntity implements EidaEntity<Long> {
 
-    @Getter
-    private final Long id;
+    private Long id;
+
+    private String name;
 
 }

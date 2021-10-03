@@ -2,9 +2,9 @@ package com.eida.eidaprototype.lib.testing.example;
 
 import com.eida.eidaprototype.lib.core.EidaManagerClient;
 import com.eida.eidaprototype.lib.core.EidaSerializer;
+import com.eida.eidaprototype.lib.core.EidaSerializerImpl;
 import com.eida.eidaprototype.lib.core.EidaShardClient;
 import com.eida.eidaprototype.lib.testing.mock.ConsoleManagerClient;
-import com.eida.eidaprototype.lib.testing.mock.ConsoleSerializer;
 import com.eida.eidaprototype.lib.testing.mock.ConsoleShardClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ class TestEidaRepositoryTest {
     void setup() {
         EidaManagerClient managerClient = new ConsoleManagerClient("http://manager:1234");
         EidaShardClient shardClient = new ConsoleShardClient();
-        EidaSerializer serializer = new ConsoleSerializer();
+        EidaSerializer serializer = new EidaSerializerImpl();
 
         repository = new TestEidaRepository();
         repository.init(managerClient, shardClient, serializer);
@@ -40,7 +40,7 @@ class TestEidaRepositoryTest {
 
     @Test
     void insert() {
-        TestEidaEntity entity = new TestEidaEntity(1L);
+        TestEidaEntity entity = new TestEidaEntity(1L, "name");
 
         Executable inserting = () -> repository.insert(entity);
 
@@ -49,7 +49,7 @@ class TestEidaRepositoryTest {
 
     @Test
     void find() {
-        TestEidaEntity expected = new TestEidaEntity(1L);
+        TestEidaEntity expected = new TestEidaEntity(1L, "testName");
 
         TestEidaEntity found = repository.find(1L)
                 .orElseThrow(NoSuchElementException::new);
