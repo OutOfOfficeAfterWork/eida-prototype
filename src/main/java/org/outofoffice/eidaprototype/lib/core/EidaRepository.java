@@ -52,9 +52,10 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
 
     public Optional<T> find(ID id) {
         String shardUrl = managerClient.getShardUrl(tableName(), id);
-        String serializable = shardClient.select(shardUrl, tableName(), id);
-        T entity = serializer.deserialize(serializable, entityClass());
-        return Optional.ofNullable(entity);
+        String tableString = shardClient.select(shardUrl, tableName(), id);
+        List<T> entities = serializer.deserialize(tableString, entityClass());
+        if (entities.size() > 1) throw new EidaException("return value size > 1");
+        return Optional.ofNullable(!entities.isEmpty() ? entities.get(0) : null);
     }
 
     public List<T> findAll() {

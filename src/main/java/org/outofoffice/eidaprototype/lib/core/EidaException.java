@@ -7,4 +7,8 @@ public class EidaException extends RuntimeException {
         super(message);
     }
 
+    public EidaException(Exception e) {
+        super(e.getClass().getSimpleName() + ": " + e.getMessage());
+    }
+
 }

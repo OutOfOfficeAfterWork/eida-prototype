@@ -1,8 +1,10 @@
 package org.outofoffice.eidaprototype.lib.core.impl;
 
+import org.junit.jupiter.api.Test;
 import org.outofoffice.eidaprototype.lib.core.EidaSerializerImpl;
 import org.outofoffice.eidaprototype.lib.testing.example.TestEidaEntity;
-import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,13 +15,24 @@ class EidaSerializerImplTest {
 
 
     @Test
-    void deserialize() {
-        String result = "id,name\n\r1,testName";
+    void deserializeSingleRow() {
+        String tableString = "id,name\n\r1,testName";
 
-        TestEidaEntity deserialized = serializer.deserialize(result, TestEidaEntity.class);
+        List<TestEidaEntity> entities = serializer.deserialize(tableString, TestEidaEntity.class);
 
-        assertThat(deserialized).isEqualTo(
-                new TestEidaEntity(1L, "testName"));
+        assertThat(entities).hasSize(1);
+        assertThat(entities.get(0)).isEqualTo(new TestEidaEntity(1L, "testName"));
+    }
+
+    @Test
+    void deserializeMultiRow() {
+        String tableString = "id,name\n\r1,testName\n\r2,newName";
+
+        List<TestEidaEntity> entities = serializer.deserialize(tableString, TestEidaEntity.class);
+
+        assertThat(entities).hasSize(2);
+        assertThat(entities.get(0)).isEqualTo(new TestEidaEntity(1L, "testName"));
+        assertThat(entities.get(1)).isEqualTo(new TestEidaEntity(2L, "newName"));
     }
 
 }
