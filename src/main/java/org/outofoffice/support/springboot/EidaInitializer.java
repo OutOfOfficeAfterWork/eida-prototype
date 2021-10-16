@@ -8,10 +8,14 @@ import org.outofoffice.eidaprototype.lib.core.EidaShardClient;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import static java.lang.Integer.MIN_VALUE;
 
 
 @Component
+@Order(MIN_VALUE)
 @RequiredArgsConstructor
 public class EidaInitializer implements ApplicationRunner {
 
