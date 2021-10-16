@@ -1,19 +1,52 @@
 package org.outofoffice.eidaprototype.lib.core;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-
+@Slf4j
 public class EidaSerializerImpl implements EidaSerializer {
 
     @Override
     public <T extends EidaEntity<ID>, ID> String serialize(T entity) {
-        return null;
+        try {
+            return doSerialize(entity);
+        } catch (Exception e) {
+            throw new EidaException(e);
+        }
+    }
+
+    public <T extends EidaEntity<ID>, ID> String doSerialize(T entity) throws Exception {
+        StringJoiner fieldsString = new StringJoiner(",");
+        StringJoiner valuesString = new StringJoiner(",");
+        Map<String, String> stringStringHashMap = new LinkedHashMap<>();
+
+        Field[] fields = entity.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            String fieldName = field.getName();
+
+            String c = String.valueOf(fieldName.charAt(0));
+            String getterName = fieldName.replace(c, "get"+ c.toUpperCase());
+            Method getter = entity.getClass().getMethod(getterName);
+            Object fieldValue = getter.invoke(entity);
+
+
+            if (fieldValue instanceof EidaEntity<?>) {
+                fieldValue = ((EidaEntity<?>) fieldValue).getId();
+            }
+
+            stringStringHashMap.put(field.getName(), fieldValue.toString());
+        }
+
+        for (String field : stringStringHashMap.keySet()) {
+            fieldsString.add(field);
+            valuesString.add(stringStringHashMap.get(field));
+        }
+
+        return fieldsString + " " + valuesString;
     }
 
 
@@ -66,7 +99,6 @@ public class EidaSerializerImpl implements EidaSerializer {
             linkedEntity.setId(value);
         }
     }
-
 
     private <T extends EidaEntity<ID>, ID> Map<Method, Class<?>> columnsToSetterMap(String[] columns, Class<T> entityClass) throws Exception {
         Map<Method, Class<?>> setters = new LinkedHashMap<>();
