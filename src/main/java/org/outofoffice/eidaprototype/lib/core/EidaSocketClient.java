@@ -5,11 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.StringJoiner;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 
-public class EidaClientImpl implements EidaClient {
+public class EidaSocketClient implements EidaClient {
 
     @Override
     public String request(String address, String message) {
@@ -19,7 +20,7 @@ public class EidaClientImpl implements EidaClient {
                 BufferedReader reader = reader(socket)
         ) {
             writer.println(message);
-            return reader.readLine();
+            return response(reader);
         } catch (Exception e) {
             throw new EidaException(e);
         }
@@ -40,4 +41,16 @@ public class EidaClientImpl implements EidaClient {
     private BufferedReader reader(Socket socket) throws IOException {
         return new BufferedReader(new InputStreamReader(socket.getInputStream(), UTF_8));
     }
+
+
+    private String response(BufferedReader reader) throws IOException {
+        StringJoiner responseJoiner = new StringJoiner("\n");
+        while (true) {
+            String line = reader.readLine();
+            if (line == null) break;
+            responseJoiner.add(line);
+        }
+        return responseJoiner.toString();
+    }
+
 }

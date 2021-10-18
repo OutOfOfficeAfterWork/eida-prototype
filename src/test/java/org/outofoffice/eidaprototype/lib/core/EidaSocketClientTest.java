@@ -12,9 +12,9 @@ import java.util.function.Function;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class EidaClientImplTest {
+class EidaSocketClientTest {
 
-    EidaClient eidaClient = new EidaClientImpl();
+    EidaClient eidaClient = new EidaSocketClient();
 
     String host = "localhost";
     int port = 9999;
@@ -23,11 +23,11 @@ class EidaClientImplTest {
 
     @Test
     void request() {
-        instantServer(port, msg -> String.format("Received: %s", msg)).start();
+        instantServer(port, msg -> String.format("OK\nReceived: %s", msg)).start();
 
         String response = eidaClient.request(address, "hello");
 
-        assertThat(response).isEqualTo("Received: hello");
+        assertThat(response).isEqualTo("OK\nReceived: hello");
     }
 
     private Thread instantServer(int port, Function<String, String> responseGenerator) {
