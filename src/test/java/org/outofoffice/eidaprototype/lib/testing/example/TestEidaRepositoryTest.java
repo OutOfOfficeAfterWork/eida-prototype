@@ -67,4 +67,14 @@ class TestEidaRepositoryTest {
         assertThat(found).isEqualTo(expected);
     }
 
+    @Test
+    void list() {
+        List<TestEidaEntity> expected = List.of(new TestEidaEntity(1L, "testName"), new TestEidaEntity(1L, "testName"));
+
+        List<TestEidaEntity> found1 = repository.list(e->e.getId()==1L);
+        assertThat(found1).isEqualTo(expected);
+
+        List<TestEidaEntity> found2 = repository.list(e->e.getId()==2L);
+        assertThat(found2).isEmpty();
+    }
 }

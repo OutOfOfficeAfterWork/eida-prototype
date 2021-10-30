@@ -88,7 +88,7 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
     }
 
     public List<T> list(Predicate<T> where) {
-        return List.of();
+        return listAll().stream().filter(where::test).collect(Collectors.toList());
     }
 
     public <R> List<T> joinList(Predicate<T> where, Function<T, R> on) {
