@@ -2,10 +2,10 @@ package org.outofoffice.eidaprototype.lib.core;
 
 import org.outofoffice.eidaprototype.lib.util.ClassUtils;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 
 public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
@@ -58,8 +58,29 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
         return Optional.ofNullable(!entities.isEmpty() ? entities.get(0) : null);
     }
 
-    public List<T> findAll() {
-        return List.of();
+    public List<T> listAll() {
+        List<String> shardUrls = managerClient.getShardUrls(tableName());
+        String header = null;
+
+        StringBuilder response = new StringBuilder();
+
+        for (String shardUrl : shardUrls) {
+            String tableString = shardClient.select(tableName(), shardUrl);
+            int index = tableString.indexOf("\n");
+
+            String firstLine = tableString.substring(0, index);
+            if (header == null) {
+                header = firstLine;
+                response.append(header);
+            } else {
+                if (!header.equals(firstLine)) throw new EidaException("샤드간 헤더 불일치");
+            }
+            String bodyString = tableString.substring(index);
+            response.append(bodyString);
+        }
+        ;
+
+        return serializer.deserialize(response.toString(), entityClass());
     }
 
     public <R> Optional<T> joinFind(ID id, Function<T, R> on) {

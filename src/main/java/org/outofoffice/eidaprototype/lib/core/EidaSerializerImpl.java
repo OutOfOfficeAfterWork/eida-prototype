@@ -60,7 +60,7 @@ public class EidaSerializerImpl implements EidaSerializer {
     }
 
     private <T extends EidaEntity<ID>, ID> List<T> doDeserialize(String tableString, Class<T> entityClass) throws Exception {
-        String[] lines = tableString.split("\n\r");
+        String[] lines = tableString.split("\n");
 
         String header = lines[0];
         String[] columns = header.split(",");

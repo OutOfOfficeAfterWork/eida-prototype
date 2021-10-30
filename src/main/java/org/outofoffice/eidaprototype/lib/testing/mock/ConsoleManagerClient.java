@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 import static org.outofoffice.eidaprototype.lib.util.LogUtils.indentedFormat;
 
 
@@ -22,6 +24,12 @@ public class ConsoleManagerClient implements EidaManagerClient {
     public String getShardUrl(String tableName) {
         log.info(indentedFormat("request shard url", "for new entity of {}", "to {}"), tableName, managerServerUrl);
         return "http://shard01:1234";
+    }
+
+    @Override
+    public List<String> getShardUrls(String tableName) {
+        log.info(indentedFormat("request shard urls", "for new entity of {}", "to {}"), tableName, managerServerUrl);
+        return List.of("http://shard01:1234", "http://shard02:1234");
     }
 
     @Override

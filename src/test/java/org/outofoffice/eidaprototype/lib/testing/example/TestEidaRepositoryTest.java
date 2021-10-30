@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,6 +54,15 @@ class TestEidaRepositoryTest {
 
         TestEidaEntity found = repository.find(1L)
                 .orElseThrow(NoSuchElementException::new);
+
+        assertThat(found).isEqualTo(expected);
+    }
+
+    @Test
+    void listAll() {
+        List<TestEidaEntity> expected = List.of(new TestEidaEntity(1L, "testName"), new TestEidaEntity(1L, "testName"));
+
+        List<TestEidaEntity> found = repository.listAll();
 
         assertThat(found).isEqualTo(expected);
     }

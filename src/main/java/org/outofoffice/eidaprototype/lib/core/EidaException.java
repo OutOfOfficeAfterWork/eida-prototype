@@ -9,6 +9,7 @@ public class EidaException extends RuntimeException {
 
     public EidaException(Exception e) {
         super(e.getClass().getSimpleName() + ": " + e.getMessage());
+        e.printStackTrace();
     }
 
 }
