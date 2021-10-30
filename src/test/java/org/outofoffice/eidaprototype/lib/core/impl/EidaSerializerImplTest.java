@@ -15,6 +15,13 @@ class EidaSerializerImplTest {
 
 
     @Test
+    void setSerializer() {
+        TestEidaEntity testEidaEntity = new TestEidaEntity(3L, "luffy");
+        String serialize = serializer.serialize(testEidaEntity);
+        assertThat(serialize).isEqualTo("id,name 3,luffy");
+    }
+
+    @Test
     void deserializeSingleRow() {
         String tableString = "id,name\n\r1,testName";
 
