@@ -55,7 +55,9 @@ class TestEidaRepositoryTest {
 
     @Test
     void listAll() {
-        List<TestEidaEntity> expected = List.of(new TestEidaEntity(1L, "testName"), new TestEidaEntity(1L, "testName"));
+        List<TestEidaEntity> expected = List.of(
+                new TestEidaEntity(1L, "testName1"), new TestEidaEntity(2L, "testName2"),
+                new TestEidaEntity(1L, "testName1"), new TestEidaEntity(2L, "testName2"));
 
         List<TestEidaEntity> found = repository.listAll();
 
@@ -64,12 +66,12 @@ class TestEidaRepositoryTest {
 
     @Test
     void list() {
-        List<TestEidaEntity> expected = List.of(new TestEidaEntity(1L, "testName"), new TestEidaEntity(1L, "testName"));
+        List<TestEidaEntity> expected = List.of(new TestEidaEntity(1L, "testName1"), new TestEidaEntity(1L, "testName1"));
 
         List<TestEidaEntity> found1 = repository.list(e -> e.getId() == 1L);
         assertThat(found1).isEqualTo(expected);
 
-        List<TestEidaEntity> found2 = repository.list(e -> e.getId() == 2L);
+        List<TestEidaEntity> found2 = repository.list(e -> e.getId() == 3L);
         assertThat(found2).isEmpty();
     }
 }

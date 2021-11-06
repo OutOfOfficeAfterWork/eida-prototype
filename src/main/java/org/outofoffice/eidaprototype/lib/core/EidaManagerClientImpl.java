@@ -16,17 +16,17 @@ public class EidaManagerClientImpl implements EidaManagerClient {
 
 
     @Override
-    public String getShardUrl(String tableName) {
-        return "http://shard01:1234";
-    }
-
-    @Override
-    public List<String> getShardUrls(String tableName) {
+    public List<String> getAllShardUrls(String tableName) {
         return List.of("http://shard01:1234", "http://shard02:1234");
     }
 
     @Override
-    public <ID> String getShardUrl(String tableName, ID id) {
+    public String getDestinationShardUrl(String tableName) {
+        return "http://shard01:1234";
+    }
+
+    @Override
+    public <ID> String getSourceShardUrl(String tableName, ID id) {
         return "http://shard02:1234";
     }
 

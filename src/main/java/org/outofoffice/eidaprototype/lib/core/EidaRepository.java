@@ -2,10 +2,12 @@ package org.outofoffice.eidaprototype.lib.core;
 
 import org.outofoffice.eidaprototype.lib.util.ClassUtils;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 
 public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
@@ -37,8 +39,8 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
 
     public void insert(T entity) {
         String serialized = serializer.serialize(entity);
-        String shardUrl = managerClient.getShardUrl(tableName());
-        shardClient.insert(shardUrl, tableName(), serialized);
+        String destinationShardUrl = managerClient.getDestinationShardUrl(tableName());
+        shardClient.insert(destinationShardUrl, tableName(), serialized);
     }
 
     public void update(T entity) {
@@ -51,21 +53,21 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
     }
 
     public Optional<T> find(ID id) {
-        String shardUrl = managerClient.getShardUrl(tableName(), id);
-        String tableString = shardClient.select(shardUrl, tableName(), id);
+        String sourceShardUrl = managerClient.getSourceShardUrl(tableName(), id);
+        String tableString = shardClient.selectById(sourceShardUrl, tableName(), id);
         List<T> entities = serializer.deserialize(tableString, entityClass());
         if (entities.size() > 1) throw new EidaException("return value size > 1");
         return Optional.ofNullable(!entities.isEmpty() ? entities.get(0) : null);
     }
 
     public List<T> listAll() {
-        List<String> shardUrls = managerClient.getShardUrls(tableName());
+        List<String> allShardUrls = managerClient.getAllShardUrls(tableName());
         String header = null;
 
         StringBuilder response = new StringBuilder();
 
-        for (String shardUrl : shardUrls) {
-            String tableString = shardClient.select(tableName(), shardUrl);
+        for (String shardUrl : allShardUrls) {
+            String tableString = shardClient.selectAll(tableName(), shardUrl);
             int index = tableString.indexOf("\n");
 
             String firstLine = tableString.substring(0, index);
@@ -78,7 +80,6 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
             String bodyString = tableString.substring(index);
             response.append(bodyString);
         }
-        ;
 
         return serializer.deserialize(response.toString(), entityClass());
     }
@@ -88,7 +89,7 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
     }
 
     public List<T> list(Predicate<T> where) {
-        return listAll().stream().filter(where::test).collect(Collectors.toList());
+        return listAll().stream().filter(where).collect(toList());
     }
 
     public <R> List<T> joinList(Predicate<T> where, Function<T, R> on) {

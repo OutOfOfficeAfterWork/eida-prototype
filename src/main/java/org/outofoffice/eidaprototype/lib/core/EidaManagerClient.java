@@ -1,7 +1,7 @@
 package org.outofoffice.eidaprototype.lib.core;
 
-
 import java.util.List;
+
 
 public interface EidaManagerClient {
 
@@ -9,10 +9,10 @@ public interface EidaManagerClient {
 
     void setManagerServerUrl(String managerServerUrl);
 
-    String getShardUrl(String tableName);
+    List<String> getAllShardUrls(String tableName);
 
-    List<String> getShardUrls(String tableName);
+    String getDestinationShardUrl(String tableName);
 
-    <ID> String getShardUrl(String tableName, ID id);
+    <ID> String getSourceShardUrl(String tableName, ID id);
 
 }
