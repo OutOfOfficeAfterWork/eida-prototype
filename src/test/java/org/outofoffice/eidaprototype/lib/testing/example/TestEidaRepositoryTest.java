@@ -20,8 +20,11 @@ class TestEidaRepositoryTest {
 
     @BeforeEach
     void setup() {
-        EidaManagerClient managerClient = new EidaManagerClientImpl("http://manager:1234");
-        EidaShardClient shardClient = new EidaShardClientImpl();
+        EidaDllGenerator dllGenerator = new EidaDllGenerator();
+        EidaDmlGenerator dmlGenerator = new EidaDmlGenerator();
+
+        EidaManagerClient managerClient = new EidaManagerClientImpl(dllGenerator, "http://manager:1234");
+        EidaShardClient shardClient = new EidaShardClientImpl(dmlGenerator);
         EidaSerializer serializer = new EidaSerializerImpl();
 
         repository = new TestEidaRepository();

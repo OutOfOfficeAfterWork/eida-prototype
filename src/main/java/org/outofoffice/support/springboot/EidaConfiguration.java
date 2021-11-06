@@ -11,13 +11,28 @@ import org.springframework.context.annotation.Configuration;
 public class EidaConfiguration {
 
     @Bean
+    protected EidaDdlGenerator ddlGenerator() {
+        return new EidaDdlGenerator();
+    }
+
+    @Bean
+    protected EidaDllGenerator dllGenerator() {
+        return new EidaDllGenerator();
+    }
+
+    @Bean
+    protected EidaDmlGenerator dmlGenerator() {
+        return new EidaDmlGenerator();
+    }
+
+    @Bean
     protected EidaManagerClient managerClient() {
-        return new EidaManagerClientImpl("localhost:1234");
+        return new EidaManagerClientImpl(dllGenerator(), "localhost:1234");
     }
 
     @Bean
     protected EidaShardClient shardClient() {
-        return new EidaShardClientImpl();
+        return new EidaShardClientImpl(dmlGenerator());
     }
 
     @Bean
