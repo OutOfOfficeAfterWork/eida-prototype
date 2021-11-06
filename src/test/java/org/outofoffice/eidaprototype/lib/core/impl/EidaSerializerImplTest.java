@@ -23,7 +23,7 @@ class EidaSerializerImplTest {
 
     @Test
     void deserializeSingleRow() {
-        String tableString = "id,name\n\r1,testName";
+        String tableString = "id,name\n1,testName";
 
         List<TestEidaEntity> entities = serializer.deserialize(tableString, TestEidaEntity.class);
 
@@ -33,7 +33,7 @@ class EidaSerializerImplTest {
 
     @Test
     void deserializeMultiRow() {
-        String tableString = "id,name\n\r1,testName\n\r2,newName";
+        String tableString = "id,name\n1,testName\n2,newName";
 
         List<TestEidaEntity> entities = serializer.deserialize(tableString, TestEidaEntity.class);
 

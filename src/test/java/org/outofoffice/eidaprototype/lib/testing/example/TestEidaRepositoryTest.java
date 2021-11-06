@@ -1,15 +1,10 @@
 package org.outofoffice.eidaprototype.lib.testing.example;
 
-import org.outofoffice.eidaprototype.lib.core.EidaManagerClient;
-import org.outofoffice.eidaprototype.lib.core.EidaSerializer;
-import org.outofoffice.eidaprototype.lib.core.EidaSerializerImpl;
-import org.outofoffice.eidaprototype.lib.core.EidaShardClient;
-import org.outofoffice.eidaprototype.lib.testing.mock.ConsoleManagerClient;
-import org.outofoffice.eidaprototype.lib.testing.mock.ConsoleShardClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.outofoffice.eidaprototype.lib.core.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -25,8 +20,8 @@ class TestEidaRepositoryTest {
 
     @BeforeEach
     void setup() {
-        EidaManagerClient managerClient = new ConsoleManagerClient("http://manager:1234");
-        EidaShardClient shardClient = new ConsoleShardClient();
+        EidaManagerClient managerClient = new EidaManagerClientImpl("http://manager:1234");
+        EidaShardClient shardClient = new EidaShardClientImpl();
         EidaSerializer serializer = new EidaSerializerImpl();
 
         repository = new TestEidaRepository();
@@ -71,10 +66,10 @@ class TestEidaRepositoryTest {
     void list() {
         List<TestEidaEntity> expected = List.of(new TestEidaEntity(1L, "testName"), new TestEidaEntity(1L, "testName"));
 
-        List<TestEidaEntity> found1 = repository.list(e->e.getId()==1L);
+        List<TestEidaEntity> found1 = repository.list(e -> e.getId() == 1L);
         assertThat(found1).isEqualTo(expected);
 
-        List<TestEidaEntity> found2 = repository.list(e->e.getId()==2L);
+        List<TestEidaEntity> found2 = repository.list(e -> e.getId() == 2L);
         assertThat(found2).isEmpty();
     }
 }
