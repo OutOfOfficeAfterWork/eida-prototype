@@ -15,7 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class TestEidaRepositoryTest {
 
-    private TestEidaRepository repository;
+    TestEidaRepository repository;
+
+    EidaManagerClient managerClient;
+    EidaShardClient shardClient;
 
 
     @BeforeEach
@@ -23,8 +26,9 @@ class TestEidaRepositoryTest {
         EidaDllGenerator dllGenerator = new EidaDllGenerator();
         EidaDmlGenerator dmlGenerator = new EidaDmlGenerator();
 
-        EidaManagerClient managerClient = new EidaManagerClientImpl(dllGenerator, "http://manager:1234");
-        EidaShardClient shardClient = new EidaShardClientImpl(dmlGenerator);
+        managerClient = new EidaManagerClientImpl(dllGenerator, null, "http://manager:1234");
+        shardClient = new EidaShardClientImpl(dmlGenerator, null);
+
         EidaSerializer serializer = new EidaSerializerImpl();
 
         repository = new TestEidaRepository();
@@ -39,6 +43,9 @@ class TestEidaRepositoryTest {
 
     @Test
     void insert() {
+        managerClient.useMockClient((address, message) -> "http://shard1:1234");
+        shardClient.useMockClient((address, message) -> "");
+
         TestEidaEntity entity = new TestEidaEntity(1L, "name");
 
         Executable inserting = () -> repository.insert(entity);
@@ -48,6 +55,9 @@ class TestEidaRepositoryTest {
 
     @Test
     void find() {
+        managerClient.useMockClient((address, message) -> "http://shard1:1234");
+        shardClient.useMockClient((address, message) -> "id,name\n1,testName");
+
         TestEidaEntity expected = new TestEidaEntity(1L, "testName");
 
         TestEidaEntity found = repository.find(1L)
@@ -58,6 +68,9 @@ class TestEidaRepositoryTest {
 
     @Test
     void listAll() {
+        managerClient.useMockClient((address, message) -> "http://shard01:1234,http://shard02:1234");
+        shardClient.useMockClient((address, message) -> "id,name\n1,testName1\n2,testName2");
+
         List<TestEidaEntity> expected = List.of(
                 new TestEidaEntity(1L, "testName1"), new TestEidaEntity(2L, "testName2"),
                 new TestEidaEntity(1L, "testName1"), new TestEidaEntity(2L, "testName2"));
@@ -69,6 +82,9 @@ class TestEidaRepositoryTest {
 
     @Test
     void list() {
+        managerClient.useMockClient((address, message) -> "http://shard01:1234,http://shard02:1234");
+        shardClient.useMockClient((address, message) -> "id,name\n1,testName1\n2,testName2");
+
         List<TestEidaEntity> expected = List.of(new TestEidaEntity(1L, "testName1"), new TestEidaEntity(1L, "testName1"));
 
         List<TestEidaEntity> found1 = repository.list(e -> e.getId() == 1L);
@@ -77,4 +93,5 @@ class TestEidaRepositoryTest {
         List<TestEidaEntity> found2 = repository.list(e -> e.getId() == 3L);
         assertThat(found2).isEmpty();
     }
+
 }

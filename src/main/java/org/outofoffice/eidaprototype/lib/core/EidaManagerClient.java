@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface EidaManagerClient {
 
+    void useMockClient(EidaClient mockClient);
+
     String getManagerServerUrl();
 
     void setManagerServerUrl(String managerServerUrl);
