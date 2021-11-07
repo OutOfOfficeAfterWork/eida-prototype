@@ -7,6 +7,8 @@ import org.junit.jupiter.api.function.Executable;
 import org.outofoffice.eidaprototype.lib.core.client.EidaDllClient;
 import org.outofoffice.eidaprototype.lib.core.client.EidaDmlClient;
 import org.outofoffice.eidaprototype.lib.core.client.EidaManagerClient;
+import org.outofoffice.eidaprototype.lib.core.socket.EidaDefaultSocketClient;
+import org.outofoffice.eidaprototype.lib.core.socket.EidaSocketClientLoggingProxy;
 import org.outofoffice.eidaprototype.lib.core.ui.EidaSerializer;
 import org.outofoffice.eidaprototype.lib.core.client.EidaShardClient;
 import org.outofoffice.eidaprototype.lib.core.query.EidaDllGenerator;

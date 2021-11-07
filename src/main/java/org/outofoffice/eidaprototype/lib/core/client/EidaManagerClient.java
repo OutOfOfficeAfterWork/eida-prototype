@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.outofoffice.eidaprototype.lib.core.query.EidaDllGenerator;
-import org.outofoffice.eidaprototype.lib.core.socket.EidaClient;
+import org.outofoffice.eidaprototype.lib.core.socket.EidaSocketClient;
+import org.outofoffice.eidaprototype.lib.core.socket.EidaSocketClientLoggingProxy;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,15 +15,15 @@ import java.util.List;
 public class EidaManagerClient implements EidaDllClient, EidaDdlManagerClient {
 
     private final EidaDllGenerator dllGenerator;
-    private EidaClient eidaClient;
+    private EidaSocketClient eidaClient;
 
     @Getter
     @Setter
     private String managerServerUrl;
 
     @Override
-    public void useMockClient(EidaClient mockClient) {
-        this.eidaClient = mockClient;
+    public void useMockClient(EidaSocketClient mockClient) {
+        this.eidaClient = new EidaSocketClientLoggingProxy(mockClient);
     }
 
 

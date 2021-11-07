@@ -1,8 +1,9 @@
 package org.outofoffice.eidaprototype.lib.core;
 
 import org.junit.jupiter.api.Test;
-import org.outofoffice.eidaprototype.lib.core.socket.EidaClient;
 import org.outofoffice.eidaprototype.lib.core.socket.EidaSocketClient;
+import org.outofoffice.eidaprototype.lib.core.socket.EidaDefaultSocketClient;
+import org.outofoffice.eidaprototype.lib.core.socket.EidaSocketClientLoggingProxy;
 import org.outofoffice.eidaprototype.lib.exception.EidaException;
 
 import java.io.BufferedReader;
@@ -15,9 +16,9 @@ import java.util.function.Function;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class EidaSocketClientTest {
+class EidaDefaultSocketClientTest {
 
-    EidaClient eidaClient = new EidaSocketClient();
+    EidaSocketClient eidaClient = new EidaSocketClientLoggingProxy(new EidaDefaultSocketClient());
 
     String host = "localhost";
     int port = 9999;

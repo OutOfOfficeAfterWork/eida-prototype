@@ -7,8 +7,8 @@ import org.outofoffice.eidaprototype.lib.core.client.EidaShardClient;
 import org.outofoffice.eidaprototype.lib.core.query.EidaDdlGenerator;
 import org.outofoffice.eidaprototype.lib.core.query.EidaDllGenerator;
 import org.outofoffice.eidaprototype.lib.core.query.EidaDmlGenerator;
-import org.outofoffice.eidaprototype.lib.core.socket.EidaClient;
 import org.outofoffice.eidaprototype.lib.core.socket.EidaSocketClient;
+import org.outofoffice.eidaprototype.lib.core.socket.EidaDefaultSocketClient;
 import org.outofoffice.eidaprototype.lib.core.ui.EidaSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -35,18 +35,18 @@ public class EidaConfiguration {
     }
 
     @Bean
-    protected EidaClient eidaClient() {
-        return new EidaSocketClient();
+    protected EidaSocketClient socketClient() {
+        return new EidaDefaultSocketClient();
     }
 
     @Bean
     protected EidaDllClient managerClient() {
-        return new EidaManagerClient(dllGenerator(), eidaClient(), "localhost:1234");
+        return new EidaManagerClient(dllGenerator(), socketClient(), "localhost:1234");
     }
 
     @Bean
     protected EidaDmlClient shardClient() {
-        return new EidaShardClient(dmlGenerator(), eidaClient());
+        return new EidaShardClient(dmlGenerator(), socketClient());
     }
 
     @Bean

@@ -1,7 +1,6 @@
 package org.outofoffice.eidaprototype.lib.core.ui;
 
 import lombok.extern.slf4j.Slf4j;
-import org.outofoffice.eidaprototype.lib.core.ui.EidaEntity;
 import org.outofoffice.eidaprototype.lib.exception.EidaException;
 
 import java.lang.reflect.Constructor;

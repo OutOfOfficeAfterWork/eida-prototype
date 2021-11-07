@@ -1,13 +1,13 @@
 package org.outofoffice.eidaprototype.lib.core.client;
 
-import org.outofoffice.eidaprototype.lib.core.socket.EidaClient;
+import org.outofoffice.eidaprototype.lib.core.socket.EidaSocketClient;
 
 import java.util.List;
 
 
 public interface EidaDllClient {
 
-    void useMockClient(EidaClient mockClient);
+    void useMockClient(EidaSocketClient mockClient);
 
     String getManagerServerUrl();
 

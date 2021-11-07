@@ -70,7 +70,7 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
         StringBuilder response = new StringBuilder();
 
         for (String shardUrl : allShardUrls) {
-            String tableString = shardClient.selectAll(tableName(), shardUrl);
+            String tableString = shardClient.selectAll(shardUrl, tableName());
             int index = tableString.indexOf("\n");
 
             String firstLine = tableString.substring(0, index);
