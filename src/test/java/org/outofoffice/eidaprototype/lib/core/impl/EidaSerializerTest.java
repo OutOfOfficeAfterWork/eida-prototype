@@ -1,7 +1,7 @@
 package org.outofoffice.eidaprototype.lib.core.impl;
 
 import org.junit.jupiter.api.Test;
-import org.outofoffice.eidaprototype.lib.core.EidaSerializerImpl;
+import org.outofoffice.eidaprototype.lib.core.ui.EidaSerializer;
 import org.outofoffice.eidaprototype.lib.testing.example.TestEidaEntity;
 
 import java.util.List;
@@ -9,9 +9,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class EidaSerializerImplTest {
+class EidaSerializerTest {
 
-    private final EidaSerializerImpl serializer = new EidaSerializerImpl();
+    private final EidaSerializer serializer = new EidaSerializer();
 
 
     @Test

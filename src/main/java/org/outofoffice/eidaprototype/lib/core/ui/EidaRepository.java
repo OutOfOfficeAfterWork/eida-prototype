@@ -1,5 +1,8 @@
-package org.outofoffice.eidaprototype.lib.core;
+package org.outofoffice.eidaprototype.lib.core.ui;
 
+import org.outofoffice.eidaprototype.lib.core.client.EidaDllClient;
+import org.outofoffice.eidaprototype.lib.core.client.EidaDmlClient;
+import org.outofoffice.eidaprototype.lib.exception.EidaException;
 import org.outofoffice.eidaprototype.lib.util.ClassUtils;
 
 import java.util.List;

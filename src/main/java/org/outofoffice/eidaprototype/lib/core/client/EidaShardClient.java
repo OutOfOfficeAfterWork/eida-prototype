@@ -1,6 +1,8 @@
-package org.outofoffice.eidaprototype.lib.core;
+package org.outofoffice.eidaprototype.lib.core.client;
 
 import lombok.AllArgsConstructor;
+import org.outofoffice.eidaprototype.lib.core.query.EidaDmlGenerator;
+import org.outofoffice.eidaprototype.lib.core.socket.EidaClient;
 
 
 @AllArgsConstructor

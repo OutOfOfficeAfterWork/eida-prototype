@@ -4,7 +4,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import org.outofoffice.eidaprototype.lib.core.*;
+import org.outofoffice.eidaprototype.lib.core.client.EidaDllClient;
+import org.outofoffice.eidaprototype.lib.core.client.EidaDmlClient;
+import org.outofoffice.eidaprototype.lib.core.client.EidaManagerClient;
+import org.outofoffice.eidaprototype.lib.core.ui.EidaSerializer;
+import org.outofoffice.eidaprototype.lib.core.client.EidaShardClient;
+import org.outofoffice.eidaprototype.lib.core.query.EidaDllGenerator;
+import org.outofoffice.eidaprototype.lib.core.query.EidaDmlGenerator;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -29,7 +35,7 @@ class TestEidaRepositoryTest {
         managerClient = new EidaManagerClient(dllGenerator, null, "http://manager:1234");
         shardClient = new EidaShardClient(dmlGenerator, null);
 
-        EidaSerializer serializer = new EidaSerializerImpl();
+        EidaSerializer serializer = new EidaSerializer();
 
         repository = new TestEidaRepository();
         repository.init(managerClient, shardClient, serializer);

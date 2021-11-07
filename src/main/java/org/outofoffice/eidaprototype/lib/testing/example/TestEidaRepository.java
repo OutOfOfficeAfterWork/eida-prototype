@@ -1,6 +1,6 @@
 package org.outofoffice.eidaprototype.lib.testing.example;
 
-import org.outofoffice.eidaprototype.lib.core.EidaRepository;
+import org.outofoffice.eidaprototype.lib.core.ui.EidaRepository;
 import org.springframework.stereotype.Repository;
 
 

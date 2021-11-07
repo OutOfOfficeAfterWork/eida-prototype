@@ -1,6 +1,9 @@
-package org.outofoffice.eidaprototype.lib.core;
+package org.outofoffice.eidaprototype.lib.core.ui;
 
 import lombok.RequiredArgsConstructor;
+import org.outofoffice.eidaprototype.lib.core.client.EidaDdlManagerClient;
+import org.outofoffice.eidaprototype.lib.core.client.EidaDdlShardClient;
+import org.outofoffice.eidaprototype.lib.core.client.EidaDllClient;
 
 
 @RequiredArgsConstructor

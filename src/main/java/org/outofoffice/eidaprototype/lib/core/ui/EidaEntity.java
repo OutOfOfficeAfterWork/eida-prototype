@@ -1,4 +1,4 @@
-package org.outofoffice.eidaprototype.lib.core;
+package org.outofoffice.eidaprototype.lib.core.ui;
 
 import org.outofoffice.eidaprototype.lib.util.ClassUtils;
 

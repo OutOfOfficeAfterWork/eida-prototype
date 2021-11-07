@@ -1,4 +1,6 @@
-package org.outofoffice.eidaprototype.lib.core;
+package org.outofoffice.eidaprototype.lib.core.socket;
+
+import org.outofoffice.eidaprototype.lib.exception.EidaException;
 
 import java.io.BufferedReader;
 import java.io.IOException;

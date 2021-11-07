@@ -1,7 +1,7 @@
 package org.outofoffice.eidaprototype.lib.testing.example;
 
-import org.outofoffice.eidaprototype.lib.core.EidaEntity;
 import lombok.*;
+import org.outofoffice.eidaprototype.lib.core.ui.EidaEntity;
 
 import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PUBLIC;

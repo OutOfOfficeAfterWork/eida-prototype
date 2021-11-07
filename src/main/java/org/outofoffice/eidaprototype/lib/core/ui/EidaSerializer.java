@@ -1,6 +1,8 @@
-package org.outofoffice.eidaprototype.lib.core;
+package org.outofoffice.eidaprototype.lib.core.ui;
 
 import lombok.extern.slf4j.Slf4j;
+import org.outofoffice.eidaprototype.lib.core.ui.EidaEntity;
+import org.outofoffice.eidaprototype.lib.exception.EidaException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -8,9 +10,8 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 @Slf4j
-public class EidaSerializerImpl implements EidaSerializer {
+public class EidaSerializer {
 
-    @Override
     public <T extends EidaEntity<ID>, ID> String serialize(T entity) {
         try {
             return doSerialize(entity);
@@ -50,7 +51,6 @@ public class EidaSerializerImpl implements EidaSerializer {
     }
 
 
-    @Override
     public <T extends EidaEntity<ID>, ID> List<T> deserialize(String tableString, Class<T> entityClass) {
         try {
             return doDeserialize(tableString, entityClass);

@@ -1,7 +1,7 @@
 package org.outofoffice.eidaprototype.lib.util;
 
-import org.outofoffice.eidaprototype.lib.core.EidaEntity;
-import org.outofoffice.eidaprototype.lib.core.EidaRepository;
+import org.outofoffice.eidaprototype.lib.core.ui.EidaEntity;
+import org.outofoffice.eidaprototype.lib.core.ui.EidaRepository;
 
 import java.lang.reflect.ParameterizedType;
 

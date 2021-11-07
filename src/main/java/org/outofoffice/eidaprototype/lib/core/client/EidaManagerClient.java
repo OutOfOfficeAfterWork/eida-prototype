@@ -1,8 +1,10 @@
-package org.outofoffice.eidaprototype.lib.core;
+package org.outofoffice.eidaprototype.lib.core.client;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.outofoffice.eidaprototype.lib.core.query.EidaDllGenerator;
+import org.outofoffice.eidaprototype.lib.core.socket.EidaClient;
 
 import java.util.Arrays;
 import java.util.List;
