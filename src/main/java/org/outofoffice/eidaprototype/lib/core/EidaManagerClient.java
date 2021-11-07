@@ -1,20 +1,46 @@
 package org.outofoffice.eidaprototype.lib.core;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Arrays;
 import java.util.List;
 
 
-public interface EidaManagerClient {
+@AllArgsConstructor
+public class EidaManagerClient implements EidaDllClient, EidaDdlManagerClient {
 
-    void useMockClient(EidaClient mockClient);
+    private final EidaDllGenerator dllGenerator;
+    private EidaClient eidaClient;
 
-    String getManagerServerUrl();
+    @Getter
+    @Setter
+    private String managerServerUrl;
 
-    void setManagerServerUrl(String managerServerUrl);
+    @Override
+    public void useMockClient(EidaClient mockClient) {
+        this.eidaClient = mockClient;
+    }
 
-    List<String> getAllShardUrls(String tableName);
 
-    String getDestinationShardUrl(String tableName);
+    @Override
+    public List<String> getAllShardUrls(String tableName) {
+        String dll = dllGenerator.createGetAllShardUrls(tableName);
+        String response = eidaClient.request(managerServerUrl, dll);
+        return Arrays.asList(response.split(","));
+    }
 
-    <ID> String getSourceShardUrl(String tableName, ID id);
+    @Override
+    public String getDestinationShardUrl(String tableName) {
+        String dll = dllGenerator.createGetDestinationShardUrl(tableName);
+        return eidaClient.request(managerServerUrl, dll);
+    }
+
+    @Override
+    public <ID> String getSourceShardUrl(String tableName, ID id) {
+        String dll = dllGenerator.createGetSourceShardUrl(tableName, id);
+        return eidaClient.request(managerServerUrl, dll);
+    }
 
 }

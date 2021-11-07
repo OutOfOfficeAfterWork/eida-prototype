@@ -31,13 +31,13 @@ public class EidaConfiguration {
     }
 
     @Bean
-    protected EidaManagerClient managerClient() {
-        return new EidaManagerClientImpl(dllGenerator(), eidaClient(), "localhost:1234");
+    protected EidaDllClient managerClient() {
+        return new EidaManagerClient(dllGenerator(), eidaClient(), "localhost:1234");
     }
 
     @Bean
-    protected EidaShardClient shardClient() {
-        return new EidaShardClientImpl(dmlGenerator(), eidaClient());
+    protected EidaDmlClient shardClient() {
+        return new EidaShardClient(dmlGenerator(), eidaClient());
     }
 
     @Bean

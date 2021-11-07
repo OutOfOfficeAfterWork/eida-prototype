@@ -12,12 +12,12 @@ import static java.util.stream.Collectors.toList;
 
 public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
 
-    private EidaManagerClient managerClient;
-    private EidaShardClient shardClient;
+    private EidaDllClient managerClient;
+    private EidaDmlClient shardClient;
     private EidaSerializer serializer;
 
 
-    public void init(EidaManagerClient managerClient, EidaShardClient shardClient, EidaSerializer serializer) {
+    public void init(EidaDllClient managerClient, EidaDmlClient shardClient, EidaSerializer serializer) {
         this.managerClient = managerClient;
         this.shardClient = shardClient;
         this.serializer = serializer;

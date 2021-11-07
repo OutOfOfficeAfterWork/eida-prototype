@@ -17,8 +17,8 @@ class TestEidaRepositoryTest {
 
     TestEidaRepository repository;
 
-    EidaManagerClient managerClient;
-    EidaShardClient shardClient;
+    EidaDllClient managerClient;
+    EidaDmlClient shardClient;
 
 
     @BeforeEach
@@ -26,8 +26,8 @@ class TestEidaRepositoryTest {
         EidaDllGenerator dllGenerator = new EidaDllGenerator();
         EidaDmlGenerator dmlGenerator = new EidaDmlGenerator();
 
-        managerClient = new EidaManagerClientImpl(dllGenerator, null, "http://manager:1234");
-        shardClient = new EidaShardClientImpl(dmlGenerator, null);
+        managerClient = new EidaManagerClient(dllGenerator, null, "http://manager:1234");
+        shardClient = new EidaShardClient(dmlGenerator, null);
 
         EidaSerializer serializer = new EidaSerializerImpl();
 

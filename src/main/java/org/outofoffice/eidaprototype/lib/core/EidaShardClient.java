@@ -1,14 +1,37 @@
 package org.outofoffice.eidaprototype.lib.core;
 
+import lombok.AllArgsConstructor;
 
-public interface EidaShardClient {
 
-    void useMockClient(EidaClient mockClient);
+@AllArgsConstructor
+public class EidaShardClient implements EidaDmlClient, EidaDdlShardClient {
 
-    String selectAll(String shardUrl, String tableName);
+    private final EidaDmlGenerator dmlGenerator;
+    private EidaClient eidaClient;
 
-    <ID> String selectById(String shardUrl, String tableName, ID id);
 
-    void insert(String shardUrl, String tableName, String serialized);
+    @Override
+    public void useMockClient(EidaClient mockClient) {
+        this.eidaClient = mockClient;
+    }
+
+
+    @Override
+    public String selectAll(String shardUrl, String tableName) {
+        String dml = dmlGenerator.createSelectAllQuery(tableName);
+        return eidaClient.request(shardUrl, dml);
+    }
+
+    @Override
+    public <ID> String selectById(String shardUrl, String tableName, ID id) {
+        String dml = dmlGenerator.createSelectByIdQuery(shardUrl, tableName, id);
+        return eidaClient.request(shardUrl, dml);
+    }
+
+    @Override
+    public void insert(String shardUrl, String tableName, String serialized) {
+        String dml = dmlGenerator.createInsertQuery(shardUrl, tableName, serialized);
+        eidaClient.request(shardUrl, dml);
+    }
 
 }

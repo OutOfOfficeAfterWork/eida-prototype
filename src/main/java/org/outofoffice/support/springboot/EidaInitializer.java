@@ -1,10 +1,10 @@
 package org.outofoffice.support.springboot;
 
 import lombok.RequiredArgsConstructor;
-import org.outofoffice.eidaprototype.lib.core.EidaManagerClient;
+import org.outofoffice.eidaprototype.lib.core.EidaDllClient;
 import org.outofoffice.eidaprototype.lib.core.EidaRepository;
 import org.outofoffice.eidaprototype.lib.core.EidaSerializer;
-import org.outofoffice.eidaprototype.lib.core.EidaShardClient;
+import org.outofoffice.eidaprototype.lib.core.EidaDmlClient;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
@@ -21,8 +21,8 @@ public class EidaInitializer implements ApplicationRunner {
 
     private final ApplicationContext applicationContext;
 
-    private final EidaManagerClient managerClient;
-    private final EidaShardClient shardClient;
+    private final EidaDllClient managerClient;
+    private final EidaDmlClient shardClient;
     private final EidaSerializer eidaserializer;
 
 
