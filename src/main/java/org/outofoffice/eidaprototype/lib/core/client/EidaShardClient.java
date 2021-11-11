@@ -1,22 +1,15 @@
 package org.outofoffice.eidaprototype.lib.core.client;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.outofoffice.eidaprototype.lib.core.query.EidaDmlGenerator;
 import org.outofoffice.eidaprototype.lib.core.socket.EidaSocketClient;
-import org.outofoffice.eidaprototype.lib.core.socket.EidaSocketClientLoggingProxy;
 
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EidaShardClient implements EidaDmlClient, EidaDdlShardClient {
 
     private final EidaDmlGenerator dmlGenerator;
-    private EidaSocketClient eidaClient;
-
-
-    @Override
-    public void useMockClient(EidaSocketClient mockClient) {
-        this.eidaClient = new EidaSocketClientLoggingProxy(mockClient);
-    }
+    private final EidaSocketClient eidaClient;
 
 
     @Override

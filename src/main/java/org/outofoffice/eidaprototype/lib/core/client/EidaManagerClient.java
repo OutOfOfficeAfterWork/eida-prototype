@@ -1,30 +1,24 @@
 package org.outofoffice.eidaprototype.lib.core.client;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.outofoffice.eidaprototype.lib.core.query.EidaDllGenerator;
 import org.outofoffice.eidaprototype.lib.core.socket.EidaSocketClient;
-import org.outofoffice.eidaprototype.lib.core.socket.EidaSocketClientLoggingProxy;
 
 import java.util.Arrays;
 import java.util.List;
 
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EidaManagerClient implements EidaDllClient, EidaDdlManagerClient {
 
     private final EidaDllGenerator dllGenerator;
-    private EidaSocketClient eidaClient;
+    private final EidaSocketClient eidaClient;
 
     @Getter
     @Setter
     private String managerServerUrl;
-
-    @Override
-    public void useMockClient(EidaSocketClient mockClient) {
-        this.eidaClient = new EidaSocketClientLoggingProxy(mockClient);
-    }
 
 
     @Override

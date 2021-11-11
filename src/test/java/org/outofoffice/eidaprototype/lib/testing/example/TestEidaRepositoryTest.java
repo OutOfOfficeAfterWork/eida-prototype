@@ -7,12 +7,11 @@ import org.junit.jupiter.api.function.Executable;
 import org.outofoffice.eidaprototype.lib.core.client.EidaDllClient;
 import org.outofoffice.eidaprototype.lib.core.client.EidaDmlClient;
 import org.outofoffice.eidaprototype.lib.core.client.EidaManagerClient;
-import org.outofoffice.eidaprototype.lib.core.socket.EidaDefaultSocketClient;
-import org.outofoffice.eidaprototype.lib.core.socket.EidaSocketClientLoggingProxy;
-import org.outofoffice.eidaprototype.lib.core.ui.EidaSerializer;
 import org.outofoffice.eidaprototype.lib.core.client.EidaShardClient;
 import org.outofoffice.eidaprototype.lib.core.query.EidaDllGenerator;
 import org.outofoffice.eidaprototype.lib.core.query.EidaDmlGenerator;
+import org.outofoffice.eidaprototype.lib.core.socket.EidaInMemoryClient;
+import org.outofoffice.eidaprototype.lib.core.ui.EidaSerializer;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -25,8 +24,8 @@ class TestEidaRepositoryTest {
 
     TestEidaRepository repository;
 
-    EidaDllClient managerClient;
-    EidaDmlClient shardClient;
+    EidaInMemoryClient inMemoryClient;
+    String managerServerUrl = "http://manager:1234";
 
 
     @BeforeEach
@@ -34,10 +33,11 @@ class TestEidaRepositoryTest {
         EidaDllGenerator dllGenerator = new EidaDllGenerator();
         EidaDmlGenerator dmlGenerator = new EidaDmlGenerator();
 
-        managerClient = new EidaManagerClient(dllGenerator, null, "http://manager:1234");
-        shardClient = new EidaShardClient(dmlGenerator, null);
-
+        inMemoryClient = new EidaInMemoryClient();
+        EidaDllClient managerClient = new EidaManagerClient(dllGenerator, inMemoryClient);
+        EidaDmlClient shardClient = new EidaShardClient(dmlGenerator, inMemoryClient);
         EidaSerializer serializer = new EidaSerializer();
+        managerClient.setManagerServerUrl(managerServerUrl);
 
         repository = new TestEidaRepository();
         repository.init(managerClient, shardClient, serializer);
@@ -51,8 +51,8 @@ class TestEidaRepositoryTest {
 
     @Test
     void insert() {
-        managerClient.useMockClient((address, message) -> "http://shard1:1234");
-        shardClient.useMockClient((address, message) -> "");
+        inMemoryClient.put(managerServerUrl, "dll query", "http://shard1:1234");
+        inMemoryClient.put("http://shard1:1234", "dml query", "");
 
         TestEidaEntity entity = new TestEidaEntity(1L, "name");
 
@@ -63,8 +63,8 @@ class TestEidaRepositoryTest {
 
     @Test
     void find() {
-        managerClient.useMockClient((address, message) -> "http://shard1:1234");
-        shardClient.useMockClient((address, message) -> "id,name\n1,testName");
+        inMemoryClient.put(managerServerUrl, "dll query", "http://shard1:1234");
+        inMemoryClient.put("http://shard1:1234", "dml query", "id,name\n1,testName");
 
         TestEidaEntity expected = new TestEidaEntity(1L, "testName");
 
@@ -76,12 +76,14 @@ class TestEidaRepositoryTest {
 
     @Test
     void listAll() {
-        managerClient.useMockClient((address, message) -> "http://shard01:1234,http://shard02:1234");
-        shardClient.useMockClient((address, message) -> "id,name\n1,testName1\n2,testName2");
+        inMemoryClient.put(managerServerUrl, "dll query", "http://shard01:1234,http://shard02:1234");
+        inMemoryClient.put("http://shard01:1234", "dml query", "id,name\n1,testName1\n2,testName2");
+        inMemoryClient.put("http://shard02:1234", "dml query", "id,name\n3,testName3\n4,testName4");
+
 
         List<TestEidaEntity> expected = List.of(
                 new TestEidaEntity(1L, "testName1"), new TestEidaEntity(2L, "testName2"),
-                new TestEidaEntity(1L, "testName1"), new TestEidaEntity(2L, "testName2"));
+                new TestEidaEntity(3L, "testName3"), new TestEidaEntity(4L, "testName4"));
 
         List<TestEidaEntity> found = repository.listAll();
 
@@ -90,16 +92,12 @@ class TestEidaRepositoryTest {
 
     @Test
     void list() {
-        managerClient.useMockClient((address, message) -> "http://shard01:1234,http://shard02:1234");
-        shardClient.useMockClient((address, message) -> "id,name\n1,testName1\n2,testName2");
+        inMemoryClient.put(managerServerUrl, "dll query", "http://shard01:1234,http://shard02:1234");
+        inMemoryClient.put("http://shard01:1234", "dml query", "id,name\n1,kemi\n2,josh");
+        inMemoryClient.put("http://shard02:1234", "dml query", "id,name\n3,kemi\n4,kemi");
 
-        List<TestEidaEntity> expected = List.of(new TestEidaEntity(1L, "testName1"), new TestEidaEntity(1L, "testName1"));
-
-        List<TestEidaEntity> found1 = repository.list(e -> e.getId() == 1L);
-        assertThat(found1).isEqualTo(expected);
-
-        List<TestEidaEntity> found2 = repository.list(e -> e.getId() == 3L);
-        assertThat(found2).isEmpty();
+        List<TestEidaEntity> found = repository.list(e -> e.getName().equals("kemi"));
+        assertThat(found).hasSize(3);
     }
 
 }
