@@ -9,6 +9,8 @@ public interface EidaDllClient {
 
     void setManagerServerUrl(String managerServerUrl);
 
+    List<String> getAllShardUrls();
+
     List<String> getAllShardUrls(String tableName);
 
     String getDestinationShardUrl(String tableName);
