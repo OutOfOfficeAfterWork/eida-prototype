@@ -94,17 +94,26 @@ public class EidaSerializer {
         else {
             Constructor<? extends EidaEntity> fieldClassConstructor = (Constructor<? extends EidaEntity>) type.getConstructor();
             EidaEntity linkedEntity = fieldClassConstructor.newInstance();
-            Class<?> id = linkedEntity.getClass().getField("id").getType();
-            linkedEntity.setId(value);
+            Class<?> id = linkedEntity.getClass().getDeclaredField("id").getType();
+            if (id.equals(Long.class)) {
+                linkedEntity.setId(Long.parseLong(value));
+            } else if (id.equals(String.class)) {
+                linkedEntity.setId(value);
+            }
+            setter.invoke(entity, linkedEntity);
         }
     }
 
     private <T extends EidaEntity<ID>, ID> Map<Method, Class<?>> columnsToSetterMap(String[] columns, Class<T> entityClass) throws Exception {
         Map<Method, Class<?>> setters = new LinkedHashMap<>();
         for (String column : columns) {
+            if (column.indexOf('(') != -1) {
+                column = column.substring(0, column.indexOf('('));
+            }
+
             Class<?> type = entityClass.getDeclaredField(column).getType();
             String c = String.valueOf(column.charAt(0));
-            String setterName = column.replace(c, "set"+ c.toUpperCase());
+            String setterName = column.replaceFirst(c, "set"+ c.toUpperCase());
             setters.put(entityClass.getMethod(setterName, type), type);
         }
         return setters;
