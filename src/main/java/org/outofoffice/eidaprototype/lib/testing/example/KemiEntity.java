@@ -10,10 +10,12 @@ import static lombok.AccessLevel.PUBLIC;
 @NoArgsConstructor(access = PUBLIC)
 @AllArgsConstructor(access = PUBLIC)
 @Getter @Setter @EqualsAndHashCode @ToString
-public class TestEidaEntity implements EidaEntity<Long> {
+public class KemiEntity implements EidaEntity<Long> {
 
     private Long id;
 
-    private String name;
+    private String major;
+
+    private TestEidaEntity testEidaEntity;
 
 }
