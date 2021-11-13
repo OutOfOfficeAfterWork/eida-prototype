@@ -7,6 +7,8 @@ import org.outofoffice.eidaprototype.lib.util.ClassUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -87,8 +89,16 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
         return serializer.deserialize(response.toString(), entityClass());
     }
 
-    public <R> Optional<T> joinFind(ID id, Function<T, R> on) {
-        return Optional.empty();
+    public <R extends EidaEntity<K>, K> Optional<T> joinFind(ID id, Function<T, R> on, BiConsumer<T, R> setter, EidaRepository<R, K> joinRepository) {
+        Optional<T> found = find(id);
+        if (found.isEmpty()) return Optional.empty();
+
+        T entity = found.get();
+        R nullJoined = on.apply(entity);
+        K joinedId = nullJoined.getId();
+        R joined = joinRepository.find(joinedId).orElse(null);
+        setter.accept(entity, joined);
+        return found;
     }
 
     public List<T> list(Predicate<T> where) {

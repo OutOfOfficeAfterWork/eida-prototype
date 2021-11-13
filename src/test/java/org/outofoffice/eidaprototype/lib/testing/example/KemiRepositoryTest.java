@@ -52,4 +52,32 @@ class KemiRepositoryTest {
         assertThat(found).isEqualTo(expected);
     }
 
+    @Test
+        // TODO refactor...
+    void join() {
+        socketClient.put(managerServerUrl, "dll query", "http://shard1:1234");
+        socketClient.put("http://shard1:1234", "dml query1", "id,major,testEidaEntity(join)\n1,cs,2");
+        socketClient.put("http://shard1:1234", "dml query2", "id,name\n2,josh");
+
+        KemiEntity expected = new KemiEntity(1L, "cs", new TestEidaEntity(2L, "josh"));
+
+        TestEidaRepository joinRepository = getTestEidaRepository();
+        KemiEntity found = kemiRepository.joinFind(1L, KemiEntity::getTestEidaEntity, KemiEntity::setTestEidaEntity, joinRepository)
+                .orElseThrow(NoSuchElementException::new);
+
+        assertThat(found).isEqualTo(expected);
+    }
+
+    private TestEidaRepository getTestEidaRepository() {
+        TestEidaRepository joinRepository = new TestEidaRepository();
+        EidaDllGenerator dllGenerator = new EidaDllGenerator();
+        EidaDmlGenerator dmlGenerator = new EidaDmlGenerator();
+        EidaDllClient managerClient = new EidaManagerClient(dllGenerator, socketClient);
+        EidaDmlClient shardClient = new EidaShardClient(dmlGenerator, socketClient);
+        managerClient.setManagerServerUrl(managerServerUrl);
+        EidaSerializer serializer = new EidaSerializer();
+        joinRepository.init(managerClient, shardClient, serializer);
+        return joinRepository;
+    }
+
 }

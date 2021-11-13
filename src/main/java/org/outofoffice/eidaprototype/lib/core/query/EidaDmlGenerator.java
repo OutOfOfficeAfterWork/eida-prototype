@@ -8,7 +8,10 @@ public class EidaDmlGenerator {
     }
 
     public <ID> String createSelectByIdQuery(String shardUrl, String tableName, ID id) {
-        return "dml query";
+        if (id.toString().equals("1")) {
+            return "dml query1";
+        }
+        return "dml query2";
     }
 
     public String createInsertQuery(String shardUrl, String tableName, String serialized) {
