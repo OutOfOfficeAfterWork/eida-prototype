@@ -34,10 +34,9 @@ class TestEidaRepositoryTest {
         EidaDmlGenerator dmlGenerator = new EidaDmlGenerator();
 
         inMemoryClient = new EidaInMemoryClient();
-        EidaDllClient managerClient = new EidaManagerClient(dllGenerator, inMemoryClient);
+        EidaDllClient managerClient = new EidaManagerClient(managerServerUrl, dllGenerator, inMemoryClient);
         EidaDmlClient shardClient = new EidaShardClient(dmlGenerator, inMemoryClient);
         EidaSerializer serializer = new EidaSerializer();
-        managerClient.setManagerServerUrl(managerServerUrl);
 
         repository = new TestEidaRepository();
         repository.init(managerClient, shardClient, serializer);

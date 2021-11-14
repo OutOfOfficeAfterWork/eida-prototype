@@ -1,5 +1,6 @@
 package org.outofoffice.eidaprototype.lib.core.ui;
 
+import org.outofoffice.eidaprototype.lib.core.bean.EidaContext;
 import org.outofoffice.eidaprototype.lib.core.client.EidaDllClient;
 import org.outofoffice.eidaprototype.lib.core.client.EidaDmlClient;
 import org.outofoffice.eidaprototype.lib.exception.EidaException;
@@ -7,8 +8,6 @@ import org.outofoffice.eidaprototype.lib.util.ClassUtils;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -22,10 +21,11 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
     private EidaSerializer serializer;
 
 
-    public void init(EidaDllClient managerClient, EidaDmlClient shardClient, EidaSerializer serializer) {
+    public EidaRepository<T, ID> init(EidaDllClient managerClient, EidaDmlClient shardClient, EidaSerializer serializer) {
         this.managerClient = managerClient;
         this.shardClient = shardClient;
         this.serializer = serializer;
+        return this;
     }
 
 
@@ -89,16 +89,35 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
         return serializer.deserialize(response.toString(), entityClass());
     }
 
-    public <R extends EidaEntity<K>, K> Optional<T> joinFind(ID id, Function<T, R> on, BiConsumer<T, R> setter, EidaRepository<R, K> joinRepository) {
-        Optional<T> found = find(id);
-        if (found.isEmpty()) return Optional.empty();
 
-        T entity = found.get();
-        R nullJoined = on.apply(entity);
-        K joinedId = nullJoined.getId();
-        R joined = joinRepository.find(joinedId).orElse(null);
-        setter.accept(entity, joined);
-        return found;
+    public Optional<T> joinFind(ID id, String fieldName) {
+        return find(id).map(entity -> join(entity, fieldName));
+    }
+
+    private <J extends EidaEntity<FK>, FK> T join(T entity, String fieldName) {
+        Class<? extends EidaEntity> entityClass = entity.getClass();
+
+        try {
+            J nullJoined = (J) entityClass.getDeclaredMethod(getterName(fieldName)).invoke(entity);
+            FK joinedId = nullJoined.getId();
+
+            Class<J> joinClass = (Class<J>) entityClass.getDeclaredField(fieldName).getType();
+            EidaRepository<J, FK> joinRepository = (EidaRepository<J, FK>) EidaContext.MAP.get(joinClass);
+
+            J joined = joinRepository.find(joinedId).orElse(null);
+            entityClass.getDeclaredMethod(setterName(fieldName), joinClass).invoke(entity, joined);
+            return entity;
+        } catch (Exception e) {
+            throw new EidaException(e);
+        }
+    }
+
+    private String getterName(String fieldName) {
+        return "getTestEidaEntity";
+    }
+
+    private String setterName(String fieldName) {
+        return "setTestEidaEntity";
     }
 
     public List<T> list(Predicate<T> where) {

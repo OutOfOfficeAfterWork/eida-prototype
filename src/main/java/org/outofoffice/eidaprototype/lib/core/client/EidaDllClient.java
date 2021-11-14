@@ -5,10 +5,6 @@ import java.util.List;
 
 public interface EidaDllClient {
 
-    String getManagerServerUrl();
-
-    void setManagerServerUrl(String managerServerUrl);
-
     List<String> getAllShardUrls(String tableName);
 
     String getDestinationShardUrl(String tableName);

@@ -1,15 +1,10 @@
 package org.outofoffice.eidaprototype.lib.testing.example;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.outofoffice.eidaprototype.lib.core.client.EidaDllClient;
-import org.outofoffice.eidaprototype.lib.core.client.EidaDmlClient;
-import org.outofoffice.eidaprototype.lib.core.client.EidaManagerClient;
-import org.outofoffice.eidaprototype.lib.core.client.EidaShardClient;
-import org.outofoffice.eidaprototype.lib.core.query.EidaDllGenerator;
-import org.outofoffice.eidaprototype.lib.core.query.EidaDmlGenerator;
+import org.outofoffice.eidaprototype.lib.core.bean.EidaContext;
 import org.outofoffice.eidaprototype.lib.core.socket.EidaInMemoryClient;
-import org.outofoffice.eidaprototype.lib.core.ui.EidaSerializer;
 
 import java.util.NoSuchElementException;
 
@@ -18,26 +13,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class KemiRepositoryTest {
 
-    KemiRepository kemiRepository = new KemiRepository();
+    KemiRepository kemiRepository;
 
-    EidaInMemoryClient socketClient;
     String managerServerUrl = "http://manager:1234";
+    EidaInMemoryClient socketClient = new EidaInMemoryClient();
 
 
     @BeforeEach
     void init() {
-        EidaDllGenerator dllGenerator = new EidaDllGenerator();
-        EidaDmlGenerator dmlGenerator = new EidaDmlGenerator();
-
-        socketClient = new EidaInMemoryClient();
-        EidaDllClient managerClient = new EidaManagerClient(dllGenerator, socketClient);
-        EidaDmlClient shardClient = new EidaShardClient(dmlGenerator, socketClient);
-        managerClient.setManagerServerUrl(managerServerUrl);
-        EidaSerializer serializer = new EidaSerializer();
-
-        kemiRepository = new KemiRepository();
-        kemiRepository.init(managerClient, shardClient, serializer);
+        EidaContext.init(socketClient);
+        kemiRepository = (KemiRepository) EidaContext.MAP.get(KemiEntity.class);
     }
+
+    @AfterEach
+    void clear() {
+        socketClient.clear();
+    }
+
 
     @Test
     void find() {
@@ -61,23 +53,10 @@ class KemiRepositoryTest {
 
         KemiEntity expected = new KemiEntity(1L, "cs", new TestEidaEntity(2L, "josh"));
 
-        TestEidaRepository joinRepository = getTestEidaRepository();
-        KemiEntity found = kemiRepository.joinFind(1L, KemiEntity::getTestEidaEntity, KemiEntity::setTestEidaEntity, joinRepository)
+        KemiEntity found = kemiRepository.joinFind(1L, "testEidaEntity")
                 .orElseThrow(NoSuchElementException::new);
 
         assertThat(found).isEqualTo(expected);
-    }
-
-    private TestEidaRepository getTestEidaRepository() {
-        TestEidaRepository joinRepository = new TestEidaRepository();
-        EidaDllGenerator dllGenerator = new EidaDllGenerator();
-        EidaDmlGenerator dmlGenerator = new EidaDmlGenerator();
-        EidaDllClient managerClient = new EidaManagerClient(dllGenerator, socketClient);
-        EidaDmlClient shardClient = new EidaShardClient(dmlGenerator, socketClient);
-        managerClient.setManagerServerUrl(managerServerUrl);
-        EidaSerializer serializer = new EidaSerializer();
-        joinRepository.init(managerClient, shardClient, serializer);
-        return joinRepository;
     }
 
 }

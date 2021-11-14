@@ -18,6 +18,11 @@ public class EidaInMemoryClient implements EidaSocketClient {
         mappings.put(compositeKey(address, message), result);
     }
 
+    public void clear() {
+        mappings.clear();
+    }
+
+
     @Override
     public String request(String address, String message) {
         log.debug("request(address: {}, message: {})", address, message);

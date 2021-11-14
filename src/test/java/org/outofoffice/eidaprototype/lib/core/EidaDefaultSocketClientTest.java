@@ -20,7 +20,7 @@ class EidaDefaultSocketClientTest {
 
     EidaSocketClient eidaClient = new EidaSocketClientLoggingProxy(new EidaDefaultSocketClient());
 
-    String host = "localhost";
+    String host = "http://localhost";
     int port = 9999;
     String address = host + ":" + port;
 

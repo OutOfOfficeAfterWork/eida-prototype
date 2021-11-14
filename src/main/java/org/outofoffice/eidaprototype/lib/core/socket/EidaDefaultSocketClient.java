@@ -30,6 +30,7 @@ public class EidaDefaultSocketClient implements EidaSocketClient {
 
 
     private Socket socket(String address) throws IOException {
+        address = address.replaceFirst("http://", "").replaceFirst("https://", "");
         String[] addressTokens = address.split(":");
         String host = addressTokens[0];
         int port = Integer.parseInt(addressTokens[1]);
