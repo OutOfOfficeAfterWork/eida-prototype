@@ -41,8 +41,11 @@ class KemiRepositoryTest {
 
     @Test
     void find() {
-        socketClient.put(managerServerUrl, "dll query", "http://shard1:1234");
-        socketClient.put("http://shard1:1234", "dml query", "id,major,testEidaEntity(join)\n1,cs,2");
+        socketClient.put(managerServerUrl, "get src KemiEntity 1", "http://shard1:1234");
+
+        EidaDmlGenerator eidaDmlGenerator = new EidaDmlGenerator();
+        String dml = eidaDmlGenerator.createSelectByIdQuery("KemiEntity", 1);
+        socketClient.put("http://shard1:1234", dml, "id,major,testEidaEntity(join)\n1,cs,2");
 
         KemiEntity expected = new KemiEntity(1L, "cs", new TestEidaEntity(2L, null));
 

@@ -25,7 +25,7 @@ public class EidaInMemoryClient implements EidaSocketClient {
         String response = mappings.get(compositeKey(address, message));
         if (response == null) {
             prettyPrintOfMappings();
-            throw new EidaException("no result mapped by " + address + " and " + message);
+            throw new EidaException("no result mapped by " + address + " and '" + message + "'");
         }
 
         log.debug("response: {}", response.replace("\n", "\\n"));

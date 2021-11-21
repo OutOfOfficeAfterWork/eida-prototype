@@ -51,8 +51,8 @@ class TestEidaRepositoryTest {
 
     @Test
     void insert() {
-        inMemoryClient.put(managerServerUrl, "dll query", "http://shard1:1234");
-        inMemoryClient.put("http://shard1:1234", "dml query", "");
+        inMemoryClient.put(managerServerUrl, "get dst TestEidaEntity", "http://shard1:1234");
+        inMemoryClient.put("http://shard1:1234", "insert TestEidaEntity id,name 1,name", "");
 
         TestEidaEntity entity = new TestEidaEntity(1L, "name");
 
@@ -63,8 +63,8 @@ class TestEidaRepositoryTest {
 
     @Test
     void find() {
-        inMemoryClient.put(managerServerUrl, "dll query", "http://shard1:1234");
-        inMemoryClient.put("http://shard1:1234", "dml query", "id,name\n1,testName");
+        inMemoryClient.put(managerServerUrl, "get src TestEidaEntity 1", "http://shard1:1234");
+        inMemoryClient.put("http://shard1:1234", "select TestEidaEntity 1", "id,name\n1,testName");
 
         TestEidaEntity expected = new TestEidaEntity(1L, "testName");
 
@@ -76,10 +76,9 @@ class TestEidaRepositoryTest {
 
     @Test
     void listAll() {
-        inMemoryClient.put(managerServerUrl, "dll query", "http://shard01:1234,http://shard02:1234");
-        inMemoryClient.put("http://shard01:1234", "dml query", "id,name\n1,testName1\n2,testName2");
-        inMemoryClient.put("http://shard02:1234", "dml query", "id,name\n3,testName3\n4,testName4");
-
+        inMemoryClient.put(managerServerUrl, "get all TestEidaEntity", "http://shard01:1234,http://shard02:1234");
+        inMemoryClient.put("http://shard01:1234", "select TestEidaEntity", "id,name\n1,testName1\n2,testName2");
+        inMemoryClient.put("http://shard02:1234", "select TestEidaEntity", "id,name\n3,testName3\n4,testName4");
 
         List<TestEidaEntity> expected = List.of(
                 new TestEidaEntity(1L, "testName1"), new TestEidaEntity(2L, "testName2"),
@@ -92,9 +91,9 @@ class TestEidaRepositoryTest {
 
     @Test
     void list() {
-        inMemoryClient.put(managerServerUrl, "dll query", "http://shard01:1234,http://shard02:1234");
-        inMemoryClient.put("http://shard01:1234", "dml query", "id,name\n1,kemi\n2,josh");
-        inMemoryClient.put("http://shard02:1234", "dml query", "id,name\n3,kemi\n4,kemi");
+        inMemoryClient.put(managerServerUrl, "get all TestEidaEntity", "http://shard01:1234,http://shard02:1234");
+        inMemoryClient.put("http://shard01:1234", "select TestEidaEntity", "id,name\n1,kemi\n2,josh");
+        inMemoryClient.put("http://shard02:1234", "select TestEidaEntity", "id,name\n3,kemi\n4,kemi");
 
         List<TestEidaEntity> found = repository.list(e -> e.getName().equals("kemi"));
         assertThat(found).hasSize(3);
