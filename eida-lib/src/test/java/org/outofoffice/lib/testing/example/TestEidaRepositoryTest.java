@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.outofoffice.lib.context.EidaContext;
 import org.outofoffice.lib.core.client.EidaDllClient;
 import org.outofoffice.lib.core.client.EidaDmlClient;
 import org.outofoffice.lib.core.client.EidaManagerClient;
@@ -11,6 +12,8 @@ import org.outofoffice.lib.core.client.EidaShardClient;
 import org.outofoffice.lib.core.query.EidaDllGenerator;
 import org.outofoffice.lib.core.query.EidaDmlGenerator;
 import org.outofoffice.lib.core.socket.EidaInMemoryClient;
+import org.outofoffice.lib.core.ui.EidaEntity;
+import org.outofoffice.lib.core.ui.EidaRepository;
 import org.outofoffice.lib.core.ui.EidaSerializer;
 import org.outofoffice.lib.example.TestEidaEntity;
 import org.outofoffice.lib.example.TestEidaRepository;
@@ -19,6 +22,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.linesOf;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -33,16 +37,10 @@ class TestEidaRepositoryTest {
 
     @BeforeEach
     void setup() {
-        EidaDllGenerator dllGenerator = new EidaDllGenerator();
-        EidaDmlGenerator dmlGenerator = new EidaDmlGenerator();
-
         inMemoryClient = new EidaInMemoryClient();
-        EidaDllClient managerClient = new EidaManagerClient(dllGenerator, inMemoryClient, managerServerUrl);
-        EidaDmlClient shardClient = new EidaShardClient(dmlGenerator, inMemoryClient);
-        EidaSerializer serializer = new EidaSerializer();
 
-        repository = new TestEidaRepository();
-        repository.init(managerClient, shardClient, serializer);
+        EidaContext.init(inMemoryClient);
+        repository = (TestEidaRepository) EidaContext.getRepository(TestEidaEntity.class);
     }
 
     @AfterEach

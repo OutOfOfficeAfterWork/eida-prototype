@@ -2,14 +2,9 @@ package org.outofoffice.lib.testing.example;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.outofoffice.lib.core.client.EidaDllClient;
-import org.outofoffice.lib.core.client.EidaDmlClient;
-import org.outofoffice.lib.core.client.EidaManagerClient;
-import org.outofoffice.lib.core.client.EidaShardClient;
-import org.outofoffice.lib.core.query.EidaDllGenerator;
+import org.outofoffice.lib.context.EidaContext;
 import org.outofoffice.lib.core.query.EidaDmlGenerator;
 import org.outofoffice.lib.core.socket.EidaInMemoryClient;
-import org.outofoffice.lib.core.ui.EidaSerializer;
 import org.outofoffice.lib.example.KemiEntity;
 import org.outofoffice.lib.example.KemiRepository;
 import org.outofoffice.lib.example.TestEidaEntity;
@@ -29,16 +24,10 @@ class KemiRepositoryTest {
 
     @BeforeEach
     void init() {
-        EidaDllGenerator dllGenerator = new EidaDllGenerator();
-        EidaDmlGenerator dmlGenerator = new EidaDmlGenerator();
-
         socketClient = new EidaInMemoryClient();
-        EidaDllClient managerClient = new EidaManagerClient(dllGenerator, socketClient, managerServerUrl);
-        EidaDmlClient shardClient = new EidaShardClient(dmlGenerator, socketClient);
-        EidaSerializer serializer = new EidaSerializer();
 
-        kemiRepository = new KemiRepository();
-        kemiRepository.init(managerClient, shardClient, serializer);
+        EidaContext.init(socketClient);
+        kemiRepository = (KemiRepository) EidaContext.getRepository(KemiEntity.class);
     }
 
     @Test

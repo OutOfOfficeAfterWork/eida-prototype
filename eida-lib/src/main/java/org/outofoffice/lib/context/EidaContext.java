@@ -1,5 +1,6 @@
 package org.outofoffice.lib.context;
 
+import lombok.extern.slf4j.Slf4j;
 import org.outofoffice.lib.core.client.EidaDllClient;
 import org.outofoffice.lib.core.client.EidaDmlClient;
 import org.outofoffice.lib.core.client.EidaManagerClient;
@@ -17,15 +18,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class EidaContext {
 
     private static final EidaPropertyLoader propertyLoader = new EidaPropertyLoader();
     private static final EidaRepositoryScanner repositoryScanner = new EidaRepositoryScanner();
 
-    private static Map<Class<? extends EidaEntity<?>>, EidaRepository<? extends EidaEntity<?>, ?>> MAP = new HashMap<>();
+    private static final Map<Class<? extends EidaEntity<?>>, EidaRepository<? extends EidaEntity<?>, ?>> MAP = new HashMap<>();
+
+    public static EidaRepository<? extends EidaEntity<?>, ?>getRepository(Class<? extends EidaEntity<?>> entityClass){
+        return MAP.get(entityClass);
+    }
 
 
     public static void init(EidaSocketClient socket) {
+        log.info("Eida Context init: socket - {}", socket);
         try {
             doInit(socket);
         } catch (Exception e) {
@@ -45,7 +52,7 @@ public class EidaContext {
         for (String className : repositoryClassNames) {
             Class<EidaRepository<T, ID>> repositoryClass = (Class<EidaRepository<T, ID>>) Class.forName(className);
             Class<? extends EidaEntity<ID>> entityClass = ClassUtils.toEntityClass(repositoryClass);
-            EidaContext.MAP.put(entityClass, repositoryInstance(repositoryClass, managerClient, shardClient, serializer));
+            MAP.put(entityClass, repositoryInstance(repositoryClass, managerClient, shardClient, serializer));
         }
     }
 
