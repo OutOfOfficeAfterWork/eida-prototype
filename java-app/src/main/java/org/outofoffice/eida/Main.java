@@ -6,13 +6,5 @@ import org.outofoffice.lib.core.socket.EidaInMemoryClient;
 public class Main {
     public static void main(String[] args) {
         EidaContext.init(new EidaInMemoryClient());
-
-//        while(true){
-//            ...
-//            Member member = new Member();
-//
-//        }
-
-
     }
 }

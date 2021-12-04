@@ -1,5 +1,6 @@
 package org.outofoffice.lib.context;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.outofoffice.lib.core.client.EidaDllClient;
 import org.outofoffice.lib.core.client.EidaDmlClient;
@@ -18,7 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static lombok.AccessLevel.PRIVATE;
+
 @Slf4j
+@NoArgsConstructor(access = PRIVATE)
 public class EidaContext {
 
     private static final EidaPropertyLoader propertyLoader = new EidaPropertyLoader();
@@ -26,7 +30,7 @@ public class EidaContext {
 
     private static final Map<Class<? extends EidaEntity<?>>, EidaRepository<? extends EidaEntity<?>, ?>> MAP = new HashMap<>();
 
-    public static EidaRepository<? extends EidaEntity<?>, ?>getRepository(Class<? extends EidaEntity<?>> entityClass){
+    public static EidaRepository<? extends EidaEntity<?>, ?> getRepository(Class<? extends EidaEntity<?>> entityClass) {
         return MAP.get(entityClass);
     }
 
