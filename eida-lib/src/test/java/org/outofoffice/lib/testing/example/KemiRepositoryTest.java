@@ -26,7 +26,7 @@ class KemiRepositoryTest {
     void init() {
         socketClient = new EidaInMemoryClient();
 
-        EidaContext.init(socketClient);
+        EidaContext.init(KemiRepository.class, socketClient);
         kemiRepository = (KemiRepository) EidaContext.getRepository(KemiEntity.class);
     }
 

@@ -25,7 +25,7 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 public class EidaContext {
 
-    private static final EidaPropertyLoader propertyLoader = new EidaPropertyLoader();
+    private static EidaPropertyLoader propertyLoader;
     private static final EidaRepositoryScanner repositoryScanner = new EidaRepositoryScanner();
 
     private static final Map<Class<? extends EidaEntity<?>>, EidaRepository<? extends EidaEntity<?>, ?>> MAP = new HashMap<>();
@@ -35,8 +35,9 @@ public class EidaContext {
     }
 
 
-    public static void init(EidaSocketClient socket) {
+    public static void init(Class<?> mainClass, EidaSocketClient socket) {
         log.info("Eida Context init: socket - {}", socket);
+        propertyLoader = new EidaPropertyLoader(mainClass);
         try {
             doInit(socket);
         } catch (Exception e) {

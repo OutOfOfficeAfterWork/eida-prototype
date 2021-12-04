@@ -28,7 +28,7 @@ class TestEidaRepositoryTest {
     void setup() {
         inMemoryClient = new EidaInMemoryClient();
 
-        EidaContext.init(inMemoryClient);
+        EidaContext.init(TestEidaRepository.class, inMemoryClient);
         repository = (TestEidaRepository) EidaContext.getRepository(TestEidaEntity.class);
     }
 
