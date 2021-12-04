@@ -33,9 +33,8 @@ class KemiRepositoryTest {
         EidaDmlGenerator dmlGenerator = new EidaDmlGenerator();
 
         socketClient = new EidaInMemoryClient();
-        EidaDllClient managerClient = new EidaManagerClient(dllGenerator, socketClient);
+        EidaDllClient managerClient = new EidaManagerClient(dllGenerator, socketClient, managerServerUrl);
         EidaDmlClient shardClient = new EidaShardClient(dmlGenerator, socketClient);
-        managerClient.setManagerServerUrl(managerServerUrl);
         EidaSerializer serializer = new EidaSerializer();
 
         kemiRepository = new KemiRepository();

@@ -1,8 +1,6 @@
 package org.outofoffice.lib.core.client;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.outofoffice.lib.core.query.EidaDllGenerator;
 import org.outofoffice.lib.core.socket.EidaSocketClient;
 
@@ -16,9 +14,7 @@ public class EidaManagerClient implements EidaDllClient, EidaDdlManagerClient {
     private final EidaDllGenerator dllGenerator;
     private final EidaSocketClient eidaClient;
 
-    @Getter
-    @Setter
-    private String managerServerUrl;
+    private final String managerServerUrl;
 
 
     @Override
