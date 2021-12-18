@@ -1,4 +1,4 @@
-package entity;
+package org.outofoffice.eida.entity;
 
 import org.outofoffice.lib.core.ui.EidaEntity;
 
