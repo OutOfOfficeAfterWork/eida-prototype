@@ -1,11 +1,11 @@
 package com.example.springapp;
 
 import com.example.springapp.repository.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
-//    @Autowired
-//    private final MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 }

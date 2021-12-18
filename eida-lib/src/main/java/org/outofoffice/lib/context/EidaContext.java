@@ -15,6 +15,7 @@ import org.outofoffice.lib.core.ui.EidaSerializer;
 import org.outofoffice.lib.exception.EidaException;
 import org.outofoffice.lib.util.ClassUtils;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,10 @@ public class EidaContext {
 
     public static EidaRepository<? extends EidaEntity<?>, ?> getRepository(Class<? extends EidaEntity<?>> entityClass) {
         return MAP.get(entityClass);
+    }
+
+    public static Collection<EidaRepository<? extends EidaEntity<?>, ?>> getRepositories(){
+        return MAP.values();
     }
 
 
