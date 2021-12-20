@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 import static java.io.File.separator;
 
@@ -43,7 +42,7 @@ public class EidaPropertyLoader {
         }
 
         String dir = String.join(separator, result);
-        String path = String.format("%s%s%s%s%s", dir, separator, "resources", separator, fileName);
+        String path = String.join(separator, dir, "resources", "main", fileName);
         File file = new File(path);
         return new FileInputStream(file);
     }
