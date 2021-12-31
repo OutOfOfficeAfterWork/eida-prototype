@@ -8,7 +8,6 @@ import org.outofoffice.lib.util.ClassUtils;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
@@ -122,8 +121,10 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
         return listAll().stream().filter(where).collect(toList());
     }
 
-    public <R> List<T> joinList(Predicate<T> where, Function<T, R> on) {
-        return List.of();
+    public List<T> joinList(Predicate<T> where, String fieldName) {
+        return list(where).stream()
+                .map(entity -> join(entity, fieldName))
+                .collect(toList());
     }
 
 }

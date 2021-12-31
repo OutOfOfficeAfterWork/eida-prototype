@@ -9,6 +9,7 @@ import org.outofoffice.lib.example.KemiEntity;
 import org.outofoffice.lib.example.KemiRepository;
 import org.outofoffice.lib.example.TestEidaEntity;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,6 +61,23 @@ class KemiRepositoryTest {
                 .orElseThrow(NoSuchElementException::new);
 
         assertThat(found).isEqualTo(expected);
+    }
+
+    @Test
+    void joinList() {
+        socketClient.put(managerServerUrl, "get all KemiEntity", "http://shard01:1234,http://shard02:1234");
+        socketClient.put("http://shard01:1234", "select KemiEntity", "id,major,testEidaEntity(join)\n1,cs,2\n2,mathematics,3");
+        socketClient.put("http://shard02:1234", "select KemiEntity", "id,major,testEidaEntity(join)\n3,physics,4\n4,cs,5");
+        socketClient.put(managerServerUrl, "get src TestEidaEntity 2", "http://shard01:1234");
+        socketClient.put(managerServerUrl, "get src TestEidaEntity 5", "http://shard02:1234");
+        socketClient.put("http://shard01:1234", "select TestEidaEntity 2", "id,name\n2,kemi");
+        socketClient.put("http://shard02:1234", "select TestEidaEntity 5", "id,name\n5,josh");
+
+        List<KemiEntity> found = kemiRepository.joinList(e -> e.getMajor().equals("cs"), "testEidaEntity");
+        assertThat(found).hasSize(2);
+        assertThat(found).isEqualTo(List.of(
+                new KemiEntity(1L, "cs", new TestEidaEntity(2L, "kemi")),
+                new KemiEntity(4L, "cs", new TestEidaEntity(5L, "josh"))));
     }
 
 }
