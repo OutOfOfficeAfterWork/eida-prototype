@@ -1,5 +1,6 @@
 package org.outofoffice.lib.core.ui;
 
+import org.outofoffice.lib.context.EidaContext;
 import org.outofoffice.lib.core.client.EidaDllClient;
 import org.outofoffice.lib.core.client.EidaDmlClient;
 import org.outofoffice.lib.exception.EidaException;
@@ -87,8 +88,34 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
         return serializer.deserialize(response.toString(), entityClass());
     }
 
-    public <R> Optional<T> joinFind(ID id, Function<T, R> on) {
-        return Optional.empty();
+    public Optional<T> joinFind(ID id, String fieldName) {
+        return find(id).map(entity -> join(entity, fieldName));
+    }
+
+    private <J extends EidaEntity<FK>, FK> T join(T entity, String fieldName) {
+        Class<? extends EidaEntity> entityClass = entity.getClass();
+
+        try {
+            J nullJoined = (J) entityClass.getDeclaredMethod(getterName(fieldName)).invoke(entity);
+            FK joinedId = nullJoined.getId();
+
+            Class<J> joinClass = (Class<J>) entityClass.getDeclaredField(fieldName).getType();
+            EidaRepository<J, FK> joinRepository = (EidaRepository<J, FK>) EidaContext.getRepository(joinClass);
+
+            J joined = joinRepository.find(joinedId).orElse(null);
+            entityClass.getDeclaredMethod(setterName(fieldName), joinClass).invoke(entity, joined);
+            return entity;
+        } catch (Exception e) {
+            throw new EidaException(e);
+        }
+    }
+
+    private String getterName(String fieldName) {
+        return "getTestEidaEntity";
+    }
+
+    private String setterName(String fieldName) {
+        return "setTestEidaEntity";
     }
 
     public List<T> list(Predicate<T> where) {
