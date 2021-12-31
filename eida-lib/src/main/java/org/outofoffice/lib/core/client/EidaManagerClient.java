@@ -41,4 +41,10 @@ public class EidaManagerClient implements EidaDllClient, EidaDdlManagerClient {
         return eidaClient.request(managerServerUrl, dll);
     }
 
+    @Override
+    public <ID> void reportDesignatedShardUrl(String shardUrl, String tableName, ID id) {
+        String dll = dllGenerator.createPostDesignatedShardUrl(shardUrl, tableName, id);
+        eidaClient.request(managerServerUrl, dll);
+    }
+
 }

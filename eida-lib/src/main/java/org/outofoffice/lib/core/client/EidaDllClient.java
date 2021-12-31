@@ -13,4 +13,5 @@ public interface EidaDllClient {
 
     <ID> String getSourceShardUrl(String tableName, ID id);
 
+    <ID> void reportDesignatedShardUrl(String shardUrl, String tableName, ID id);
 }

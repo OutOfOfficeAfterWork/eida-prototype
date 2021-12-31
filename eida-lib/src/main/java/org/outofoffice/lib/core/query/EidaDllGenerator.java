@@ -19,4 +19,8 @@ public class EidaDllGenerator {
         return "get src " + tableName + " " + id.toString();
     }
 
+    public <ID> String createPostDesignatedShardUrl(String shardUrl, String tableName, ID id) {
+        return "post " + shardUrl + " " + tableName + " " + id.toString();
+    }
+
 }

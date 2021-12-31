@@ -42,6 +42,7 @@ class TestEidaRepositoryTest {
     void insert() {
         inMemoryClient.put(managerServerUrl, "get dst TestEidaEntity", "http://shard1:1234");
         inMemoryClient.put("http://shard1:1234", "insert TestEidaEntity id,name 1,name", "");
+        inMemoryClient.put(managerServerUrl, "post http://shard1:1234 TestEidaEntity 1", "");
 
         TestEidaEntity entity = new TestEidaEntity(1L, "name");
 
