@@ -47,6 +47,9 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
     }
 
     public void update(T entity) {
+        String serialized = serializer.serialize(entity);
+        String sourceShardUrl = managerClient.getSourceShardUrl(tableName(), entity.getId());
+        shardClient.update(sourceShardUrl, tableName(), serialized);
     }
 
     public void delete(ID id) {

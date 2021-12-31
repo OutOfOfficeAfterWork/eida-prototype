@@ -30,4 +30,10 @@ public class EidaShardClient implements EidaDmlClient, EidaDdlShardClient {
         eidaClient.request(shardUrl, dml);
     }
 
+    @Override
+    public void update(String shardUrl, String tableName, String serialized) {
+        String dml = dmlGenerator.createUpdateQuery(tableName, serialized);
+        eidaClient.request(shardUrl, dml);
+    }
+
 }

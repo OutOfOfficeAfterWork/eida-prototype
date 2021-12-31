@@ -51,6 +51,18 @@ class TestEidaRepositoryTest {
     }
 
     @Test
+    void update() {
+        inMemoryClient.put(managerServerUrl, "get src TestEidaEntity 1", "http://shard1:1234");
+        inMemoryClient.put("http://shard1:1234", "update TestEidaEntity id,name 1,name", "");
+
+        TestEidaEntity entity = new TestEidaEntity(1L, "name");
+
+        Executable inserting = () -> repository.update(entity);
+
+        assertDoesNotThrow(inserting);
+    }
+
+    @Test
     void find() {
         inMemoryClient.put(managerServerUrl, "get src TestEidaEntity 1", "http://shard1:1234");
         inMemoryClient.put("http://shard1:1234", "select TestEidaEntity 1", "id,name\n1,testName");

@@ -9,4 +9,6 @@ public interface EidaDmlClient {
 
     void insert(String shardUrl, String tableName, String serialized);
 
+    void update(String shardUrl, String tableName, String serialized);
+
 }

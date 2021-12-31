@@ -15,4 +15,8 @@ public class EidaDmlGenerator {
         return "insert " + tableName + " " + serialized;
     }
 
+    public String createUpdateQuery(String tableName, String serialized) {
+        return "update " + tableName + " " + serialized;
+    }
+
 }
