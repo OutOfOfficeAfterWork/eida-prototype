@@ -60,6 +60,7 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
     }
 
     public void deleteAll() {
+        listAll().forEach(entity -> delete(entity.getId()));
     }
 
     public Optional<T> find(ID id) {
