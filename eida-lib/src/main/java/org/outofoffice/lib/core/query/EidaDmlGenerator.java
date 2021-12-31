@@ -19,4 +19,7 @@ public class EidaDmlGenerator {
         return "update " + tableName + " " + serialized;
     }
 
+    public <ID> String createDeleteQuery(String tableName, ID id) {
+        return "delete " + tableName + " " + id;
+    }
 }

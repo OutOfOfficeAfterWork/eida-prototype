@@ -36,4 +36,10 @@ public class EidaShardClient implements EidaDmlClient, EidaDdlShardClient {
         eidaClient.request(shardUrl, dml);
     }
 
+    @Override
+    public <ID> void delete(String shardUrl, String tableName, ID id) {
+        String dml = dmlGenerator.createDeleteQuery(tableName, id);
+        eidaClient.request(shardUrl, dml);
+    }
+
 }

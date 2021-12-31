@@ -23,4 +23,8 @@ public class EidaDllGenerator {
         return "post " + shardUrl + " " + tableName + " " + id.toString();
     }
 
+    public <ID> String createReleasedShardUrl(String shardUrl, String tableName, ID id) {
+        return "delete " + shardUrl + " " + tableName + " " + id.toString();
+    }
+
 }

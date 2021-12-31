@@ -64,9 +64,19 @@ class TestEidaRepositoryTest {
     }
 
     @Test
+    void delete() {
+        inMemoryClient.put(managerServerUrl, "get src TestEidaEntity 1", "http://shard1:1234");
+        inMemoryClient.put("http://shard1:1234", "delete TestEidaEntity 1", "");
+        inMemoryClient.put(managerServerUrl, "delete http://shard1:1234 TestEidaEntity 1", "");
+
+        Executable deleted = () -> repository.delete(1L);
+        assertDoesNotThrow(deleted);
+    }
+
+    @Test
     void find() {
         inMemoryClient.put(managerServerUrl, "get src TestEidaEntity 1", "http://shard1:1234");
-        inMemoryClient.put("http://shard1:1234", "select TestEidaEntity 1", "id,name\n1,testName");
+        inMemoryClient.put("htt3p://shard1:1234", "select TestEidaEntity 1", "id,name\n1,testName");
 
         TestEidaEntity expected = new TestEidaEntity(1L, "testName");
 

@@ -54,6 +54,9 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
     }
 
     public void delete(ID id) {
+        String sourceShardUrl = managerClient.getSourceShardUrl(tableName(), id.toString());
+        shardClient.delete(sourceShardUrl, tableName(), id);
+        managerClient.reportReleasedShardUrl(sourceShardUrl, tableName(), id);
     }
 
     public void deleteAll() {

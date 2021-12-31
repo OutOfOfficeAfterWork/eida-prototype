@@ -11,4 +11,5 @@ public interface EidaDmlClient {
 
     void update(String shardUrl, String tableName, String serialized);
 
+    <ID> void delete(String sourceShardUrl, String tableName, ID id);
 }
