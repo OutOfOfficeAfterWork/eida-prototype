@@ -20,6 +20,7 @@ class KemiRepositoryTest {
 
     EidaInMemoryClient socketClient;
     String managerServerUrl = "http://manager:1234";
+    String shardUrl = "http://shard1:1234";
 
 
     @BeforeEach
@@ -42,6 +43,21 @@ class KemiRepositoryTest {
 
         KemiEntity found = kemiRepository.find(1L)
                 .orElseThrow(NoSuchElementException::new);
+
+        assertThat(found).isEqualTo(expected);
+    }
+
+    @Test
+    void join() {
+        socketClient.put(managerServerUrl, "get src KemiEntity 1", "http://shard1:1234");
+        socketClient.put("http://shard1:1234", "select KemiEntity 1", "id,major,testEidaEntity(join)\n1,cs,2");
+        socketClient.put(managerServerUrl, "get src TestEidaEntity 2", "http://shard2:1234");
+        socketClient.put("http://shard2:1234", "select TestEidaEntity 2", "id,name\n2,josh");
+
+        KemiEntity expected = new KemiEntity(1L, "cs", new TestEidaEntity(2L, "josh"));
+
+        KemiEntity found = kemiRepository.joinFind(1L, "testEidaEntity")
+            .orElseThrow(NoSuchElementException::new);
 
         assertThat(found).isEqualTo(expected);
     }
