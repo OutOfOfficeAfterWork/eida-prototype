@@ -5,12 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import static java.io.File.separator;
 
@@ -23,27 +19,22 @@ public class EidaPropertyLoader {
     private final Class<?> mainClass;
 
     public String getManagerServerUrl() throws IOException {
-        FileInputStream fileInputStream = getFileInputStream();
         Properties properties = new Properties();
-        properties.load(fileInputStream);
+        properties.load(new FileInputStream(getPropertyFileFromMainClass()));
 
         String managerServerUrl = properties.getProperty("managerServerUrl");
         log.info("Eida Property load: managerServerUrl - {}", managerServerUrl);
         return managerServerUrl;
     }
 
-    private FileInputStream getFileInputStream() throws FileNotFoundException {
-        String currentPath = mainClass.getResource(".").getPath();
-        List<String> full = Arrays.asList(currentPath.split(separator));
-        List<String> result = new ArrayList<>();
-        for (String token : full) {
-            if (token.equals("classes")) break;
-            result.add(token);
+    private File getPropertyFileFromMainClass() {
+        String[] mainClassPath = mainClass.getResource(".").getPath().split(separator);
+        StringJoiner buildRootPath = new StringJoiner(separator);
+        for (String hierarchy : mainClassPath) {
+            if (hierarchy.equals("classes")) break;
+            buildRootPath.add(hierarchy);
         }
-
-        String dir = String.join(separator, result);
-        String path = String.join(separator, dir, "resources", "main", fileName);
-        File file = new File(path);
-        return new FileInputStream(file);
+        String path = String.join(separator, buildRootPath.toString(), "resources", "main", fileName);
+        return new File(path);
     }
 }

@@ -11,6 +11,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
+import static org.outofoffice.lib.util.ClassUtils.getterName;
+import static org.outofoffice.lib.util.ClassUtils.setterName;
 
 
 public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
@@ -44,7 +46,7 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
         String serialized = serializer.serialize(entity);
         String destinationShardUrl = managerClient.getDestinationShardUrl(tableName());
         shardClient.insert(destinationShardUrl, tableName(), serialized);
-        managerClient.reportDesignatedShardUrl(destinationShardUrl, tableName(), entity.getId());
+        managerClient.postShardUrl(destinationShardUrl, tableName(), entity.getId());
     }
 
     public void update(T entity) {
@@ -56,7 +58,7 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
     public void delete(ID id) {
         String sourceShardUrl = managerClient.getSourceShardUrl(tableName(), id.toString());
         shardClient.delete(sourceShardUrl, tableName(), id);
-        managerClient.reportReleasedShardUrl(sourceShardUrl, tableName(), id);
+        managerClient.deleteShardUrl(sourceShardUrl, tableName(), id);
     }
 
     public void deleteAll() {
@@ -73,26 +75,25 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
 
     public List<T> listAll() {
         List<String> allShardUrls = managerClient.getAllShardUrls(tableName());
+
         String header = null;
-
-        StringBuilder response = new StringBuilder();
-
+        StringBuilder packedTableBuilder = new StringBuilder();
         for (String shardUrl : allShardUrls) {
             String tableString = shardClient.selectAll(shardUrl, tableName());
-            int index = tableString.indexOf("\n");
+            String[] headerAndBody = tableString.split("\n", 2);
 
-            String firstLine = tableString.substring(0, index);
+            String firstLine = headerAndBody[0];
             if (header == null) {
                 header = firstLine;
-                response.append(header);
-            } else {
-                if (!header.equals(firstLine)) throw new EidaException("샤드간 헤더 불일치");
+                packedTableBuilder.append(header).append("\n");
             }
-            String bodyString = tableString.substring(index);
-            response.append(bodyString);
-        }
 
-        return serializer.deserialize(response.toString(), entityClass());
+            String bodyString = headerAndBody[1];
+            packedTableBuilder.append(bodyString).append("\n");
+        }
+        String packedTableString = packedTableBuilder.toString();
+
+        return serializer.deserialize(packedTableString, entityClass());
     }
 
     public Optional<T> joinFind(ID id, String fieldName) {
@@ -103,26 +104,18 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
         Class<? extends EidaEntity> entityClass = entity.getClass();
 
         try {
-            J nullJoined = (J) entityClass.getDeclaredMethod(getterName(fieldName)).invoke(entity);
-            FK joinedId = nullJoined.getId();
+            J emptyTarget = (J) entityClass.getDeclaredMethod(getterName(fieldName)).invoke(entity);
+            FK targetId = emptyTarget.getId();
 
-            Class<J> joinClass = (Class<J>) entityClass.getDeclaredField(fieldName).getType();
-            EidaRepository<J, FK> joinRepository = (EidaRepository<J, FK>) EidaContext.getRepository(joinClass);
+            Class<J> joinTargetClass = (Class<J>) entityClass.getDeclaredField(fieldName).getType();
+            EidaRepository<J, FK> joinTargetRepository = (EidaRepository<J, FK>) EidaContext.getRepository(joinTargetClass);
 
-            J joined = joinRepository.find(joinedId).orElse(null);
-            entityClass.getDeclaredMethod(setterName(fieldName), joinClass).invoke(entity, joined);
+            J foundTarget = joinTargetRepository.find(targetId).orElse(null);
+            entityClass.getDeclaredMethod(setterName(fieldName), joinTargetClass).invoke(entity, foundTarget);
             return entity;
         } catch (Exception e) {
             throw new EidaException(e);
         }
-    }
-
-    private String getterName(String fieldName) {
-        return "getTestEidaEntity";
-    }
-
-    private String setterName(String fieldName) {
-        return "setTestEidaEntity";
     }
 
     public List<T> list(Predicate<T> where) {

@@ -17,4 +17,14 @@ public class ClassUtils {
         return (Class<T>) generic.getActualTypeArguments()[0];
     }
 
+    public static String getterName(String fieldName) {
+        String c = String.valueOf(fieldName.charAt(0));
+        return fieldName.replaceFirst(c, "get"+ c.toUpperCase());
+    }
+
+    public static String setterName(String fieldName) {
+        String c = String.valueOf(fieldName.charAt(0));
+        return fieldName.replaceFirst(c, "set"+ c.toUpperCase());
+    }
+
 }

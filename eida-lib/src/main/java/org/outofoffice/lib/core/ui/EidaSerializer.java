@@ -90,7 +90,6 @@ public class EidaSerializer {
         } else if (type.equals(String.class)) {
             setter.invoke(entity, String.valueOf(value));
         }
-        // TODO marking join column + Embeddable
         else {
             Constructor<? extends EidaEntity> fieldClassConstructor = (Constructor<? extends EidaEntity>) type.getConstructor();
             EidaEntity linkedEntity = fieldClassConstructor.newInstance();

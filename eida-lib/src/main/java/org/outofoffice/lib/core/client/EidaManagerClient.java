@@ -18,38 +18,33 @@ public class EidaManagerClient implements EidaDllClient, EidaDdlManagerClient {
 
 
     @Override
-    public List<String> getAllShardUrls() {
-        return getAllShardUrls("");
-    }
-
-    @Override
     public List<String> getAllShardUrls(String tableName) {
-        String dll = dllGenerator.createGetAllShardUrls(tableName);
+        String dll = dllGenerator.createGetAllShardUrlsQuery(tableName);
         String response = eidaClient.request(managerServerUrl, dll);
         return Arrays.asList(response.split(","));
     }
 
     @Override
     public String getDestinationShardUrl(String tableName) {
-        String dll = dllGenerator.createGetDestinationShardUrl(tableName);
+        String dll = dllGenerator.createGetDestinationShardUrlQuery(tableName);
         return eidaClient.request(managerServerUrl, dll);
     }
 
     @Override
     public <ID> String getSourceShardUrl(String tableName, ID id) {
-        String dll = dllGenerator.createGetSourceShardUrl(tableName, id);
+        String dll = dllGenerator.createGetSourceShardUrlQuery(tableName, id);
         return eidaClient.request(managerServerUrl, dll);
     }
 
     @Override
-    public <ID> void reportDesignatedShardUrl(String shardUrl, String tableName, ID id) {
-        String dll = dllGenerator.createPostDesignatedShardUrl(shardUrl, tableName, id);
+    public <ID> void postShardUrl(String shardUrl, String tableName, ID id) {
+        String dll = dllGenerator.createPostShardUrlQuery(shardUrl, tableName, id);
         eidaClient.request(managerServerUrl, dll);
     }
 
     @Override
-    public <ID> void reportReleasedShardUrl(String shardUrl, String tableName, ID id) {
-        String dll = dllGenerator.createReleasedShardUrl(shardUrl, tableName, id);
+    public <ID> void deleteShardUrl(String shardUrl, String tableName, ID id) {
+        String dll = dllGenerator.createDeleteShardUrlQuery(shardUrl, tableName, id);
         eidaClient.request(managerServerUrl, dll);
     }
 

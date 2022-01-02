@@ -17,35 +17,35 @@ public class EidaDefaultSocketClient implements EidaSocketClient {
     @Override
     public String request(String address, String message) {
         try (
-                Socket socket = socket(address);
-                PrintWriter writer = writer(socket);
-                BufferedReader reader = reader(socket)
+            Socket socket = createSocket(address);
+            PrintWriter writer = getWriter(socket);
+            BufferedReader reader = getReader(socket)
         ) {
             writer.println(message);
-            return response(reader);
+            return readResponse(reader);
         } catch (Exception e) {
             throw new EidaException(e);
         }
     }
 
 
-    private Socket socket(String address) throws IOException {
+    private Socket createSocket(String address) throws IOException {
         String[] addressTokens = address.split(":");
         String host = addressTokens[0];
         int port = Integer.parseInt(addressTokens[1]);
         return new Socket(host, port);
     }
 
-    private PrintWriter writer(Socket socket) throws IOException {
+    private PrintWriter getWriter(Socket socket) throws IOException {
         return new PrintWriter(socket.getOutputStream(), true, UTF_8);
     }
 
-    private BufferedReader reader(Socket socket) throws IOException {
+    private BufferedReader getReader(Socket socket) throws IOException {
         return new BufferedReader(new InputStreamReader(socket.getInputStream(), UTF_8));
     }
 
 
-    private String response(BufferedReader reader) throws IOException {
+    private String readResponse(BufferedReader reader) throws IOException {
         StringJoiner responseJoiner = new StringJoiner("\n");
         while (true) {
             String line = reader.readLine();

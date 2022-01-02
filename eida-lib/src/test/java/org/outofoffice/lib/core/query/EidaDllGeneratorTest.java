@@ -11,26 +11,20 @@ class EidaDllGeneratorTest {
 
 
     @Test
-    void createGetAllShardUrls() {
-        String dllQuery = dllGenerator.createGetAllShardUrls("");
-        assertThat(dllQuery).isEqualTo("get all");
-    }
-
-    @Test
     void createGetAllShardUrlsWithTableName() {
-        String dllQuery = dllGenerator.createGetAllShardUrls("member");
+        String dllQuery = dllGenerator.createGetAllShardUrlsQuery("member");
         assertThat(dllQuery).isEqualTo("get all member");
     }
 
     @Test
     void createGetDestinationShardUrl() {
-        String dllQuery = dllGenerator.createGetDestinationShardUrl("member");
+        String dllQuery = dllGenerator.createGetDestinationShardUrlQuery("member");
         assertThat(dllQuery).isEqualTo("get dst member");
     }
 
     @Test
     void createGetSourceShardUrl() {
-        String dllQuery = dllGenerator.createGetSourceShardUrl("member", 1L);
+        String dllQuery = dllGenerator.createGetSourceShardUrlQuery("member", 1L);
         assertThat(dllQuery).isEqualTo("get src member 1");
     }
 
