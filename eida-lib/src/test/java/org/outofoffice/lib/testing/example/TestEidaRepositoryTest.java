@@ -32,12 +32,6 @@ class TestEidaRepositoryTest {
         repository = (TestEidaRepository) EidaContext.getRepository(TestEidaEntity.class);
     }
 
-    @AfterEach
-    void clear() {
-        repository.deleteAll();
-    }
-
-
     @Test
     void insert() {
         inMemoryClient.put(managerServerUrl, "get dst TestEidaEntity", "http://shard1:1234");
