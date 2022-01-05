@@ -57,53 +57,54 @@ public class EidaSerializer {
 
         String header = lines[0];
         String[] columns = header.split(",");
-        Map<Method, Class<?>> setterTypeMap = columnsToSetterMap(columns, entityClass);
-        List<Method> setters = new ArrayList<>(setterTypeMap.keySet());
-        List<Class<?>> types = new ArrayList<>(setterTypeMap.values());
+
+        List<Method> setters = new ArrayList<>();
+        List<Class<?>> types = new ArrayList<>();
+        for (String column : columns) {
+            Class<?> fieldType = entityClass.getDeclaredField(column).getType();
+            Method setter = entityClass.getMethod(setterName(column), fieldType);
+
+            setters.add(setter);
+            types.add(fieldType);
+        }
 
         Constructor<T> constructor = entityClass.getDeclaredConstructor();
         constructor.setAccessible(true);
 
         List<T> entityList = new ArrayList<>();
         for (int i = 1; i < lines.length; i++) {
-            String body = lines[i];
-            String[] values = body.split(",");
+            String line = lines[i];
+            String[] values = line.split(",");
 
-            T entity = constructor.newInstance();
-            for (int j = 0; j < values.length; j++) {
-                setValue(entity, values[j], setters.get(j), types.get(j));
-            }
+            T entity = constructEntity(setters, types, constructor, values);
             entityList.add(entity);
         }
         return entityList;
     }
 
-    private <T extends EidaEntity<ID>, ID> void setValue(T entity, String value, Method setter, Class<?> type) throws Exception {
-        if (type.equals(Long.class)) {
-            setter.invoke(entity, Long.parseLong(value));
-        } else if (type.equals(String.class)) {
-            setter.invoke(entity, String.valueOf(value));
-        }
-        else {
-            Constructor<? extends EidaEntity> fieldClassConstructor = (Constructor<? extends EidaEntity>) type.getConstructor();
-            EidaEntity linkedEntity = fieldClassConstructor.newInstance();
-            Class<?> id = linkedEntity.getClass().getDeclaredField("id").getType();
-            if (id.equals(Long.class)) {
-                linkedEntity.setId(Long.parseLong(value));
-            } else if (id.equals(String.class)) {
-                linkedEntity.setId(value);
+    private <T extends EidaEntity<ID>, ID> T constructEntity(List<Method> setters, List<Class<?>> types, Constructor<T> constructor, String[] values) throws Exception {
+        T entity = constructor.newInstance();
+        for (int j = 0; j < values.length; j++) {
+            Method setter = setters.get(j);
+            Class<?> type = types.get(j);
+            if (type.equals(Long.class)) {
+                setter.invoke(entity, Long.parseLong(values[j]));
+            } else if (type.equals(String.class)) {
+                setter.invoke(entity, String.valueOf(values[j]));
             }
-            setter.invoke(entity, linkedEntity);
+            else {
+                Constructor<? extends EidaEntity> fieldClassConstructor = (Constructor<? extends EidaEntity>) type.getConstructor();
+                EidaEntity linkedEntity = fieldClassConstructor.newInstance();
+                Class<?> id = linkedEntity.getClass().getDeclaredField("id").getType();
+                if (id.equals(Long.class)) {
+                    linkedEntity.setId(Long.parseLong(values[j]));
+                } else if (id.equals(String.class)) {
+                    linkedEntity.setId(values[j]);
+                }
+                setter.invoke(entity, linkedEntity);
+            }
         }
-    }
-
-    private <T extends EidaEntity<ID>, ID> Map<Method, Class<?>> columnsToSetterMap(String[] columns, Class<T> entityClass) throws Exception {
-        Map<Method, Class<?>> setters = new LinkedHashMap<>();
-        for (String column : columns) {
-            Class<?> type = entityClass.getDeclaredField(column).getType();
-            setters.put(entityClass.getMethod(setterName(column), type), type);
-        }
-        return setters;
+        return entity;
     }
 
 }
