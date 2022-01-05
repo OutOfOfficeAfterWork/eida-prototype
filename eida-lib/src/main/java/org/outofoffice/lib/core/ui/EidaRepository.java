@@ -11,8 +11,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toList;
-import static org.outofoffice.lib.util.ClassUtils.getterName;
-import static org.outofoffice.lib.util.ClassUtils.setterName;
+import static org.outofoffice.lib.util.StringUtils.getterName;
+import static org.outofoffice.lib.util.StringUtils.setterName;
 
 
 public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {

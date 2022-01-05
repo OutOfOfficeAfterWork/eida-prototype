@@ -8,6 +8,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static org.outofoffice.lib.util.StringUtils.getterName;
+import static org.outofoffice.lib.util.StringUtils.setterName;
+
 @Slf4j
 public class EidaSerializer {
 
@@ -19,34 +22,25 @@ public class EidaSerializer {
         }
     }
 
-    public <T extends EidaEntity<ID>, ID> String doSerialize(T entity) throws Exception {
-        StringJoiner fieldsString = new StringJoiner(",");
-        StringJoiner valuesString = new StringJoiner(",");
-        Map<String, String> stringStringHashMap = new LinkedHashMap<>();
+    private <T extends EidaEntity<ID>, ID> String doSerialize(T entity) throws Exception {
+        StringJoiner header = new StringJoiner(",");
+        StringJoiner body = new StringJoiner(",");
 
         Field[] fields = entity.getClass().getDeclaredFields();
         for (Field field : fields) {
-            String fieldName = field.getName();
-
-            String c = String.valueOf(fieldName.charAt(0));
-            String getterName = fieldName.replace(c, "get"+ c.toUpperCase());
-            Method getter = entity.getClass().getMethod(getterName);
-            Object fieldValue = getter.invoke(entity);
-
-
-            if (fieldValue instanceof EidaEntity<?>) {
-                fieldValue = ((EidaEntity<?>) fieldValue).getId();
-            }
-
-            stringStringHashMap.put(field.getName(), fieldValue.toString());
+            header.add(field.getName());
+            body.add(getValue(entity, field).toString());
         }
+        return header + " " + body;
+    }
 
-        for (String field : stringStringHashMap.keySet()) {
-            fieldsString.add(field);
-            valuesString.add(stringStringHashMap.get(field));
+    private <T extends EidaEntity<ID>, ID> Object getValue(T entity, Field field) throws Exception {
+        Method getter = entity.getClass().getMethod(getterName(field.getName()));
+        Object value = getter.invoke(entity);
+        if (value instanceof EidaEntity<?>) {
+            value = ((EidaEntity<?>) value).getId();
         }
-
-        return fieldsString + " " + valuesString;
+        return value;
     }
 
 
@@ -106,14 +100,8 @@ public class EidaSerializer {
     private <T extends EidaEntity<ID>, ID> Map<Method, Class<?>> columnsToSetterMap(String[] columns, Class<T> entityClass) throws Exception {
         Map<Method, Class<?>> setters = new LinkedHashMap<>();
         for (String column : columns) {
-            if (column.indexOf('(') != -1) {
-                column = column.substring(0, column.indexOf('('));
-            }
-
             Class<?> type = entityClass.getDeclaredField(column).getType();
-            String c = String.valueOf(column.charAt(0));
-            String setterName = column.replaceFirst(c, "set"+ c.toUpperCase());
-            setters.put(entityClass.getMethod(setterName, type), type);
+            setters.put(entityClass.getMethod(setterName(column), type), type);
         }
         return setters;
     }
