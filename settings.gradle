@@ -1,6 +1,8 @@
 rootProject.name = 'eida-prototype'
 include 'eida-lib'
 include 'eida-spring-support'
+include 'eida-manager'
+include 'eida-shard'
 include 'spring-app'
 include 'java-app'
 

@@ -20,13 +20,13 @@ class EidaDefaultSocketClientTest {
 
     EidaSocketClient eidaClient = new EidaSocketClientLoggingProxy(new EidaDefaultSocketClient());
 
-    String host = "localhost";
-    int port = 9999;
-    String address = host + ":" + port;
-
 
     @Test
     void request() {
+        String host = "localhost";
+        int port = 9999;
+        String address = host + ":" + port;
+
         instantServer(port, msg -> String.format("OK\nReceived: %s", msg)).start();
 
         String response = eidaClient.request(address, "hello");
@@ -49,6 +49,21 @@ class EidaDefaultSocketClientTest {
                 throw new EidaException(e);
             }
         });
+    }
+
+    @Test
+    void requestReal() {
+        String host = "localhost";
+        int port = 10325;
+        String address = host + ":" + port;
+
+        long start = System.currentTimeMillis();
+        String response = eidaClient.request(address, "hello");
+        long end = System.currentTimeMillis();
+        long duration = end - start;
+        System.out.println(duration);
+
+        assertThat(response).isEqualTo("h e l l o");
     }
 
 }
