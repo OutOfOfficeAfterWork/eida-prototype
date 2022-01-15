@@ -1,5 +1,6 @@
-package org.outofoffice.eida.manager;
+package org.outofoffice.eida.manager.core;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -7,16 +8,19 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.function.Function;
 
 @Slf4j
+@RequiredArgsConstructor
 public class ManagerServer {
 
-    public static void main(String[] args) {
-        int port = 10325;
-        Function<String, String> responseGenerator = (s) -> String.join(" ", s.split(""));
+    private final int port;
 
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+    private final QueryDispatcher queryDispatcher = new QueryDispatcher();
+
+
+    public void run() {
+        try (
+            ServerSocket serverSocket = new ServerSocket(port)) {
             log.info("ManagerServer started!");
             while (true) {
                 try (
@@ -25,8 +29,7 @@ public class ManagerServer {
                     PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true)
                 ) {
                     String request = reader.readLine();
-                    String response = responseGenerator.apply(request);
-                    log.info("{} -> {}", request, response);
+                    String response = queryDispatcher.send(request);
                     writer.println(response);
                 } catch (Exception e) {
                     log.error(e.getMessage());
