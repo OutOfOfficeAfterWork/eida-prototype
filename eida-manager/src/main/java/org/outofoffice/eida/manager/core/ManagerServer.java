@@ -29,6 +29,7 @@ public class ManagerServer {
                     PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true)
                 ) {
                     String request = reader.readLine();
+                    log.debug("{}", request);
                     String response = queryDispatcher.send(request);
                     writer.println(response);
                 } catch (Exception e) {

@@ -1,30 +1,27 @@
 package org.outofoffice.eida.manager.core;
 
 import lombok.extern.slf4j.Slf4j;
-import org.outofoffice.eida.manager.handler.QueryHandler;
+import org.outofoffice.eida.manager.core.handler.QueryHandler;
 
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 public class QueryDispatcher {
 
-    private final Map<String, QueryHandler> mappings = new HashMap<>();
-//    private final Map<Class<? extends Exception>, ExceptionHandler> exceptionMappings = new HashMap<>();
+    private final QueryHandlerMappings queryHandlerMappings = new QueryHandlerMappings();
+    private final ExceptionHandlerMappings exceptionHandlerMappings = new ExceptionHandlerMappings();
+
 
     public String send(String request) {
         try {
-            String[] s = request.split(" ");
+            String[] s = request.split(", ");
             String command = s[0];
             String param = s[1];
 
-            QueryHandler queryHandler = mappings.get(command);
-            return queryHandler.handle(param);
+            QueryHandler queryHandler = queryHandlerMappings.mustGet(command);
+            return queryHandler.handle(param.split(" "));
         } catch (Exception e) {
-            log.error(e.getMessage());
-            // ExceptionHandler exceptionHandler = exceptionMappings.get(e.getClass());
-            // return exceptionHandler.handle(e);
-            return "500";
+            e.printStackTrace();
+            return exceptionHandlerMappings.getOrDefault(e.getClass()).handle(e);
         }
     }
 

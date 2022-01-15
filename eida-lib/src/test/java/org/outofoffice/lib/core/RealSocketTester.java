@@ -1,6 +1,5 @@
 package org.outofoffice.lib.core;
 
-import org.junit.jupiter.api.Test;
 import org.outofoffice.lib.core.socket.EidaDefaultSocketClient;
 import org.outofoffice.lib.core.socket.EidaSocketClient;
 import org.outofoffice.lib.core.socket.EidaSocketClientLoggingProxy;
@@ -17,12 +16,12 @@ public class RealSocketTester {
         String address = host + ":" + port;
 
         long start = System.currentTimeMillis();
-        String response = eidaClient.request(address, "hello");
+        String response = eidaClient.request(address, "get dest, hehe");
         long end = System.currentTimeMillis();
         long duration = end - start;
         System.out.println(duration);
 
-        assertThat(response).isEqualTo("h e l l o");
+        assertThat(response).isEqualTo("127.0.0.1:10830");
     }
 
 }
