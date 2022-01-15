@@ -34,7 +34,7 @@ class KemiRepositoryTest {
 
     @Test
     void find() {
-        socketClient.put(managerServerUrl, "get src KemiEntity 1", "http://shard1:1234");
+        socketClient.put(managerServerUrl, "get src, KemiEntity 1", "http://shard1:1234");
 
         EidaDmlGenerator eidaDmlGenerator = new EidaDmlGenerator();
         String dml = eidaDmlGenerator.createSelectByIdQuery("KemiEntity", 1);
@@ -50,9 +50,9 @@ class KemiRepositoryTest {
 
     @Test
     void join() {
-        socketClient.put(managerServerUrl, "get src KemiEntity 1", "http://shard1:1234");
+        socketClient.put(managerServerUrl, "get src, KemiEntity 1", "http://shard1:1234");
         socketClient.put("http://shard1:1234", "select KemiEntity 1", "id,major,testEidaEntity\n1,cs,2");
-        socketClient.put(managerServerUrl, "get src TestEidaEntity 2", "http://shard2:1234");
+        socketClient.put(managerServerUrl, "get src, TestEidaEntity 2", "http://shard2:1234");
         socketClient.put("http://shard2:1234", "select TestEidaEntity 2", "id,name\n2,josh");
 
         KemiEntity expected = new KemiEntity(1L, "cs", new TestEidaEntity(2L, "josh"));
@@ -65,11 +65,11 @@ class KemiRepositoryTest {
 
     @Test
     void joinList() {
-        socketClient.put(managerServerUrl, "get all KemiEntity", "http://shard01:1234,http://shard02:1234");
+        socketClient.put(managerServerUrl, "get all, KemiEntity", "http://shard01:1234,http://shard02:1234");
         socketClient.put("http://shard01:1234", "select KemiEntity", "id,major,testEidaEntity\n1,cs,2\n2,mathematics,3");
         socketClient.put("http://shard02:1234", "select KemiEntity", "id,major,testEidaEntity\n3,physics,4\n4,cs,5");
-        socketClient.put(managerServerUrl, "get src TestEidaEntity 2", "http://shard01:1234");
-        socketClient.put(managerServerUrl, "get src TestEidaEntity 5", "http://shard02:1234");
+        socketClient.put(managerServerUrl, "get src, TestEidaEntity 2", "http://shard01:1234");
+        socketClient.put(managerServerUrl, "get src, TestEidaEntity 5", "http://shard02:1234");
         socketClient.put("http://shard01:1234", "select TestEidaEntity 2", "id,name\n2,kemi");
         socketClient.put("http://shard02:1234", "select TestEidaEntity 5", "id,name\n5,josh");
 

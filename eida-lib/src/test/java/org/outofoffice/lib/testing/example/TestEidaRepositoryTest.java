@@ -34,9 +34,9 @@ class TestEidaRepositoryTest {
 
     @Test
     void insert() {
-        inMemoryClient.put(managerServerUrl, "get dst TestEidaEntity", "http://shard1:1234");
+        inMemoryClient.put(managerServerUrl, "get dst, TestEidaEntity", "http://shard1:1234");
         inMemoryClient.put("http://shard1:1234", "insert TestEidaEntity id,name 1,name", "");
-        inMemoryClient.put(managerServerUrl, "post http://shard1:1234 TestEidaEntity 1", "");
+        inMemoryClient.put(managerServerUrl, "post, http://shard1:1234 TestEidaEntity 1", "");
 
         TestEidaEntity entity = new TestEidaEntity(1L, "name");
 
@@ -47,7 +47,7 @@ class TestEidaRepositoryTest {
 
     @Test
     void update() {
-        inMemoryClient.put(managerServerUrl, "get src TestEidaEntity 1", "http://shard1:1234");
+        inMemoryClient.put(managerServerUrl, "get src, TestEidaEntity 1", "http://shard1:1234");
         inMemoryClient.put("http://shard1:1234", "update TestEidaEntity id,name 1,name", "");
 
         TestEidaEntity entity = new TestEidaEntity(1L, "name");
@@ -59,9 +59,9 @@ class TestEidaRepositoryTest {
 
     @Test
     void delete() {
-        inMemoryClient.put(managerServerUrl, "get src TestEidaEntity 1", "http://shard1:1234");
+        inMemoryClient.put(managerServerUrl, "get src, TestEidaEntity 1", "http://shard1:1234");
         inMemoryClient.put("http://shard1:1234", "delete TestEidaEntity 1", "");
-        inMemoryClient.put(managerServerUrl, "delete http://shard1:1234 TestEidaEntity 1", "");
+        inMemoryClient.put(managerServerUrl, "delete, http://shard1:1234 TestEidaEntity 1", "");
 
         Executable deleted = () -> repository.delete(1L);
         assertDoesNotThrow(deleted);
@@ -69,19 +69,19 @@ class TestEidaRepositoryTest {
 
     @Test
     void deleteAll() {
-        inMemoryClient.put(managerServerUrl, "get all TestEidaEntity", "http://shard1:1234,http://shard2:1234");
+        inMemoryClient.put(managerServerUrl, "get all, TestEidaEntity", "http://shard1:1234,http://shard2:1234");
         inMemoryClient.put("http://shard1:1234", "select TestEidaEntity", "id,name\n1,kemi\n2,josh");
         inMemoryClient.put("http://shard2:1234", "select TestEidaEntity", "id,name\n3,luffy");
 
-        inMemoryClient.put(managerServerUrl, "get src TestEidaEntity 1", "http://shard1:1234");
+        inMemoryClient.put(managerServerUrl, "get src, TestEidaEntity 1", "http://shard1:1234");
         inMemoryClient.put("http://shard1:1234", "delete TestEidaEntity 1", "");
-        inMemoryClient.put(managerServerUrl, "delete http://shard1:1234 TestEidaEntity 1", "");
-        inMemoryClient.put(managerServerUrl, "get src TestEidaEntity 2", "http://shard1:1234");
+        inMemoryClient.put(managerServerUrl, "delete, http://shard1:1234 TestEidaEntity 1", "");
+        inMemoryClient.put(managerServerUrl, "get src, TestEidaEntity 2", "http://shard1:1234");
         inMemoryClient.put("http://shard1:1234", "delete TestEidaEntity 2", "");
-        inMemoryClient.put(managerServerUrl, "delete http://shard1:1234 TestEidaEntity 2", "");
-        inMemoryClient.put(managerServerUrl, "get src TestEidaEntity 3", "http://shard2:1234");
+        inMemoryClient.put(managerServerUrl, "delete, http://shard1:1234 TestEidaEntity 2", "");
+        inMemoryClient.put(managerServerUrl, "get src, TestEidaEntity 3", "http://shard2:1234");
         inMemoryClient.put("http://shard2:1234", "delete TestEidaEntity 3", "");
-        inMemoryClient.put(managerServerUrl, "delete http://shard2:1234 TestEidaEntity 3", "");
+        inMemoryClient.put(managerServerUrl, "delete, http://shard2:1234 TestEidaEntity 3", "");
 
         Executable deleted = () -> repository.deleteAll();
         assertDoesNotThrow(deleted);
@@ -89,7 +89,7 @@ class TestEidaRepositoryTest {
 
     @Test
     void find() {
-        inMemoryClient.put(managerServerUrl, "get src TestEidaEntity 1", "http://shard1:1234");
+        inMemoryClient.put(managerServerUrl, "get src, TestEidaEntity 1", "http://shard1:1234");
         inMemoryClient.put("http://shard1:1234", "select TestEidaEntity 1", "id,name\n1,testName");
 
         TestEidaEntity expected = new TestEidaEntity(1L, "testName");
@@ -103,7 +103,7 @@ class TestEidaRepositoryTest {
 
     @Test
     void listAll() {
-        inMemoryClient.put(managerServerUrl, "get all TestEidaEntity", "http://shard01:1234,http://shard02:1234");
+        inMemoryClient.put(managerServerUrl, "get all, TestEidaEntity", "http://shard01:1234,http://shard02:1234");
         inMemoryClient.put("http://shard01:1234", "select TestEidaEntity", "id,name\n1,testName1\n2,testName2");
         inMemoryClient.put("http://shard02:1234", "select TestEidaEntity", "id,name\n3,testName3\n4,testName4");
 
@@ -118,7 +118,7 @@ class TestEidaRepositoryTest {
 
     @Test
     void list() {
-        inMemoryClient.put(managerServerUrl, "get all TestEidaEntity", "http://shard01:1234,http://shard02:1234");
+        inMemoryClient.put(managerServerUrl, "get all, TestEidaEntity", "http://shard01:1234,http://shard02:1234");
         inMemoryClient.put("http://shard01:1234", "select TestEidaEntity", "id,name\n1,kemi\n2,josh");
         inMemoryClient.put("http://shard02:1234", "select TestEidaEntity", "id,name\n3,kemi\n4,kemi");
 

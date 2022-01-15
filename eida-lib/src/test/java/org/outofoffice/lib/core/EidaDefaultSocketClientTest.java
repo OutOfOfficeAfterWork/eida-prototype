@@ -37,10 +37,10 @@ class EidaDefaultSocketClientTest {
     private Thread instantServer(int port, Function<String, String> responseGenerator) {
         return new Thread(() -> {
             try (
-                    ServerSocket serverSocket = new ServerSocket(port);
-                    Socket clientSocket = serverSocket.accept();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                    PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true)
+                ServerSocket serverSocket = new ServerSocket(port);
+                Socket clientSocket = serverSocket.accept();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true)
             ) {
                 String request = reader.readLine();
                 String response = responseGenerator.apply(request);
@@ -49,21 +49,6 @@ class EidaDefaultSocketClientTest {
                 throw new EidaException(e);
             }
         });
-    }
-
-    @Test
-    void requestReal() {
-        String host = "localhost";
-        int port = 10325;
-        String address = host + ":" + port;
-
-        long start = System.currentTimeMillis();
-        String response = eidaClient.request(address, "hello");
-        long end = System.currentTimeMillis();
-        long duration = end - start;
-        System.out.println(duration);
-
-        assertThat(response).isEqualTo("h e l l o");
     }
 
 }
