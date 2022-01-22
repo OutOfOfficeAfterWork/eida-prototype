@@ -30,7 +30,7 @@ public class ManagerServer {
                 ) {
                     String request = reader.readLine();
                     log.debug("{}", request);
-                    String response = queryDispatcher.send(request);
+                    String response = queryDispatcher.send(request).toString();
                     writer.println(response);
                 } catch (Exception e) {
                     log.error(e.getMessage());

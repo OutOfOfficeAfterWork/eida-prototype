@@ -1,7 +1,11 @@
 package org.outofoffice.eida.manager.core.io;
 
+import org.outofoffice.eida.manager.exception.TableNotFoundException;
+
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,9 +27,10 @@ public class FileFacade {
                 map.put(entityId, shardId);
             }
             return map;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException();
+        } catch (FileNotFoundException e) {
+            throw new TableNotFoundException(tableName);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
         }
     }
 
