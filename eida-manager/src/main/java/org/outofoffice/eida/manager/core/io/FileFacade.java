@@ -15,20 +15,38 @@ public class FileFacade {
     private static final String FILE_ROOT = "file-root/";
     private static final String MANAGER_PATH = FILE_ROOT + "eida-manager/";
     private static final String TABLE_PATH = MANAGER_PATH + "table/";
+    private static final String META_PATH = MANAGER_PATH + "meta/";
 
-    public static Map<String, String> readTableFile(String tableName){
+    public static Map<String, String> readTableFile(String tableName) {
         String filePath = TABLE_PATH + tableName;
-        try(BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        try {
+            return readFileAsMap(filePath);
+        } catch (FileNotFoundException e) {
+            String targetFilePath = e.getMessage();
+            throw new TableNotFoundException(targetFilePath);
+        }
+    }
+
+    public static Map<String, String> readShardFile() {
+        String filePath = META_PATH + "shard";
+        try {
+            return readFileAsMap(filePath);
+        } catch (FileNotFoundException e) {
+            String targetFilePath = e.getMessage();
+            throw new IllegalStateException("shard file not found in " + targetFilePath);
+        }
+    }
+
+    private static Map<String, String> readFileAsMap(String filePath) throws FileNotFoundException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             Map<String, String> map = new HashMap<>();
-            while(reader.ready()) {
+            while (reader.ready()) {
                 String[] row = reader.readLine().split(", ", 2);
                 String entityId = row[0];
                 String shardId = row[1];
                 map.put(entityId, shardId);
             }
             return map;
-        } catch (FileNotFoundException e) {
-            throw new TableNotFoundException(tableName);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
