@@ -11,7 +11,7 @@ public class QueryHandlerMappings {
     private final Map<String, QueryHandler> mappings = new HashMap<>();
 
     public QueryHandlerMappings() {
-        mappings.put("get dest", new GetDestQueryHandler());
+        mappings.put("get dst", new GetDestQueryHandler());
     }
 
     public QueryHandler mustGet(String command) {

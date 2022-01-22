@@ -16,7 +16,7 @@ public class RealSocketTester {
         String address = host + ":" + port;
 
         long start = System.currentTimeMillis();
-        String response = eidaClient.request(address, "get dest, hehe");
+        String response = eidaClient.request(address, "get dst, hehe");
         long end = System.currentTimeMillis();
         long duration = end - start;
         System.out.println(duration);
