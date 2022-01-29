@@ -1,18 +1,18 @@
 package org.outofoffice.eida.manager.core.handler.dll;
 
-
+import lombok.RequiredArgsConstructor;
+import org.outofoffice.eida.manager.core.controller.DllController;
 import org.outofoffice.eida.manager.core.handler.QueryHandler;
-import org.outofoffice.eida.manager.core.io.FileFacade;
 
-import java.util.Map;
-
+@RequiredArgsConstructor
 public class GetDestQueryHandler implements QueryHandler {
+
+    private final DllController dllController;
+
     @Override
     public String handle(String parameter) {
         String[] params = parameter.split(" ");
         String tableName = params[0];
-        Map<String, String> map = FileFacade.readTableFile(tableName);
-
-        return "127.0.0.1:10830";
+        return dllController.getDestinationShardUrl(tableName);
     }
 }

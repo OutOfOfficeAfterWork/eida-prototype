@@ -1,25 +1,30 @@
 package org.outofoffice.eida.manager.core.controller;
 
+import java.util.Collections;
+import java.util.List;
+
 public class DllController {
     public static final DllController INSTANCE = new DllController();
 
-    public String createGetAllShardUrlsQuery(String tableName) {
-        return  "get all, " + tableName;
+
+    public List<String> getAllShardUrls(String tableName) {
+        // return  "get all, " + tableName;
+        return Collections.emptyList();
     }
 
-    public String createGetDestinationShardUrlQuery(String tableName) {
+    public String getDestinationShardUrl(String tableName) {
         return "get dst, " + tableName;
     }
 
-    public String createGetSourceShardUrlQuery(String tableName, String id) {
+    public String getSourceShardUrl(String tableName, String id) {
         return "get src, " + tableName + " " + id;
     }
 
-    public String createReportInsertShardUrlQuery(String shardUrl, String tableName, String id) {
-        return "report insert, " + shardUrl + " " + tableName + " " + id;
+    public void reportInsertShardUrl(String shardUrl, String tableName, String id) {
+        // return "report insert, " + shardUrl + " " + tableName + " " + id;
     }
 
-    public String createReportDeleteShardUrlQuery(String shardUrl, String tableName, String id) {
-        return "report delete, " + shardUrl + " " + tableName + " " + id;
+    public void reportDeleteShardUrl(String shardUrl, String tableName, String id) {
+        // return "report delete, " + shardUrl + " " + tableName + " " + id;
     }
 }
