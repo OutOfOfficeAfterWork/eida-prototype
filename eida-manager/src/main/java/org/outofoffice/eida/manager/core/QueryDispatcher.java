@@ -12,11 +12,11 @@ public class QueryDispatcher {
     public EidaResponse send(String request) {
         String[] s = request.split(", ");
         String command = s[0];
-        String param = s[1];
+        String parameter = s[1];
 
         try {
             String code = "OK";
-            String body = queryHandlerMappings.mustGet(command).handle(param.split(" "));
+            String body = queryHandlerMappings.mustGet(command).handle(parameter);
             return EidaResponse.create(code, body);
         } catch (EidaBadRequestException e) {
             String code = e.getClass().getSimpleName();

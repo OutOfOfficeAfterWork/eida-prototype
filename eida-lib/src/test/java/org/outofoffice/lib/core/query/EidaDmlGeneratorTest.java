@@ -15,13 +15,13 @@ class EidaDmlGeneratorTest {
     @Test
     void createSelectAllQuery() {
         String dmlQuery = dmlGenerator.createSelectAllQuery("member");
-        assertThat(dmlQuery).isEqualTo("select member");
+        assertThat(dmlQuery).isEqualTo("select all, member");
     }
 
     @Test
     void createSelectByIdQuery() {
         String dmlQuery = dmlGenerator.createSelectByIdQuery("member", 1L);
-        assertThat(dmlQuery).isEqualTo("select member 1");
+        assertThat(dmlQuery).isEqualTo("select, member 1");
     }
 
     @Test
@@ -30,6 +30,6 @@ class EidaDmlGeneratorTest {
         EidaSerializer serializer = new EidaSerializer();
         String serialized = serializer.serialize(entity);
         String dmlQuery = dmlGenerator.createInsertQuery("member", serialized);
-        assertThat(dmlQuery).isEqualTo("insert member id,name 1,kemi");
+        assertThat(dmlQuery).isEqualTo("insert, member id,name 1,kemi");
     }
 }

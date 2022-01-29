@@ -15,12 +15,12 @@ public class EidaDllGenerator {
         return "get src, " + tableName + " " + id.toString();
     }
 
-    public <ID> String createPostShardUrlQuery(String shardUrl, String tableName, ID id) {
-        return "post, " + shardUrl + " " + tableName + " " + id.toString();
+    public <ID> String createReportInsertShardUrlQuery(String shardUrl, String tableName, ID id) {
+        return "report insert, " + shardUrl + " " + tableName + " " + id.toString();
     }
 
-    public <ID> String createDeleteShardUrlQuery(String shardUrl, String tableName, ID id) {
-        return "delete, " + shardUrl + " " + tableName + " " + id.toString();
+    public <ID> String createReportDeleteShardUrlQuery(String shardUrl, String tableName, ID id) {
+        return "report delete, " + shardUrl + " " + tableName + " " + id.toString();
     }
 
 }

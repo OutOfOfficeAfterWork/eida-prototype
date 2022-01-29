@@ -38,13 +38,13 @@ public class EidaManagerClient implements EidaDllClient, EidaDdlManagerClient {
 
     @Override
     public <ID> void postShardUrl(String shardUrl, String tableName, ID id) {
-        String dll = dllGenerator.createPostShardUrlQuery(shardUrl, tableName, id);
+        String dll = dllGenerator.createReportInsertShardUrlQuery(shardUrl, tableName, id);
         eidaClient.request(managerServerUrl, dll);
     }
 
     @Override
     public <ID> void deleteShardUrl(String shardUrl, String tableName, ID id) {
-        String dll = dllGenerator.createDeleteShardUrlQuery(shardUrl, tableName, id);
+        String dll = dllGenerator.createReportDeleteShardUrlQuery(shardUrl, tableName, id);
         eidaClient.request(managerServerUrl, dll);
     }
 

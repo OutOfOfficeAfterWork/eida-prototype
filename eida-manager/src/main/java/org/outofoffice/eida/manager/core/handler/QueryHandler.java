@@ -1,5 +1,5 @@
 package org.outofoffice.eida.manager.core.handler;
 
 public interface QueryHandler {
-    String handle(String... params);
+    String handle(String parameter);
 }
