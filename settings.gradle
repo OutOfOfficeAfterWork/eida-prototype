@@ -5,4 +5,5 @@ include 'eida-manager'
 include 'eida-shard'
 include 'spring-app'
 include 'java-app'
+include 'eida-server-common'
 

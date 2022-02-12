@@ -1,7 +1,9 @@
 package org.outofoffice.eida.manager;
 
 import lombok.extern.slf4j.Slf4j;
-import org.outofoffice.eida.manager.core.ManagerServer;
+import org.outofoffice.eida.common.QueryHandlerMap;
+import org.outofoffice.eida.common.QueryDispatcher;
+import org.outofoffice.eida.common.ServerRunner;
 
 @Slf4j
 public class ManagerServerApplication {
@@ -9,7 +11,9 @@ public class ManagerServerApplication {
     private static final int PORT = 10325;
 
     public static void main(String[] args) {
-        new ManagerServer(PORT).run();
+        QueryHandlerMap queryHandlerMap = new ManagerServerQueryHandlerMap().configureMappings();
+        QueryDispatcher queryDispatcher = new QueryDispatcher(queryHandlerMap);
+        new ServerRunner(PORT, queryDispatcher).run();
     }
 
 }

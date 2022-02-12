@@ -21,7 +21,7 @@ public class RealSocketTester {
         long duration = end - start;
         System.out.println(duration);
 
-        assertThat(response).isEqualTo("127.0.0.1:10830");
+        assertThat(response).isEqualTo("OK\nget dst, hehe");
     }
 
 }
