@@ -1,11 +1,11 @@
-package org.outofoffice.eida.manager.handler.dml;
+package org.outofoffice.eida.shard.handler.dml;
 
 import lombok.RequiredArgsConstructor;
-import org.outofoffice.eida.manager.controller.DmlController;
 import org.outofoffice.eida.common.QueryHandler;
+import org.outofoffice.eida.shard.controller.DmlController;
 
 @RequiredArgsConstructor
-public class InsertQueryHandler implements QueryHandler {
+public class UpdateQueryHandler implements QueryHandler {
     private final DmlController dmlController;
 
     @Override
@@ -13,7 +13,7 @@ public class InsertQueryHandler implements QueryHandler {
         String[] params = parameter.split(" ", 2);
         String tableName = params[0];
         String data = params[1];
-        dmlController.insert(tableName, data);
+        dmlController.update(tableName, data);
 
         return null;
     }

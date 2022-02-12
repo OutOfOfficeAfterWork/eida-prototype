@@ -1,8 +1,8 @@
-package org.outofoffice.eida.manager.handler.dml;
+package org.outofoffice.eida.shard.handler.dml;
 
 import lombok.RequiredArgsConstructor;
-import org.outofoffice.eida.manager.controller.DmlController;
 import org.outofoffice.eida.common.QueryHandler;
+import org.outofoffice.eida.shard.controller.DmlController;
 
 @RequiredArgsConstructor
 public class SelectAllQueryHandler implements QueryHandler {

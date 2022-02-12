@@ -1,20 +1,18 @@
-package org.outofoffice.eida.manager.handler.dml;
+package org.outofoffice.eida.shard.handler.dml;
 
 import lombok.RequiredArgsConstructor;
-import org.outofoffice.eida.manager.controller.DmlController;
 import org.outofoffice.eida.common.QueryHandler;
+import org.outofoffice.eida.shard.controller.DmlController;
 
 @RequiredArgsConstructor
-public class DeleteQueryHandler implements QueryHandler {
+public class SelectQueryHandler implements QueryHandler {
     private final DmlController dmlController;
 
     @Override
     public String handle(String parameter) {
-        String[] params = parameter.split(" ", 2);
+        String[] params = parameter.split(" ");
         String tableName = params[0];
         String id = params[1];
-        dmlController.delete(tableName, id);
-
-        return null;
+        return dmlController.selectById(tableName, id);
     }
 }
