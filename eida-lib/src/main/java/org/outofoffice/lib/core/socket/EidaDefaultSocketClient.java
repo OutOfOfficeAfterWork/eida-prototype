@@ -52,7 +52,13 @@ public class EidaDefaultSocketClient implements EidaSocketClient {
             if (line == null) break;
             responseJoiner.add(line);
         }
-        return responseJoiner.toString();
+        String responseBody = responseJoiner.toString();
+
+        String[] tokens = responseBody.split("\n", 2);
+
+        String code = tokens[0];
+        if (!code.equals("OK")) throw new EidaException(code);
+        return tokens[1];
     }
 
 }
