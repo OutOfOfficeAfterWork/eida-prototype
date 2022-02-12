@@ -5,7 +5,7 @@ plugins {
 jar {
     manifest {
         attributes (
-            "Main-Class" : "org.outofoffice.eida.manager.ManagerServer"
+            "Main-Class" : "org.outofoffice.eida.manager.ManagerServerApplication"
         )
     }
 
