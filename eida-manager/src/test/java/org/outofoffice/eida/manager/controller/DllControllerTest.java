@@ -2,6 +2,7 @@ package org.outofoffice.eida.manager.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.outofoffice.eida.manager.configuration.SingletonContainer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,7 +12,7 @@ class DllControllerTest {
 
     @BeforeEach
     void setup() {
-        dllController = DllController.INSTANCE;
+        dllController = SingletonContainer.DLL_CONTROLLER;
     }
 
     @Test

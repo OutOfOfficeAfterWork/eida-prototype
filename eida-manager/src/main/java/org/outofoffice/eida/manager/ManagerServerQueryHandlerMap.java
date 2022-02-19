@@ -4,14 +4,15 @@ import org.outofoffice.eida.common.QueryHandlerMap;
 import org.outofoffice.eida.manager.controller.DllController;
 import org.outofoffice.eida.manager.handler.dll.*;
 
+import static org.outofoffice.eida.manager.configuration.SingletonContainer.DLL_CONTROLLER;
+
 
 public class ManagerServerQueryHandlerMap extends QueryHandlerMap {
 
     @Override
     public QueryHandlerMap configureMappings() {
-        final DllController dllController = DllController.INSTANCE;
 
-        // dll
+        DllController dllController = DLL_CONTROLLER;
         mappings.put("get all", new GetAllQueryHandler(dllController));
         mappings.put("get dst", new GetDestQueryHandler(dllController));
         mappings.put("get src", new GetSrcQueryHandler(dllController));
