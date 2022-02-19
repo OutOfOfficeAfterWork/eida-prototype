@@ -1,11 +1,11 @@
-package org.outofoffice.eida.manager.handler.dll;
+package org.outofoffice.eida.manager.configuration.handler.dll;
 
 import lombok.RequiredArgsConstructor;
 import org.outofoffice.eida.manager.controller.DllController;
 import org.outofoffice.eida.common.QueryHandler;
 
 @RequiredArgsConstructor
-public class ReportInsertQueryHandler implements QueryHandler {
+public class ReportDeleteQueryHandler implements QueryHandler {
 
     private final DllController dllController;
 
@@ -15,7 +15,8 @@ public class ReportInsertQueryHandler implements QueryHandler {
         String shardUrl = params[0];
         String tableName = params[1];
         String id = params[2];
-        dllController.reportInsertShardUrl(shardUrl, tableName, id);
+        dllController.reportDeleteShardUrl(shardUrl, tableName, id);
         return null;
     }
+
 }

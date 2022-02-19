@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.outofoffice.eida.common.QueryHandlerMap;
 import org.outofoffice.eida.common.QueryDispatcher;
 import org.outofoffice.eida.common.ServerRunner;
+import org.outofoffice.eida.manager.configuration.handler.ManagerServerQueryHandlerMap;
 
 @Slf4j
 public class ManagerServerApplication {

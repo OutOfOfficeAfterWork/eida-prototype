@@ -1,8 +1,8 @@
-package org.outofoffice.eida.manager;
+package org.outofoffice.eida.manager.configuration.handler;
 
 import org.outofoffice.eida.common.QueryHandlerMap;
 import org.outofoffice.eida.manager.controller.DllController;
-import org.outofoffice.eida.manager.handler.dll.*;
+import org.outofoffice.eida.manager.configuration.handler.dll.*;
 
 import static org.outofoffice.eida.manager.configuration.SingletonContainer.DLL_CONTROLLER;
 
