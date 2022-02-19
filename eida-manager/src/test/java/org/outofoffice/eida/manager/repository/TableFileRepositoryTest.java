@@ -1,5 +1,6 @@
 package org.outofoffice.eida.manager.repository;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.outofoffice.eida.manager.io.ManagerServerFileFacade;
@@ -12,14 +13,19 @@ class TableFileRepositoryTest {
 
     @BeforeEach
     void setup() {
+        ManagerServerFileFacade.createTableFile("Team");
         tableFileRepository = new TableFileRepository();
+    }
+
+    @AfterEach
+    void clear (){
+        ManagerServerFileFacade.deleteTableFile("Team");
     }
 
 
     @Test
     void findShardIdByTableNameAndId() {
-        ManagerServerFileFacade.createTableFile("Team");
-
+        ManagerServerFileFacade.appendLineToTableFile("Team", "1", "1");
         String shardId = tableFileRepository.findShardIdByTableNameAndId("Team", "1");
         assertThat(shardId).isEqualTo("1");
     }
