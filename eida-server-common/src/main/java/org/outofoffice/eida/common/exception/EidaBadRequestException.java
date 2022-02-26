@@ -6,6 +6,10 @@ public class EidaBadRequestException extends RuntimeException {
     }
 
     public EidaBadRequestException(Exception e) {
-        super(e.getClass().getSimpleName() + ": " + e.getMessage());
+        super(messageFrom(e));
+    }
+
+    protected static String messageFrom(Exception e) {
+        return e.getClass().getSimpleName() + ": " + e.getMessage();
     }
 }

@@ -19,17 +19,20 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 public class EidaFileFacade {
 
+    private static final String DELIMITER = ",";
+
+
     public static void createFile(String filePath, String... columns) throws IOException {
         Path path = Paths.get(filePath);
         Path file = Files.createFile(path);
 
-        String header = String.join(", ", columns) + "\n";
+        String header = String.join(DELIMITER, columns) + "\n";
         Files.write(file, header.getBytes(UTF_8), CREATE);
     }
 
     public static void appendLineToFile(String filePath, String... columns) throws IOException {
         Path path = Paths.get(filePath);
-        String line = String.join(", ", columns) + "\n";
+        String line = String.join(DELIMITER, columns) + "\n";
         Files.write(path, line.getBytes(UTF_8), APPEND);
     }
 
@@ -47,10 +50,9 @@ public class EidaFileFacade {
         int size = lines.size();
         for (int i = 1; i < size; i++) {
             String line = lines.get(i);
-            String[] row = line.split(", ", 2);
-            String entityId = row[0];
-            String shardId = row[1];
-            map.put(entityId, shardId);
+            int idx = line.indexOf(DELIMITER);
+            String key = line.substring(0, idx);
+            map.put(key, line);
         }
         return map;
     }

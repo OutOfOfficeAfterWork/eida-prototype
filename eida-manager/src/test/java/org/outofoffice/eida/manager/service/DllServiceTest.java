@@ -4,10 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.outofoffice.eida.common.exception.RowNotFoundException;
-import org.outofoffice.eida.manager.repository.MetadataFileRepository;
-import org.outofoffice.eida.manager.repository.MetadataRepository;
-import org.outofoffice.eida.manager.repository.TableFileRepository;
-import org.outofoffice.eida.manager.repository.TableRepository;
+import org.outofoffice.eida.manager.repository.*;
 
 import java.util.List;
 
@@ -23,14 +20,17 @@ class DllServiceTest {
 
     @BeforeEach
     void setup() {
-        tableRepository = new TableFileRepository();
-        metadataRepository = new MetadataFileRepository();
+        tableRepository = new TableMapRepository();
+        metadataRepository = new MetadataMapRepository();
         dllService = new DllService(tableRepository, metadataRepository);
     }
 
 
     @Test
     void getAllShardUrls() {
+        metadataRepository.save("3", "localhost:10830");
+        tableRepository.save("Team", "1"/* entityId */, "3"/* sharId */);
+
         String tableName = "Team";
         List<String> shardUrls = dllService.getAllShardUrls(tableName);
         assertThat(shardUrls).isEqualTo(List.of("localhost:10830"));
@@ -45,6 +45,9 @@ class DllServiceTest {
 
     @Test
     void getSourceShardUrl() {
+        metadataRepository.save("3", "localhost:10830");
+        tableRepository.save("Team", "1"/* entityId */, "3"/* sharId */);
+
         String tableName = "Team";
         String id = "1";
         String sourceShardUrl = dllService.getSourceShardUrl(tableName, id);

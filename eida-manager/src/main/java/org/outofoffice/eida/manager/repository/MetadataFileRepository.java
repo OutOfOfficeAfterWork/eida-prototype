@@ -1,8 +1,19 @@
 package org.outofoffice.eida.manager.repository;
 
-public class MetadataFileRepository implements MetadataRepository {
+import org.outofoffice.eida.manager.io.ManagerServerFileFacade;
+
+import java.util.Map;
+
+public class MetadataFileRepository extends MetadataRepository {
     @Override
-    public String findShardUrlByShardId(String shardId) {
-        return "x";
+    protected String findLineByShardId(String shardId) {
+        Map<String, String> map = ManagerServerFileFacade.readShardFile();
+        return map.get(shardId);
+    }
+
+    @Override
+    protected void saveLine(String line) {
+        // ManagerServerFileFacade.e();
+        throw new IllegalStateException("구현 필요");
     }
 }

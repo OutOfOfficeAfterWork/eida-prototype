@@ -4,10 +4,15 @@ import org.outofoffice.eida.manager.io.ManagerServerFileFacade;
 
 import java.util.Map;
 
-public class TableFileRepository implements TableRepository {
+public class TableFileRepository extends TableRepository {
     @Override
-    public String findShardIdByTableNameAndId(String tableName, String id) {
+    protected String findLineByTableNameAndId(String tableName, String id) {
         Map<String, String> map = ManagerServerFileFacade.readTableFile(tableName);
         return map.get(id);
+    }
+
+    @Override
+    protected void saveLine(String tableName, String line) {
+
     }
 }
