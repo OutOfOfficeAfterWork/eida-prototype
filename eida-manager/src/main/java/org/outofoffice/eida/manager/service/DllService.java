@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.outofoffice.eida.manager.repository.MetadataRepository;
 import org.outofoffice.eida.manager.repository.TableRepository;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 
 @RequiredArgsConstructor
@@ -16,8 +16,8 @@ public class DllService {
 
 
     public List<String> getAllShardUrls(String tableName) {
-        // return  "get all, " + tableName;
-        return Collections.emptyList();
+        Set<String> shardIds = tableRepository.findAllShardIdsByTableName(tableName);
+        return metadataRepository.findAllShardUrlsByShardIds(shardIds);
     }
 
     public String getDestinationShardUrl(String tableName) {

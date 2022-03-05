@@ -1,5 +1,10 @@
 package org.outofoffice.eida.manager.repository;
 
+import java.util.Collection;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+
 public abstract class MetadataRepository {
     private static final String DELIMITER = ",";
 
@@ -19,5 +24,11 @@ public abstract class MetadataRepository {
 
     protected abstract void saveLine(String line);
 
+
+    public List<String> findAllShardUrlsByShardIds(Collection<String> shardIds) {
+        return shardIds.stream()
+            .map(this::findShardUrlByShardId)
+            .collect(toList());
+    }
 
 }

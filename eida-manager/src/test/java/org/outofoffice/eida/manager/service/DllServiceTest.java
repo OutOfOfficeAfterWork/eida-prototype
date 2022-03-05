@@ -28,12 +28,15 @@ class DllServiceTest {
 
     @Test
     void getAllShardUrls() {
-        metadataRepository.save("3", "localhost:10830");
-        tableRepository.save("Team", "1"/* entityId */, "3"/* sharId */);
+        metadataRepository.save("1", "localhost:10830");
+        metadataRepository.save("2", "localhost:10831");
+        metadataRepository.save("3", "localhost:10832");
+        tableRepository.save("Team", "1"/* entityId */, "1"/* sharId */);
+        tableRepository.save("Team", "2"/* entityId */, "2"/* sharId */);
 
         String tableName = "Team";
         List<String> shardUrls = dllService.getAllShardUrls(tableName);
-        assertThat(shardUrls).isEqualTo(List.of("localhost:10830"));
+        assertThat(shardUrls).isEqualTo(List.of("localhost:10830", "localhost:10831"));
     }
 
     @Test

@@ -1,5 +1,11 @@
 package org.outofoffice.eida.manager.repository;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
+import static java.util.stream.Collectors.toSet;
+
 public abstract class TableRepository {
     private static final String DELIMITER = ",";
 
@@ -16,5 +22,13 @@ public abstract class TableRepository {
     }
 
     protected abstract void saveLine(String tableName, String line);
+
+    public Set<String> findAllShardIdsByTableName(String tableName) {
+        Map<String, String> table = getTableByName(tableName);
+        Collection<String> lines = table.values();
+        return lines.stream().map(l -> l.split(DELIMITER)[1]).collect(toSet());
+    }
+
+    protected abstract Map<String, String> getTableByName(String tableName);
 
 }

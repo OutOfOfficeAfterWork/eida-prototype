@@ -21,4 +21,9 @@ public class TableMapRepository extends TableRepository {
         map.put(tableName, tableFile);
     }
 
+    @Override
+    protected Map<String, String> getTableByName(String tableName) {
+        return map.get(tableName);
+    }
+
 }
