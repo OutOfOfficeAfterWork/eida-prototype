@@ -31,4 +31,5 @@ public abstract class MetadataRepository {
             .collect(toList());
     }
 
+    public abstract String findShardIdByShardUrl(String shardUrl);
 }

@@ -16,4 +16,9 @@ public class MetadataFileRepository extends MetadataRepository {
         // ManagerServerFileFacade.e();
         throw new IllegalStateException("구현 필요");
     }
+
+    @Override
+    public String findShardIdByShardUrl(String shardUrl) {
+        throw new IllegalStateException("구현 필요");
+    }
 }

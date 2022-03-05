@@ -29,12 +29,13 @@ public class DllService {
         return metadataRepository.findShardUrlByShardId(shardId);
     }
 
-    public void reportInsertShardUrl(String shardUrl, String tableName, String id) {
-        // return "report insert, " + shardUrl + " " + tableName + " " + id;
+    public void reportInsert(String shardUrl, String tableName, String id) {
+        String shardId = metadataRepository.findShardIdByShardUrl(shardUrl);
+        tableRepository.save(tableName, id, shardId);
     }
 
-    public void reportDeleteShardUrl(String shardUrl, String tableName, String id) {
-        // return "report delete, " + shardUrl + " " + tableName + " " + id;
+    public void reportDelete(String tableName, String id) {
+        tableRepository.delete(tableName, id);
     }
 
 }

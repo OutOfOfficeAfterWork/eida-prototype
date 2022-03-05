@@ -63,7 +63,10 @@ class DllServiceTest {
         String shardUrl = "localhost:10830";
         String tableName = "Team";
         String id = "1";
-        dllService.reportInsertShardUrl(shardUrl, tableName, id);
+        String shardId = "1";
+        metadataRepository.save(shardId, shardUrl);
+
+        dllService.reportInsert(shardUrl, tableName, id);
 
         String sourceShardUrl = dllService.getSourceShardUrl(tableName, id);
         assertThat(sourceShardUrl).isEqualTo(shardUrl);
@@ -74,7 +77,11 @@ class DllServiceTest {
         String shardUrl = "localhost:10830";
         String tableName = "Team";
         String id = "1";
-        dllService.reportDeleteShardUrl(shardUrl, tableName, id);
+        String shardId = "1";
+        metadataRepository.save(shardId, shardUrl);
+        dllService.reportInsert(shardUrl, tableName, id);
+
+        dllService.reportDelete(tableName, id);
 
         Executable action = () -> dllService.getSourceShardUrl(tableName, id);
         assertThrows(RowNotFoundException.class, action);

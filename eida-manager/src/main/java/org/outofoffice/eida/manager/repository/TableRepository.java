@@ -1,5 +1,7 @@
 package org.outofoffice.eida.manager.repository;
 
+import org.outofoffice.eida.common.exception.RowNotFoundException;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -11,6 +13,7 @@ public abstract class TableRepository {
 
     public String findShardIdByTableNameAndId(String tableName, String id) {
         String line = findLineByTableNameAndId(tableName, id);
+        if (line == null) throw new RowNotFoundException(tableName, id);
         return line.split(",")[1];
     }
 
@@ -30,5 +33,7 @@ public abstract class TableRepository {
     }
 
     protected abstract Map<String, String> getTableByName(String tableName);
+
+    public abstract void delete(String tableName, String id);
 
 }

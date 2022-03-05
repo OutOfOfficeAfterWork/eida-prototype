@@ -24,12 +24,12 @@ public class DllController {
         return dllService.getSourceShardUrl(tableName, id);
     }
 
-    public void reportInsertShardUrl(String shardUrl, String tableName, String id) {
-        dllService.reportInsertShardUrl(shardUrl, tableName, id);
+    public void reportInsert(String shardUrl, String tableName, String id) {
+        dllService.reportInsert(shardUrl, tableName, id);
     }
 
-    public void reportDeleteShardUrl(String shardUrl, String tableName, String id) {
-        dllService.reportDeleteShardUrl(shardUrl, tableName, id);
+    public void reportDelete(String tableName, String id) {
+        dllService.reportDelete(tableName, id);
     }
 
 }

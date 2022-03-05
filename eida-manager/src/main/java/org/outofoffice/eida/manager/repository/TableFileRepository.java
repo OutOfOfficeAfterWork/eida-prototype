@@ -20,4 +20,9 @@ public class TableFileRepository extends TableRepository {
     protected Map<String, String> getTableByName(String tableName) {
        return ManagerServerFileFacade.readTableFile(tableName);
     }
+
+    @Override
+    public void delete(String tableName, String id) {
+        throw new IllegalStateException("구현 필요");
+    }
 }

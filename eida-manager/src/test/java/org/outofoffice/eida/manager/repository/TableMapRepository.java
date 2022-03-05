@@ -26,4 +26,10 @@ public class TableMapRepository extends TableRepository {
         return map.get(tableName);
     }
 
+    @Override
+    public void delete(String tableName, String id) {
+        Map<String, String> table = getTableByName(tableName);
+        table.remove(id);
+    }
+
 }

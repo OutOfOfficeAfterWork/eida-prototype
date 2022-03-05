@@ -15,7 +15,7 @@ public class ReportDeleteQueryHandler implements QueryHandler {
         String shardUrl = params[0];
         String tableName = params[1];
         String id = params[2];
-        dllController.reportDeleteShardUrl(shardUrl, tableName, id);
+        dllController.reportDelete(tableName, id);
         return null;
     }
 
