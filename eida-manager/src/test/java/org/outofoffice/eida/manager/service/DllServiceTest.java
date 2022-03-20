@@ -17,12 +17,14 @@ class DllServiceTest {
     DllService dllService;
     TableRepository tableRepository;
     MetadataRepository metadataRepository;
+    Partitioner partitioner;
 
     @BeforeEach
     void setup() {
         tableRepository = new TableMapRepository();
         metadataRepository = new MetadataMapRepository();
-        dllService = new DllService(tableRepository, metadataRepository);
+        partitioner = new Partitioner(tableRepository, metadataRepository);
+        dllService = new DllService(tableRepository, metadataRepository, partitioner);
     }
 
 
@@ -42,8 +44,13 @@ class DllServiceTest {
     @Test
     void getDestinationShardUrl() {
         String tableName = "Team";
+        metadataRepository.save("s1", "localhost:10830");
+        metadataRepository.save("s2", "localhost:10831");
+        tableRepository.save(tableName, "e1", "s1");
+        partitioner.init();
+
         String shardUrl = dllService.getDestinationShardUrl(tableName);
-        assertThat(shardUrl).isEqualTo("localhost:10830");
+        assertThat(shardUrl).isEqualTo("localhost:10831");
     }
 
     @Test
@@ -65,6 +72,8 @@ class DllServiceTest {
         String id = "1";
         String shardId = "1";
         metadataRepository.save(shardId, shardUrl);
+        tableRepository.save(tableName, id, shardId);
+        partitioner.init();
 
         dllService.reportInsert(shardUrl, tableName, id);
 
@@ -79,6 +88,8 @@ class DllServiceTest {
         String id = "1";
         String shardId = "1";
         metadataRepository.save(shardId, shardUrl);
+        tableRepository.save(tableName, id, shardId);
+        partitioner.init();
         dllService.reportInsert(shardUrl, tableName, id);
 
         dllService.reportDelete(tableName, id);

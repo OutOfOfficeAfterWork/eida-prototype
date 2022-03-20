@@ -11,8 +11,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class DllService {
 
-    public final TableRepository tableRepository;
-    public final MetadataRepository metadataRepository;
+    private final TableRepository tableRepository;
+    private final MetadataRepository metadataRepository;
+
+    private final Partitioner partitioner;
 
 
     public List<String> getAllShardUrls(String tableName) {
@@ -21,7 +23,8 @@ public class DllService {
     }
 
     public String getDestinationShardUrl(String tableName) {
-        return "get dst, " + tableName;
+        String shardId = partitioner.nextShardId(tableName);
+        return metadataRepository.findShardUrlByShardId(shardId);
     }
 
     public String getSourceShardUrl(String tableName, String id) {
@@ -32,6 +35,7 @@ public class DllService {
     public void reportInsert(String shardUrl, String tableName, String id) {
         String shardId = metadataRepository.findShardIdByShardUrl(shardUrl);
         tableRepository.save(tableName, id, shardId);
+        partitioner.arrange(tableName);
     }
 
     public void reportDelete(String tableName, String id) {
