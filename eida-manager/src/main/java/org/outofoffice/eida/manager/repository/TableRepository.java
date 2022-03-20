@@ -36,4 +36,5 @@ public abstract class TableRepository {
 
     public abstract void delete(String tableName, String id);
 
+    public abstract Map<String, Map<String, String>> getAllTables();
 }

@@ -32,4 +32,9 @@ public class TableMapRepository extends TableRepository {
         table.remove(id);
     }
 
+    @Override
+    public Map<String, Map<String, String>> getAllTables() {
+        return map;
+    }
+
 }

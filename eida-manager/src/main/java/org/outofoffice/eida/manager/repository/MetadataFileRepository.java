@@ -2,6 +2,7 @@ package org.outofoffice.eida.manager.repository;
 
 import org.outofoffice.eida.manager.io.ManagerServerFileFacade;
 
+import java.util.List;
 import java.util.Map;
 
 public class MetadataFileRepository extends MetadataRepository {
@@ -14,6 +15,11 @@ public class MetadataFileRepository extends MetadataRepository {
     @Override
     protected void saveLine(String line) {
         // ManagerServerFileFacade.e();
+        throw new IllegalStateException("구현 필요");
+    }
+
+    @Override
+    public List<String> findAllShardIds() {
         throw new IllegalStateException("구현 필요");
     }
 

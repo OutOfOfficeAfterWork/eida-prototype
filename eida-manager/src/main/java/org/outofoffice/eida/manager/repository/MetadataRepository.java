@@ -24,6 +24,7 @@ public abstract class MetadataRepository {
 
     protected abstract void saveLine(String line);
 
+    public abstract List<String> findAllShardIds();
 
     public List<String> findAllShardUrlsByShardIds(Collection<String> shardIds) {
         return shardIds.stream()

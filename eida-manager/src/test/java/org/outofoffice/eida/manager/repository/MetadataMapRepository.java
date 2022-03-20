@@ -1,6 +1,8 @@
 package org.outofoffice.eida.manager.repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MetadataMapRepository extends MetadataRepository {
@@ -20,6 +22,11 @@ public class MetadataMapRepository extends MetadataRepository {
     protected void saveLine(String line) {
         String key = line.split(DELIMITER)[0];
         map.put(key, line);
+    }
+
+    @Override
+    public List<String> findAllShardIds() {
+        return new ArrayList<>(map.keySet());
     }
 
     @Override

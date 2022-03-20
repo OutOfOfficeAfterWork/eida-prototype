@@ -25,4 +25,9 @@ public class TableFileRepository extends TableRepository {
     public void delete(String tableName, String id) {
         throw new IllegalStateException("구현 필요");
     }
+
+    @Override
+    public Map<String, Map<String, String>> getAllTables() {
+        throw new IllegalStateException("구현 필요");
+    }
 }
