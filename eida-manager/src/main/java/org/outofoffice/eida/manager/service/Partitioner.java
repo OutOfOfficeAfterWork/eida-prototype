@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.outofoffice.eida.manager.repository.MetadataRepository;
-import org.outofoffice.eida.manager.repository.TableRepository;
+import org.outofoffice.eida.common.table.TableRepository;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,10 +22,16 @@ public class Partitioner {
 
     public void init() {
         List<String> allShardIds = metadataRepository.findAllShardIds();
-        tableRepository.getAllTables()
-            .forEach((tableName, entityShardMap) -> {
+        tableRepository.findAll()
+            .forEach(table -> {
+                String tableName = table.getTableName();
+                Map<String, String> entityShardMap = table.getContent();
+
                 List<ShardElement> shardElementList = new ArrayList<>();
-                entityShardMap.entrySet().forEach(entry -> entry.setValue(entry.getValue().split(",")[1]));
+                entityShardMap.entrySet().forEach(entry -> {
+                    System.out.println(tableName+": "+ entry);
+                    entry.setValue(entry.getValue().split(",")[1]);
+                });
                 Map<String, List<Map.Entry<String, String>>> shardEntriesMap = entityShardMap.entrySet().stream()
                     .collect(groupingBy(Map.Entry::getValue));
                 allShardIds.forEach(shardId ->

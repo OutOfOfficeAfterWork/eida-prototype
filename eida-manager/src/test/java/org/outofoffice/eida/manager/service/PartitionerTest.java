@@ -1,13 +1,14 @@
 package org.outofoffice.eida.manager.service;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.outofoffice.eida.common.table.Table;
 import org.outofoffice.eida.manager.repository.MetadataMapRepository;
 import org.outofoffice.eida.manager.repository.MetadataRepository;
-import org.outofoffice.eida.manager.repository.TableMapRepository;
-import org.outofoffice.eida.manager.repository.TableRepository;
+import org.outofoffice.eida.common.table.TableMapRepository;
+import org.outofoffice.eida.common.table.TableRepository;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PartitionerTest {
@@ -20,9 +21,14 @@ class PartitionerTest {
 
     @BeforeEach
     void setup() {
-         tableRepository = new TableMapRepository();
-         metadataRepository = new MetadataMapRepository();
+        tableRepository = new TableMapRepository();
+        metadataRepository = new MetadataMapRepository();
         partitioner = new Partitioner(tableRepository, metadataRepository);
+    }
+
+    @AfterEach
+    void clear() {
+        tableRepository.clear();
     }
 
     @Test
@@ -31,8 +37,10 @@ class PartitionerTest {
         // shard1 : e1, e2
         // shard2 :
 
-        tableRepository.save(tableName, "e1", "1");
-        tableRepository.save(tableName, "e2", "1");
+        Table table = new Table(tableName);
+        table.appendRow("e1", "1");
+        table.appendRow("e2", "1");
+        tableRepository.save(table);
 
         metadataRepository.save("1", "localhost:10830");
         metadataRepository.save("2", "localhost:10831");

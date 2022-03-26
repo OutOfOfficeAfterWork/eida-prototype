@@ -4,10 +4,11 @@ import lombok.NoArgsConstructor;
 import org.outofoffice.eida.manager.controller.DllController;
 import org.outofoffice.eida.manager.repository.MetadataFileRepository;
 import org.outofoffice.eida.manager.repository.MetadataRepository;
-import org.outofoffice.eida.manager.repository.TableFileRepository;
-import org.outofoffice.eida.manager.repository.TableRepository;
+import org.outofoffice.eida.common.table.TableFileRepository;
+import org.outofoffice.eida.common.table.TableRepository;
 import org.outofoffice.eida.manager.service.DllService;
 import org.outofoffice.eida.manager.service.Partitioner;
+import org.outofoffice.eida.common.table.TableService;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -20,6 +21,8 @@ public class SingletonContainer {
 
     public static final Partitioner PARTITIONER;
 
+    public static final TableService TABLE_SERVICE;
+
     public static final DllService DLL_SERVICE;
     public static final DllController DLL_CONTROLLER;
 
@@ -30,7 +33,9 @@ public class SingletonContainer {
         PARTITIONER = new Partitioner(TABLE_REPOSITORY, METADATA_REPOSITORY);
         PARTITIONER.init();
 
-        DLL_SERVICE = new DllService(TABLE_REPOSITORY, METADATA_REPOSITORY, PARTITIONER);
+        TABLE_SERVICE = new TableService(TABLE_REPOSITORY);
+
+        DLL_SERVICE = new DllService(TABLE_SERVICE, TABLE_REPOSITORY, METADATA_REPOSITORY, PARTITIONER);
         DLL_CONTROLLER = new DllController(DLL_SERVICE);
     }
 

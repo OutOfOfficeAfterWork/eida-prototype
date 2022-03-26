@@ -1,9 +1,14 @@
 package org.outofoffice.eida.manager.service;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.outofoffice.eida.common.table.TableMapRepository;
+import org.outofoffice.eida.common.table.TableRepository;
+import org.outofoffice.eida.common.table.TableService;
 import org.outofoffice.eida.common.exception.RowNotFoundException;
+import org.outofoffice.eida.common.table.Table;
 import org.outofoffice.eida.manager.repository.*;
 
 import java.util.List;
@@ -16,15 +21,22 @@ class DllServiceTest {
 
     DllService dllService;
     TableRepository tableRepository;
+    TableService tableService;
     MetadataRepository metadataRepository;
     Partitioner partitioner;
 
     @BeforeEach
     void setup() {
         tableRepository = new TableMapRepository();
+        tableService = new TableService(tableRepository);
         metadataRepository = new MetadataMapRepository();
         partitioner = new Partitioner(tableRepository, metadataRepository);
-        dllService = new DllService(tableRepository, metadataRepository, partitioner);
+        dllService = new DllService(tableService, tableRepository, metadataRepository, partitioner);
+    }
+
+    @AfterEach
+    void clear() {
+        tableRepository.clear();
     }
 
 
@@ -33,10 +45,13 @@ class DllServiceTest {
         metadataRepository.save("1", "localhost:10830");
         metadataRepository.save("2", "localhost:10831");
         metadataRepository.save("3", "localhost:10832");
-        tableRepository.save("Team", "1"/* entityId */, "1"/* sharId */);
-        tableRepository.save("Team", "2"/* entityId */, "2"/* sharId */);
-
         String tableName = "Team";
+
+        Table table = new Table(tableName);
+        table.appendRow("1", "1");
+        table.appendRow("2", "2");
+        tableRepository.save(table);
+
         List<String> shardUrls = dllService.getAllShardUrls(tableName);
         assertThat(shardUrls).isEqualTo(List.of("localhost:10830", "localhost:10831"));
     }
@@ -46,7 +61,11 @@ class DllServiceTest {
         String tableName = "Team";
         metadataRepository.save("s1", "localhost:10830");
         metadataRepository.save("s2", "localhost:10831");
-        tableRepository.save(tableName, "e1", "s1");
+
+        Table table = new Table(tableName);
+        table.appendRow("e1", "s1");
+        tableRepository.save(table);
+
         partitioner.init();
 
         String shardUrl = dllService.getDestinationShardUrl(tableName);
@@ -56,10 +75,14 @@ class DllServiceTest {
     @Test
     void getSourceShardUrl() {
         metadataRepository.save("3", "localhost:10830");
-        tableRepository.save("Team", "1"/* entityId */, "3"/* sharId */);
 
         String tableName = "Team";
         String id = "1";
+
+        Table table = new Table(tableName);
+        table.appendRow(id, "3");
+        tableRepository.save(table);
+
         String sourceShardUrl = dllService.getSourceShardUrl(tableName, id);
 
         assertThat(sourceShardUrl).isEqualTo("localhost:10830");
@@ -72,7 +95,11 @@ class DllServiceTest {
         String id = "1";
         String shardId = "1";
         metadataRepository.save(shardId, shardUrl);
-        tableRepository.save(tableName, id, shardId);
+
+        Table table = new Table(tableName);
+        table.appendRow(id, shardId);
+        tableRepository.save(table);
+
         partitioner.init();
 
         dllService.reportInsert(shardUrl, tableName, id);
@@ -87,8 +114,12 @@ class DllServiceTest {
         String tableName = "Team";
         String id = "1";
         String shardId = "1";
+
+        Table table = new Table(tableName);
+        table.appendRow(id, shardId);
+        tableRepository.save(table);
         metadataRepository.save(shardId, shardUrl);
-        tableRepository.save(tableName, id, shardId);
+
         partitioner.init();
         dllService.reportInsert(shardUrl, tableName, id);
 
