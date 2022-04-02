@@ -3,9 +3,10 @@ package org.outofoffice.eida.manager.service;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.outofoffice.eida.manager.domain.ShardMapping;
+import org.outofoffice.eida.manager.infrastructure.ShardMappingMockRepository;
+import org.outofoffice.eida.manager.repository.ShardMappingRepository;
 import org.outofoffice.eida.common.table.Table;
-import org.outofoffice.eida.manager.repository.MetadataMapRepository;
-import org.outofoffice.eida.manager.repository.MetadataRepository;
 import org.outofoffice.eida.common.table.TableMapRepository;
 import org.outofoffice.eida.common.table.TableRepository;
 
@@ -16,14 +17,17 @@ class PartitionerTest {
     Partitioner partitioner;
 
     TableRepository tableRepository;
-    MetadataRepository metadataRepository;
-
+    ShardMappingRepository shardMappingRepository;
+    ShardMappingService shardMappingService;
 
     @BeforeEach
     void setup() {
         tableRepository = new TableMapRepository();
-        metadataRepository = new MetadataMapRepository();
-        partitioner = new Partitioner(tableRepository, metadataRepository);
+        shardMappingRepository = new ShardMappingMockRepository();
+        partitioner = new Partitioner(tableRepository, shardMappingRepository);
+
+        shardMappingRepository.save(new ShardMapping());
+        shardMappingService = new ShardMappingService(shardMappingRepository);
     }
 
     @AfterEach
@@ -42,8 +46,8 @@ class PartitionerTest {
         table.appendRow("e2", "1");
         tableRepository.save(table);
 
-        metadataRepository.save("1", "localhost:10830");
-        metadataRepository.save("2", "localhost:10831");
+        shardMappingService.appendRow("1", "localhost:10830");
+        shardMappingService.appendRow("2", "localhost:10831");
 
         partitioner.init();
 

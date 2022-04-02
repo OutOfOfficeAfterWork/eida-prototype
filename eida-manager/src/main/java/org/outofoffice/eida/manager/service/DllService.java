@@ -1,15 +1,14 @@
 package org.outofoffice.eida.manager.service;
 
 import lombok.RequiredArgsConstructor;
+import org.outofoffice.eida.manager.domain.ShardMapping;
+import org.outofoffice.eida.manager.repository.ShardMappingRepository;
 import org.outofoffice.eida.common.table.TableService;
 import org.outofoffice.eida.common.exception.RowNotFoundException;
 import org.outofoffice.eida.common.table.Table;
-import org.outofoffice.eida.manager.repository.MetadataRepository;
 import org.outofoffice.eida.common.table.TableRepository;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -20,8 +19,9 @@ public class DllService {
     private final TableService tableService;
     private final TableRepository tableRepository;
 
-    private final MetadataRepository metadataRepository;
-
+    private final ShardMappingService shardMappingService;
+    private final ShardMappingRepository shardMappingRepository;
+    
     private final Partitioner partitioner;
 
 
@@ -31,23 +31,27 @@ public class DllService {
         Set<String> shardIds = content.values().stream()
             .map(line -> line.split(",")[1])
             .collect(toSet());
-        return metadataRepository.findAllShardUrlsByShardIds(shardIds);
+        ShardMapping shardMapping = shardMappingRepository.find();
+        return shardMapping.getShardUrls(shardIds);
     }
 
     public String getDestinationShardUrl(String tableName) {
         String shardId = partitioner.nextShardId(tableName);
-        return metadataRepository.findShardUrlByShardId(shardId);
+        ShardMapping shardMapping = shardMappingRepository.find();
+        return shardMapping.getShardUrl(shardId).orElseThrow();
     }
 
     public String getSourceShardUrl(String tableName, String entityId) {
         Table table = tableRepository.findByName(tableName);
         String row = table.getRow(entityId).orElseThrow(() -> new RowNotFoundException(tableName, entityId));
         String shardId = row.split(",")[1];
-        return metadataRepository.findShardUrlByShardId(shardId);
+        ShardMapping shardMapping = shardMappingRepository.find();
+        return shardMapping.getShardUrl(shardId).orElseThrow();
     }
 
     public void reportInsert(String shardUrl, String tableName, String id) {
-        String shardId = metadataRepository.findShardIdByShardUrl(shardUrl);
+        ShardMapping shardMapping = shardMappingRepository.find();
+        String shardId = shardMapping.getShardId(shardUrl).orElseThrow();
         tableService.appendRow(tableName, id, shardId);
         partitioner.arrange(tableName);
     }

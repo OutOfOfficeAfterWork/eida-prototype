@@ -3,7 +3,8 @@ package org.outofoffice.eida.manager.service;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.outofoffice.eida.manager.repository.MetadataRepository;
+import org.outofoffice.eida.manager.domain.ShardMapping;
+import org.outofoffice.eida.manager.repository.ShardMappingRepository;
 import org.outofoffice.eida.common.table.TableRepository;
 
 import java.util.*;
@@ -16,22 +17,20 @@ import static java.util.stream.Collectors.groupingBy;
 @RequiredArgsConstructor
 public class Partitioner {
     private final TableRepository tableRepository;
-    private final MetadataRepository metadataRepository;
+    private final ShardMappingRepository shardMappingRepository;
 
     private final ConcurrentMap<String, PriorityQueue<ShardElement>> tableQueueMap = new ConcurrentHashMap<>();
 
     public void init() {
-        List<String> allShardIds = metadataRepository.findAllShardIds();
+        ShardMapping shardMapping = shardMappingRepository.find();
+        Set<String> allShardIds = shardMapping.getAllShardIds();
         tableRepository.findAll()
             .forEach(table -> {
                 String tableName = table.getTableName();
                 Map<String, String> entityShardMap = table.getContent();
 
                 List<ShardElement> shardElementList = new ArrayList<>();
-                entityShardMap.entrySet().forEach(entry -> {
-                    System.out.println(tableName+": "+ entry);
-                    entry.setValue(entry.getValue().split(",")[1]);
-                });
+                entityShardMap.entrySet().forEach(entry -> entry.setValue(entry.getValue().split(",")[1]));
                 Map<String, List<Map.Entry<String, String>>> shardEntriesMap = entityShardMap.entrySet().stream()
                     .collect(groupingBy(Map.Entry::getValue));
                 allShardIds.forEach(shardId ->

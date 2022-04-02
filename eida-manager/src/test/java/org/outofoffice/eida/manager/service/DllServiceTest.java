@@ -4,12 +4,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.outofoffice.eida.common.exception.RowNotFoundException;
+import org.outofoffice.eida.manager.domain.ShardMapping;
+import org.outofoffice.eida.manager.infrastructure.ShardMappingMockRepository;
+import org.outofoffice.eida.manager.repository.ShardMappingRepository;
+import org.outofoffice.eida.common.table.Table;
 import org.outofoffice.eida.common.table.TableMapRepository;
 import org.outofoffice.eida.common.table.TableRepository;
 import org.outofoffice.eida.common.table.TableService;
-import org.outofoffice.eida.common.exception.RowNotFoundException;
-import org.outofoffice.eida.common.table.Table;
-import org.outofoffice.eida.manager.repository.*;
 
 import java.util.List;
 
@@ -22,16 +24,22 @@ class DllServiceTest {
     DllService dllService;
     TableRepository tableRepository;
     TableService tableService;
-    MetadataRepository metadataRepository;
+    ShardMappingRepository shardMappingRepository;
+    ShardMappingService shardMappingService;
     Partitioner partitioner;
 
     @BeforeEach
     void setup() {
         tableRepository = new TableMapRepository();
         tableService = new TableService(tableRepository);
-        metadataRepository = new MetadataMapRepository();
-        partitioner = new Partitioner(tableRepository, metadataRepository);
-        dllService = new DllService(tableService, tableRepository, metadataRepository, partitioner);
+
+        shardMappingRepository = new ShardMappingMockRepository();
+        shardMappingService = new ShardMappingService(shardMappingRepository);
+
+        partitioner = new Partitioner(tableRepository, shardMappingRepository);
+        dllService = new DllService(tableService, tableRepository, shardMappingService, shardMappingRepository, partitioner);
+
+        shardMappingRepository.save(new ShardMapping());
     }
 
     @AfterEach
@@ -42,9 +50,9 @@ class DllServiceTest {
 
     @Test
     void getAllShardUrls() {
-        metadataRepository.save("1", "localhost:10830");
-        metadataRepository.save("2", "localhost:10831");
-        metadataRepository.save("3", "localhost:10832");
+        shardMappingService.appendRow("1", "localhost:10830");
+        shardMappingService.appendRow("2", "localhost:10831");
+        shardMappingService.appendRow("3", "localhost:10832");
         String tableName = "Team";
 
         Table table = new Table(tableName);
@@ -59,8 +67,8 @@ class DllServiceTest {
     @Test
     void getDestinationShardUrl() {
         String tableName = "Team";
-        metadataRepository.save("s1", "localhost:10830");
-        metadataRepository.save("s2", "localhost:10831");
+        shardMappingService.appendRow("s1", "localhost:10830");
+        shardMappingService.appendRow("s2", "localhost:10831");
 
         Table table = new Table(tableName);
         table.appendRow("e1", "s1");
@@ -74,7 +82,7 @@ class DllServiceTest {
 
     @Test
     void getSourceShardUrl() {
-        metadataRepository.save("3", "localhost:10830");
+        shardMappingService.appendRow("3", "localhost:10830");
 
         String tableName = "Team";
         String id = "1";
@@ -94,7 +102,7 @@ class DllServiceTest {
         String tableName = "Team";
         String id = "1";
         String shardId = "1";
-        metadataRepository.save(shardId, shardUrl);
+        shardMappingService.appendRow(shardId, shardUrl);
 
         Table table = new Table(tableName);
         table.appendRow(id, shardId);
@@ -118,7 +126,7 @@ class DllServiceTest {
         Table table = new Table(tableName);
         table.appendRow(id, shardId);
         tableRepository.save(table);
-        metadataRepository.save(shardId, shardUrl);
+        shardMappingService.appendRow(shardId, shardUrl);
 
         partitioner.init();
         dllService.reportInsert(shardUrl, tableName, id);
