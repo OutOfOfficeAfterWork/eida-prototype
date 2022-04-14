@@ -1,7 +1,9 @@
 package org.outofoffice.eida.manager.configuration;
 
 import lombok.NoArgsConstructor;
+import org.outofoffice.eida.common.table.TableMapRepository;
 import org.outofoffice.eida.manager.infrastructure.ShardMappingFileRepository;
+import org.outofoffice.eida.manager.infrastructure.ShardMappingMockRepository;
 import org.outofoffice.eida.manager.repository.ShardMappingRepository;
 import org.outofoffice.eida.manager.service.ShardMappingService;
 import org.outofoffice.eida.manager.controller.DllController;
@@ -29,8 +31,8 @@ public class SingletonContainer {
     public static final DllController DLL_CONTROLLER;
 
     static {
-        TABLE_REPOSITORY = new TableFileRepository();
-        SHARD_MAPPING_REPOSITORY = new ShardMappingFileRepository();
+        TABLE_REPOSITORY = new TableMapRepository();
+        SHARD_MAPPING_REPOSITORY = new ShardMappingMockRepository();
 
         PARTITIONER = new Partitioner(TABLE_REPOSITORY, SHARD_MAPPING_REPOSITORY);
         PARTITIONER.init();

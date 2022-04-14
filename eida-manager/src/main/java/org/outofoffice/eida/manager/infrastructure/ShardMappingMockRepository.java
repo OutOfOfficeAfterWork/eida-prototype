@@ -10,6 +10,11 @@ public class ShardMappingMockRepository implements ShardMappingRepository {
     @Setter(PRIVATE)
     private ShardMapping shardMapping;
 
+    public ShardMappingMockRepository() {
+        shardMapping = new ShardMapping();
+        shardMapping.appendRow("0", "localhost:10830");
+    }
+
     @Override
     public ShardMapping find() {
         return shardMapping;

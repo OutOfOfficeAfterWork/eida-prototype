@@ -42,7 +42,9 @@ public class Partitioner {
 
     public String nextShardId(String tableName) {
         PriorityQueue<ShardElement> priorityQueue = tableQueueMap.get(tableName);
-        if (priorityQueue == null) throw new IllegalStateException("pq null");
+        // TODO tableQueueMap update
+//        if (priorityQueue == null) throw new IllegalStateException("pq null");
+        if (priorityQueue == null) return "0";
         if (priorityQueue.isEmpty()) throw new IllegalStateException("pq empty");
 
         return priorityQueue.peek().getShardId();

@@ -26,7 +26,6 @@ class PartitionerTest {
         shardMappingRepository = new ShardMappingMockRepository();
         partitioner = new Partitioner(tableRepository, shardMappingRepository);
 
-        shardMappingRepository.save(new ShardMapping());
         shardMappingService = new ShardMappingService(shardMappingRepository);
     }
 

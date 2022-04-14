@@ -38,8 +38,6 @@ class DllServiceTest {
 
         partitioner = new Partitioner(tableRepository, shardMappingRepository);
         dllService = new DllService(tableService, tableRepository, shardMappingService, shardMappingRepository, partitioner);
-
-        shardMappingRepository.save(new ShardMapping());
     }
 
     @AfterEach
