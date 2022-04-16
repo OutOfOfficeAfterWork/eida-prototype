@@ -1,7 +1,6 @@
-package org.outofoffice.lib.core;
+package org.outofoffice.common.socket;
 
 import org.junit.jupiter.api.Test;
-import org.outofoffice.common.socket.EidaSocketClient;
 import org.outofoffice.common.exception.EidaException;
 
 import java.io.BufferedReader;
@@ -12,9 +11,9 @@ import java.net.Socket;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
-
-class EidaDefaultSocketClientTest {
+class EidaSocketClientTest {
 
     EidaSocketClient eidaClient = new EidaSocketClient();
 
@@ -29,7 +28,7 @@ class EidaDefaultSocketClientTest {
 
         String response = eidaClient.request(address, "hello");
 
-        assertThat(response).isEqualTo("OK\nReceived: hello");
+        assertThat(response).isEqualTo("Received: hello");
     }
 
     private Thread instantServer(int port, Function<String, String> responseGenerator) {

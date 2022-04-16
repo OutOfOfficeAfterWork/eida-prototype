@@ -12,7 +12,6 @@ public class ShardMappingMockRepository implements ShardMappingRepository {
 
     public ShardMappingMockRepository() {
         shardMapping = new ShardMapping();
-        shardMapping.appendRow("0", "localhost:10830");
     }
 
     @Override

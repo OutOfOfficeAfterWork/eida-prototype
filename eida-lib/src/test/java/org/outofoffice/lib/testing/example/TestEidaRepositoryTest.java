@@ -20,7 +20,7 @@ class TestEidaRepositoryTest {
     TestEidaRepository repository;
 
     EidaInMemoryClient inMemoryClient;
-    String managerServerUrl = "http://manager:1234";
+    String managerServerUrl = "localhost:10325";
 
 
     @BeforeEach

@@ -3,7 +3,6 @@ package org.outofoffice.eida.manager.service;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.outofoffice.eida.manager.domain.ShardMapping;
 import org.outofoffice.eida.manager.infrastructure.ShardMappingMockRepository;
 import org.outofoffice.eida.manager.repository.ShardMappingRepository;
 import org.outofoffice.eida.common.table.Table;

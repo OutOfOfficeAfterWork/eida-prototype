@@ -20,8 +20,7 @@ class KemiRepositoryTest {
     KemiRepository kemiRepository = new KemiRepository();
 
     EidaInMemoryClient socketClient;
-    String managerServerUrl = "http://manager:1234";
-    String shardUrl = "http://shard1:1234";
+    String managerServerUrl = "localhost:10325";
 
 
     @BeforeEach
