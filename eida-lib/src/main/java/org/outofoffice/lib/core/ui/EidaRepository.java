@@ -3,7 +3,7 @@ package org.outofoffice.lib.core.ui;
 import org.outofoffice.lib.context.EidaContext;
 import org.outofoffice.lib.core.client.EidaDllClient;
 import org.outofoffice.lib.core.client.EidaDmlClient;
-import org.outofoffice.lib.exception.EidaException;
+import org.outofoffice.common.exception.EidaException;
 import org.outofoffice.lib.util.ClassUtils;
 
 import java.util.List;

@@ -8,11 +8,11 @@ import org.outofoffice.lib.core.client.EidaManagerClient;
 import org.outofoffice.lib.core.client.EidaShardClient;
 import org.outofoffice.lib.core.query.EidaDllGenerator;
 import org.outofoffice.lib.core.query.EidaDmlGenerator;
-import org.outofoffice.lib.core.socket.EidaSocketClient;
+import org.outofoffice.common.socket.EidaSocketClient;
 import org.outofoffice.lib.core.ui.EidaEntity;
 import org.outofoffice.lib.core.ui.EidaRepository;
 import org.outofoffice.lib.core.ui.EidaSerializer;
-import org.outofoffice.lib.exception.EidaException;
+import org.outofoffice.common.exception.EidaException;
 import org.outofoffice.lib.util.ClassUtils;
 
 import java.util.Collection;

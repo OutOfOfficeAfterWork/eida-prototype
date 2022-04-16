@@ -3,7 +3,7 @@ package org.outofoffice.eidaspringsupport;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.outofoffice.lib.context.EidaContext;
-import org.outofoffice.lib.core.socket.EidaDefaultSocketClient;
+import org.outofoffice.common.socket.EidaSocketClient;
 import org.outofoffice.lib.core.ui.EidaEntity;
 import org.outofoffice.lib.core.ui.EidaRepository;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -20,7 +20,7 @@ public class EidaInitializer {
         log.info("init: by {}, from {}", beanFactory.getClass().getSimpleName(), mainClass.getSimpleName());
         BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
 
-        EidaContext.init(mainClass, new EidaDefaultSocketClient());
+        EidaContext.init(mainClass, new EidaSocketClient());
         EidaContext.getRepositories().forEach(repository -> registerBean(registry, repository));
     }
 

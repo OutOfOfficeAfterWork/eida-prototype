@@ -1,14 +1,14 @@
-package org.outofoffice.lib.core.socket;
+package org.outofoffice.common.socket;
 
 import lombok.extern.slf4j.Slf4j;
-import org.outofoffice.lib.exception.EidaException;
+import org.outofoffice.common.exception.EidaException;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
 @Slf4j
-public class EidaInMemoryClient implements EidaSocketClient {
+public class EidaInMemoryClient extends EidaSocketClient {
 
     private static final String KEY_DELIMITER = ":::";
     private final Map<String, String> mappings = new HashMap<>();

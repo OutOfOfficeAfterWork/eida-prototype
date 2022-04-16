@@ -1,4 +1,4 @@
-package org.outofoffice.lib.testing;
+package org.outofoffice.common.testing;
 
 public interface TestRequest {
 

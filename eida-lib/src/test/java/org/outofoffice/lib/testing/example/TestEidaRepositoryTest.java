@@ -1,11 +1,10 @@
 package org.outofoffice.lib.testing.example;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.outofoffice.lib.context.EidaContext;
-import org.outofoffice.lib.core.socket.EidaInMemoryClient;
+import org.outofoffice.common.socket.EidaInMemoryClient;
 import org.outofoffice.lib.example.TestEidaEntity;
 import org.outofoffice.lib.example.TestEidaRepository;
 

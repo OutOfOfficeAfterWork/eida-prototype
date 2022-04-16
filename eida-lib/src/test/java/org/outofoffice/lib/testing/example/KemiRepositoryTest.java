@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.outofoffice.lib.context.EidaContext;
 import org.outofoffice.lib.core.query.EidaDmlGenerator;
-import org.outofoffice.lib.core.socket.EidaInMemoryClient;
+import org.outofoffice.common.socket.EidaInMemoryClient;
 import org.outofoffice.lib.example.KemiEntity;
 import org.outofoffice.lib.example.KemiRepository;
 import org.outofoffice.lib.example.TestEidaEntity;

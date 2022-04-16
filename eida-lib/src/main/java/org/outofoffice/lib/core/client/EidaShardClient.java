@@ -2,7 +2,7 @@ package org.outofoffice.lib.core.client;
 
 import lombok.RequiredArgsConstructor;
 import org.outofoffice.lib.core.query.EidaDmlGenerator;
-import org.outofoffice.lib.core.socket.EidaSocketClient;
+import org.outofoffice.common.socket.EidaSocketClient;
 
 
 @RequiredArgsConstructor

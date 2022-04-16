@@ -1,6 +1,8 @@
-package org.outofoffice.lib.testing;
+package org.outofoffice.eida.manager.testing;
 
 import lombok.Data;
+import org.outofoffice.common.testing.EidaSocketTestFacade;
+import org.outofoffice.common.testing.TestRequest;
 
 @Data
 public class GetDestTestRequest implements TestRequest {
@@ -9,7 +11,7 @@ public class GetDestTestRequest implements TestRequest {
     private final String message = "get dst, table";
 
     public static void main(String[] args) {
-        EidaTestClient.request(new GetDestTestRequest());
+        EidaSocketTestFacade.request(new GetDestTestRequest());
     }
 
 }

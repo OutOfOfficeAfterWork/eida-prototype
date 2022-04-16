@@ -1,6 +1,7 @@
-package org.outofoffice.lib.core.socket;
+package org.outofoffice.common.socket;
 
-import org.outofoffice.lib.exception.EidaException;
+import lombok.extern.slf4j.Slf4j;
+import org.outofoffice.common.exception.EidaException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,17 +13,22 @@ import java.util.StringJoiner;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 
-public class EidaDefaultSocketClient implements EidaSocketClient {
+@Slf4j
+public class EidaSocketClient {
 
-    @Override
     public String request(String address, String message) {
         try (
             Socket socket = createSocket(address);
             PrintWriter writer = getWriter(socket);
             BufferedReader reader = getReader(socket)
         ) {
+            log.debug("request(address: {}, message: {})", address, message);
+
             writer.println(message);
-            return readResponse(reader);
+            String response = readResponse(reader);
+
+            log.debug("response: {}", response.replace("\n", "\\n"));
+            return response;
         } catch (Exception e) {
             throw new EidaException(e);
         }

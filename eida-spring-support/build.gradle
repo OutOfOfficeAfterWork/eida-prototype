@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+    implementation project(':eida-common')
     implementation project(':eida-lib')
 
     implementation 'org.springframework.boot:spring-boot-starter'

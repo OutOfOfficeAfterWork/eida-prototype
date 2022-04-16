@@ -1,14 +1,16 @@
-package org.outofoffice.lib.testing;
+package org.outofoffice.common.testing;
 
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.outofoffice.lib.core.socket.EidaDefaultSocketClient;
-import org.outofoffice.lib.core.socket.EidaSocketClient;
-import org.outofoffice.lib.core.socket.EidaSocketClientLoggingProxy;
+import org.outofoffice.common.socket.EidaSocketClient;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
-public class EidaTestClient {
+@NoArgsConstructor(access = PRIVATE)
+public class EidaSocketTestFacade {
 
-    private static final EidaSocketClient eidaClient = new EidaSocketClientLoggingProxy(new EidaDefaultSocketClient());
+    private static final EidaSocketClient eidaClient = new EidaSocketClient();
 
 
     public static void request(TestRequest req) {
