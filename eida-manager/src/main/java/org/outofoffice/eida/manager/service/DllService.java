@@ -54,6 +54,8 @@ public class DllService {
     }
 
     public void reportDelete(String tableName, String id) {
+        Table table = tableService.findByName(tableName);
+        if (table.getRow(id).isEmpty()) throw new RowNotFoundException(tableName, id);
         tableService.deleteRow(tableName, id);
     }
 
