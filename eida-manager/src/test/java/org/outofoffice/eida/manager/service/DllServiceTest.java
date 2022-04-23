@@ -5,13 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.outofoffice.eida.common.exception.RowNotFoundException;
-import org.outofoffice.eida.manager.domain.ShardMapping;
-import org.outofoffice.eida.manager.infrastructure.ShardMappingMockRepository;
-import org.outofoffice.eida.manager.repository.ShardMappingRepository;
 import org.outofoffice.eida.common.table.Table;
 import org.outofoffice.eida.common.table.TableMapRepository;
 import org.outofoffice.eida.common.table.TableRepository;
 import org.outofoffice.eida.common.table.TableService;
+import org.outofoffice.eida.manager.infrastructure.ShardMappingMockRepository;
+import org.outofoffice.eida.manager.repository.ShardMappingRepository;
 
 import java.util.List;
 
@@ -37,7 +36,7 @@ class DllServiceTest {
         shardMappingService = new ShardMappingService(shardMappingRepository);
 
         partitioner = new Partitioner(tableRepository, shardMappingRepository);
-        dllService = new DllService(tableService, tableRepository, shardMappingService, shardMappingRepository, partitioner);
+        dllService = new DllService(tableService, shardMappingService, partitioner);
     }
 
     @AfterEach

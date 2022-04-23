@@ -20,4 +20,7 @@ public class TableService {
         tableRepository.save(table);
     }
 
+    public Table findByName(String tableName) {
+        return tableRepository.findByName(tableName);
+    }
 }

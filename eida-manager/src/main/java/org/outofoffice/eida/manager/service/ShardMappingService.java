@@ -15,4 +15,9 @@ public class ShardMappingService {
         shardMapping.appendRow(shardId, shardUrl);
         shardMappingRepository.save(shardMapping);
     }
+
+    public ShardMapping find() {
+        return shardMappingRepository.find();
+    }
+
 }
