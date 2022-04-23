@@ -8,7 +8,7 @@ import org.outofoffice.common.testing.TestRequest;
 public class GetAllTestRequest implements TestRequest {
 
     private final String address = "localhost:10325";
-    private final String message = "get all, table";
+    private final String message = "get all, user";
 
     public static void main(String[] args) {
         EidaSocketTestFacade.request(new GetAllTestRequest());

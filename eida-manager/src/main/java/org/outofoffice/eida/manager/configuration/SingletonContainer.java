@@ -1,17 +1,14 @@
 package org.outofoffice.eida.manager.configuration;
 
 import lombok.NoArgsConstructor;
-import org.outofoffice.eida.common.table.TableMapRepository;
-import org.outofoffice.eida.manager.infrastructure.ShardMappingFileRepository;
+import org.outofoffice.eida.common.table.*;
+import org.outofoffice.eida.manager.domain.ShardMapping;
 import org.outofoffice.eida.manager.infrastructure.ShardMappingMockRepository;
 import org.outofoffice.eida.manager.repository.ShardMappingRepository;
 import org.outofoffice.eida.manager.service.ShardMappingService;
 import org.outofoffice.eida.manager.controller.DllController;
-import org.outofoffice.eida.common.table.TableFileRepository;
-import org.outofoffice.eida.common.table.TableRepository;
 import org.outofoffice.eida.manager.service.DllService;
 import org.outofoffice.eida.manager.service.Partitioner;
-import org.outofoffice.eida.common.table.TableService;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -33,6 +30,7 @@ public class SingletonContainer {
     static {
         TABLE_REPOSITORY = new TableMapRepository();
         SHARD_MAPPING_REPOSITORY = new ShardMappingMockRepository();
+        setTestData();
 
         PARTITIONER = new Partitioner(TABLE_REPOSITORY, SHARD_MAPPING_REPOSITORY);
         PARTITIONER.init();
@@ -42,6 +40,20 @@ public class SingletonContainer {
 
         DLL_SERVICE = new DllService(TABLE_SERVICE, SHARD_MAPPING_SERVICE, PARTITIONER);
         DLL_CONTROLLER = new DllController(DLL_SERVICE);
+    }
+
+    private static void setTestData() {
+        Table userTable = new Table("user");
+        userTable.appendRow("1", "1");
+        userTable.appendRow("2", "1");
+        userTable.appendRow("3", "2");
+        TABLE_REPOSITORY.save(userTable);
+
+        ShardMapping shardMapping = new ShardMapping();
+        shardMapping.appendRow("1", "localhost:10830");
+        shardMapping.appendRow("2", "localhost:10831");
+        shardMapping.appendRow("3", "localhost:10832");
+        SHARD_MAPPING_REPOSITORY.save(shardMapping);
     }
 
 }

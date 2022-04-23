@@ -24,7 +24,7 @@ public class DllService {
 
     public List<String> getAllShardUrls(String tableName) {
         Table table = tableService.findByName(tableName);
-        Map<String, String> content = table.getContent();
+        Map<String, String> content = table.copyContent();
         Set<String> shardIds = content.values().stream()
             .map(line -> line.split(",")[1])
             .collect(toSet());

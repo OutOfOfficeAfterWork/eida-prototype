@@ -1,15 +1,15 @@
 package org.outofoffice.eida.manager.domain;
 
-import lombok.Getter;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ShardMapping {
 
-    @Getter
     private final Map<String, String> content = new HashMap<>();
 
+    public Map<String, String> copyContent() {
+        return new HashMap<>(content);
+    }
 
     public void appendRow(String shardId, String shardUrl) {
         content.put(shardId, shardUrl);

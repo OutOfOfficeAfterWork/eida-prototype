@@ -27,7 +27,7 @@ public class Partitioner {
         tableRepository.findAll()
             .forEach(table -> {
                 String tableName = table.getTableName();
-                Map<String, String> entityShardMap = table.getContent();
+                Map<String, String> entityShardMap = table.copyContent();
 
                 List<ShardElement> shardElementList = new ArrayList<>();
                 entityShardMap.entrySet().forEach(entry -> entry.setValue(entry.getValue().split(",")[1]));

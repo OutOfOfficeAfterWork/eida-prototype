@@ -1,5 +1,6 @@
 package org.outofoffice.eida.common.table;
 
+import lombok.extern.slf4j.Slf4j;
 import org.outofoffice.eida.common.exception.TableNotFoundException;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class TableMapRepository implements TableRepository {
     private final Map<String, Table> map = new HashMap<>();
 
@@ -19,6 +21,7 @@ public class TableMapRepository implements TableRepository {
     @Override
     public void save(Table table) {
         map.put(table.getTableName(), table);
+        log.debug("post save: \n\t{}", String.join("\n\t", findByName(table.getTableName()).copyContent().values()));
     }
 
     @Override

@@ -13,9 +13,12 @@ public class Table {
 
     @Getter
     private final String tableName;
-    @Getter
     private final Map<String, String> content = new HashMap<>();
 
+
+    public Map<String, String> copyContent() {
+        return new HashMap<>(content);
+    }
 
     public void appendRow(String id, String value) {
         content.put(id, String.join(DELIMITER, id, value));
