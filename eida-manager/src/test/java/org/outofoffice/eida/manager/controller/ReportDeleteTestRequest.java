@@ -1,4 +1,4 @@
-package org.outofoffice.eida.manager.testing;
+package org.outofoffice.eida.manager.controller;
 
 import lombok.Data;
 import org.outofoffice.common.testing.EidaSocketTestFacade;
