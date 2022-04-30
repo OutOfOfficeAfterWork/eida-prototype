@@ -5,7 +5,15 @@ import java.util.stream.Collectors;
 
 public class ShardMapping {
 
-    private final Map<String, String> content = new HashMap<>();
+    private final Map<String, String> content;
+
+    public ShardMapping() {
+        content = new HashMap<>();
+    }
+
+    public ShardMapping(Map<String, String> content) {
+        this.content = content;
+    }
 
     public Map<String, String> copyContent() {
         return new HashMap<>(content);

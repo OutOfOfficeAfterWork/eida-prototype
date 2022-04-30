@@ -3,6 +3,8 @@ package org.outofoffice.eida.manager.configuration;
 import lombok.NoArgsConstructor;
 import org.outofoffice.eida.common.table.*;
 import org.outofoffice.eida.manager.domain.ShardMapping;
+import org.outofoffice.eida.manager.infrastructure.ShardMappingFileFacade;
+import org.outofoffice.eida.manager.infrastructure.ShardMappingFileRepository;
 import org.outofoffice.eida.manager.infrastructure.ShardMappingMockRepository;
 import org.outofoffice.eida.manager.repository.ShardMappingRepository;
 import org.outofoffice.eida.manager.service.ShardMappingService;
@@ -11,26 +13,28 @@ import org.outofoffice.eida.manager.service.DllService;
 import org.outofoffice.eida.manager.service.Partitioner;
 
 import static lombok.AccessLevel.PRIVATE;
+import static org.outofoffice.eida.manager.configuration.ConfigConstant.SHARD_MAPPING_FILE_PATH;
+import static org.outofoffice.eida.manager.configuration.ConfigConstant.TABLE_DIR_PATH;
 
 
 @NoArgsConstructor(access = PRIVATE)
 public class SingletonContainer {
 
-    public static final TableRepository TABLE_REPOSITORY;
-    public static final ShardMappingRepository SHARD_MAPPING_REPOSITORY;
+    public static TableRepository TABLE_REPOSITORY;
+    public static ShardMappingRepository SHARD_MAPPING_REPOSITORY;
 
-    public static final Partitioner PARTITIONER;
+    public static Partitioner PARTITIONER;
 
-    public static final TableService TABLE_SERVICE;
-    public static final ShardMappingService SHARD_MAPPING_SERVICE;
+    public static TableService TABLE_SERVICE;
+    public static ShardMappingService SHARD_MAPPING_SERVICE;
 
-    public static final DllService DLL_SERVICE;
-    public static final DllController DLL_CONTROLLER;
+    public static DllService DLL_SERVICE;
+    public static DllController DLL_CONTROLLER;
 
-    static {
-        TABLE_REPOSITORY = new TableMapRepository();
-        SHARD_MAPPING_REPOSITORY = new ShardMappingMockRepository();
-        setTestData();
+    public static void init(boolean isTest) {
+        TABLE_REPOSITORY = isTest ? new TableMapRepository() : new TableFileRepository(new TableFileFacade(TABLE_DIR_PATH));
+        SHARD_MAPPING_REPOSITORY = isTest ? new ShardMappingMockRepository() : new ShardMappingFileRepository(new ShardMappingFileFacade(SHARD_MAPPING_FILE_PATH));
+        if (isTest) setTestData();
 
         PARTITIONER = new Partitioner(TABLE_REPOSITORY, SHARD_MAPPING_REPOSITORY);
         PARTITIONER.init();

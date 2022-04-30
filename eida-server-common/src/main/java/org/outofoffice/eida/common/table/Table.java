@@ -1,19 +1,29 @@
 package org.outofoffice.eida.common.table;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@RequiredArgsConstructor
 public class Table {
-    private static final String DELIMITER = ",";
+
+    public static final String DELIMITER = ",";
 
     @Getter
     private final String tableName;
-    private final Map<String, String> content = new HashMap<>();
+    private final Map<String, String> content;
+
+
+    public Table(String tableName) {
+        this.tableName = tableName;
+        this.content = new HashMap<>();
+    }
+
+    public Table(String tableName, Map<String, String > content) {
+        this.tableName = tableName;
+        this.content = content;
+    }
 
 
     public Map<String, String> copyContent() {

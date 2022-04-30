@@ -1,25 +1,31 @@
 package org.outofoffice.eida.common.table;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
+@RequiredArgsConstructor
 public class TableFileRepository implements TableRepository {
+
+    private final TableFileFacade tableFileFacade;
+
     @Override
     public Table findByName(String tableName) {
-        throw new IllegalStateException("todo impl");
+        return tableFileFacade.findByName(tableName);
     }
 
     @Override
     public void save(Table table) {
-        throw new IllegalStateException("todo impl");
+        tableFileFacade.save(table);
     }
 
     @Override
     public List<Table> findAll() {
-        throw new IllegalStateException("todo impl");
+        return tableFileFacade.findAll();
     }
 
     @Override
     public void clear() {
-        throw new IllegalStateException("todo impl");
+        tableFileFacade.clear();
     }
 }
