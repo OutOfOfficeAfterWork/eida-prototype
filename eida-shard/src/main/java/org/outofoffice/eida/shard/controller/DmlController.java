@@ -1,39 +1,33 @@
 package org.outofoffice.eida.shard.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.outofoffice.eida.shard.repository.TableRepository;
+import org.outofoffice.eida.shard.service.DmlService;
 
 
 @RequiredArgsConstructor
 public class DmlController {
-    public static final DmlController INSTANCE = new DmlController(
-        new TableRepository() {
-            @Override
-            public String findByTableNameAndId(String tableName, String id) {
-                return "id,teamName\n1,OutOfOffice";
-            }
-        }
-    );
 
-    private final TableRepository tableRepository;
+    private final DmlService dmlService;
+
 
     public String selectAll(String tableName) {
-        return "select all, " + tableName;
+        return dmlService.selectAll(tableName);
     }
 
-    public String selectById(String tableName, String id) {
-        return tableRepository.findByTableNameAndId(tableName, id);
+    public String selectByTableNameAndId(String tableName, String id) {
+        return dmlService.selectByTableNameAndId(tableName, id);
     }
 
     public void insert(String tableName, String data) {
-        // return "insert, " + tableName + " " + data;
+        dmlService.insert(tableName, data);
     }
 
     public void update(String tableName, String data) {
-        // return "update, " + tableName + " " + data;
+        dmlService.update(tableName, data);
     }
 
     public void delete(String tableName, String id) {
-        // return "delete, " + tableName + " " + id;
+        dmlService.delete(tableName, id);
     }
+
 }

@@ -1,4 +1,4 @@
-package org.outofoffice.eida.shard.handler.dml;
+package org.outofoffice.eida.shard.configuration.handler.dml;
 
 import lombok.RequiredArgsConstructor;
 import org.outofoffice.eida.common.QueryHandler;
@@ -13,6 +13,6 @@ public class SelectQueryHandler implements QueryHandler {
         String[] params = parameter.split(" ");
         String tableName = params[0];
         String id = params[1];
-        return dmlController.selectById(tableName, id);
+        return dmlController.selectByTableNameAndId(tableName, id);
     }
 }
