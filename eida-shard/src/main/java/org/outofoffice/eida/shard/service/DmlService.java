@@ -1,6 +1,7 @@
 package org.outofoffice.eida.shard.service;
 
 import lombok.RequiredArgsConstructor;
+import org.outofoffice.eida.common.exception.DuplicatedKeyException;
 import org.outofoffice.eida.common.exception.RowNotFoundException;
 import org.outofoffice.eida.common.table.Table;
 import org.outofoffice.eida.common.table.TableService;
@@ -30,7 +31,11 @@ public class DmlService {
     }
 
     public void insert(String tableName, String data) {
+        Table table = tableService.findByName(tableName);
         String rowString = data.split(" ", 2)[1];
+        String id = rowString.split(DELIMITER, 2)[0];
+        if (table.getRow(id).isPresent()) throw new DuplicatedKeyException(tableName, id);
+
         tableService.appendRow(tableName, rowString);
     }
 

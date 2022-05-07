@@ -8,7 +8,7 @@ import org.outofoffice.common.testing.TestRequest;
 public class DeleteTestRequest implements TestRequest {
 
     private final String address = "localhost:10830";
-    private final String message = "delete, table {entityId}";
+    private final String message = "delete, user 2";
 
     public static void main(String[] args) {
         EidaSocketTestFacade.request(new DeleteTestRequest());
