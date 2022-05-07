@@ -11,7 +11,7 @@ import org.outofoffice.eida.common.table.TableRepository;
 import org.outofoffice.eida.common.table.TableService;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DmlServiceTest {
     DmlService dmlService;
@@ -34,10 +34,11 @@ class DmlServiceTest {
     @Test
     void selectAll() {
         String tableName = "user";
+        String scheme = "id,name";
 
-        Table table = new Table(tableName);
-        table.appendRow("1", "1,kemi");
-        table.appendRow("2", "2,josh");
+        Table table = new Table(tableName, scheme);
+        table.appendRow("1", "kemi");
+        table.appendRow("2", "josh");
         tableRepository.save(table);
 
         String response = dmlService.selectAll(tableName);
@@ -48,9 +49,9 @@ class DmlServiceTest {
     void selectByTableNameAndId() {
         String tableName = "user";
 
-        Table table = new Table(tableName);
-        table.appendRow("1", "1,kemi");
-        table.appendRow("2", "2,josh");
+        Table table = new Table(tableName, "id,name");
+        table.appendRow("1", "kemi");
+        table.appendRow("2", "josh");
         tableRepository.save(table);
 
         String response = dmlService.selectByTableNameAndId(tableName, "1");
@@ -60,12 +61,17 @@ class DmlServiceTest {
     @Test
     void insert() {
         String tableName = "user";
-        String data = "id,name 1,kemi";
+        String data = "id,name 3,eida";
+
+        Table table = new Table(tableName, "id,name");
+        table.appendRow("1", "kemi");
+        table.appendRow("2", "josh");
+        tableRepository.save(table);
 
         dmlService.insert(tableName, data);
 
-        String response = dmlService.selectByTableNameAndId(tableName, "1");
-        assertThat(response).isEqualTo("id,name\n1,kemi");
+        String response = dmlService.selectByTableNameAndId(tableName, "3");
+        assertThat(response).isEqualTo("id,name\n3,eida");
     }
 
     @Test
@@ -73,8 +79,8 @@ class DmlServiceTest {
         String tableName = "user";
         String data = "id,name 1,josh";
 
-        Table table = new Table(tableName);
-        table.appendRow("1", "1,kemi");
+        Table table = new Table(tableName, "id,name");
+        table.appendRow("1", "kemi");
         tableRepository.save(table);
 
         dmlService.update(tableName, data);
@@ -87,8 +93,8 @@ class DmlServiceTest {
     void delete() {
         String tableName = "user";
 
-        Table table = new Table(tableName);
-        table.appendRow("1", "1,kemi");
+        Table table = new Table(tableName, "id,name");
+        table.appendRow("1", "kemi");
         tableRepository.save(table);
 
         dmlService.delete(tableName, "1");

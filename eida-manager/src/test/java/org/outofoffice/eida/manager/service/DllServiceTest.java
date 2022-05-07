@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DllServiceTest {
 
+    String header = "entityId,shardId";
+
     DllService dllService;
     TableRepository tableRepository;
     TableService tableService;
@@ -52,7 +54,7 @@ class DllServiceTest {
         shardMappingService.appendRow("3", "localhost:10832");
         String tableName = "Team";
 
-        Table table = new Table(tableName);
+        Table table = new Table(tableName, header);
         table.appendRow("1", "1");
         table.appendRow("2", "2");
         tableRepository.save(table);
@@ -67,7 +69,7 @@ class DllServiceTest {
         shardMappingService.appendRow("s1", "localhost:10830");
         shardMappingService.appendRow("s2", "localhost:10831");
 
-        Table table = new Table(tableName);
+        Table table = new Table(tableName, header);
         table.appendRow("e1", "s1");
         tableRepository.save(table);
 
@@ -84,7 +86,7 @@ class DllServiceTest {
         String tableName = "Team";
         String id = "1";
 
-        Table table = new Table(tableName);
+        Table table = new Table(tableName, header);
         table.appendRow(id, "3");
         tableRepository.save(table);
 
@@ -101,7 +103,7 @@ class DllServiceTest {
         String shardId = "1";
         shardMappingService.appendRow(shardId, shardUrl);
 
-        Table table = new Table(tableName);
+        Table table = new Table(tableName, header);
         table.appendRow(id, shardId);
         tableRepository.save(table);
 
@@ -120,7 +122,7 @@ class DllServiceTest {
         String id = "1";
         String shardId = "1";
 
-        Table table = new Table(tableName);
+        Table table = new Table(tableName, header);
         table.appendRow(id, shardId);
         tableRepository.save(table);
         shardMappingService.appendRow(shardId, shardUrl);

@@ -13,8 +13,7 @@ import org.outofoffice.eida.manager.service.DllService;
 import org.outofoffice.eida.manager.service.Partitioner;
 
 import static lombok.AccessLevel.PRIVATE;
-import static org.outofoffice.eida.manager.configuration.ConfigConstant.SHARD_MAPPING_FILE_PATH;
-import static org.outofoffice.eida.manager.configuration.ConfigConstant.TABLE_DIR_PATH;
+import static org.outofoffice.eida.manager.configuration.ConfigConstant.*;
 
 
 @NoArgsConstructor(access = PRIVATE)
@@ -32,7 +31,7 @@ public class SingletonContainer {
     public static DllController DLL_CONTROLLER;
 
     public static void init(boolean isTest) {
-        TABLE_REPOSITORY = isTest ? new TableMapRepository() : new TableFileRepository(new TableFileFacade(TABLE_DIR_PATH));
+        TABLE_REPOSITORY = isTest ? new TableMapRepository() : new TableFileRepository(new TableFileFacade(TABLE_DIR_PATH, SCHEME_DIR_PATH));
         SHARD_MAPPING_REPOSITORY = isTest ? new ShardMappingMockRepository() : new ShardMappingFileRepository(new ShardMappingFileFacade(SHARD_MAPPING_FILE_PATH));
         if (isTest) setTestData();
 
@@ -47,7 +46,7 @@ public class SingletonContainer {
     }
 
     private static void setTestData() {
-        Table userTable = new Table("user");
+        Table userTable = new Table("user", "id,name");
         userTable.appendRow("1", "1");
         userTable.appendRow("2", "1");
         userTable.appendRow("3", "2");

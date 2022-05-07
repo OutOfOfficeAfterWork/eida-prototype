@@ -6,7 +6,7 @@ import org.outofoffice.eida.shard.controller.DmlController;
 import org.outofoffice.eida.shard.service.DmlService;
 
 import static lombok.AccessLevel.PRIVATE;
-import static org.outofoffice.eida.shard.configuration.ConfigConstant.SHARD_ROOT;
+import static org.outofoffice.eida.shard.configuration.ConfigConstant.*;
 
 
 @NoArgsConstructor(access = PRIVATE)
@@ -20,7 +20,7 @@ public class SingletonContainer {
     public static DmlController DML_CONTROLLER;
 
     public static void init(boolean isTest) {
-        TABLE_REPOSITORY = isTest ? new TableMapRepository() : new TableFileRepository(new TableFileFacade(SHARD_ROOT));
+        TABLE_REPOSITORY = isTest ? new TableMapRepository() : new TableFileRepository(new TableFileFacade(SHARD_TABLE_DIR, SHARD_SCHEME_DIR));
         if (isTest) setTestData();
 
         TABLE_SERVICE = new TableService(TABLE_REPOSITORY);
@@ -30,7 +30,7 @@ public class SingletonContainer {
     }
 
     private static void setTestData() {
-        Table userTable = new Table("user");
+        Table userTable = new Table("user", "id,name");
         TABLE_REPOSITORY.save(userTable);
     }
 

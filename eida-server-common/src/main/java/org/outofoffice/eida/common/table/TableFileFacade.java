@@ -19,13 +19,16 @@ import static org.outofoffice.eida.common.table.Table.DELIMITER;
 public class TableFileFacade {
 
     private final String dirPath;
+    private final String schemePath;
 
 
     public Table findByName(String tableName) {
         String filePath = dirPath + tableName;
+
         try {
             Path path = Paths.get(filePath);
             List<String> lines = Files.readAllLines(path);
+            String header = lines.get(0);
 
             Map<String, String> map = new HashMap<>();
             int size = lines.size();
@@ -35,7 +38,7 @@ public class TableFileFacade {
                 String key = line.substring(0, idx);
                 map.put(key, line);
             }
-            return new Table(tableName, map);
+            return new Table(tableName, header, map);
         } catch (NoSuchFileException e) {
             throw new TableNotFoundException(e);
         } catch (IOException e) {
@@ -46,6 +49,7 @@ public class TableFileFacade {
 
     public void save(Table table) {
         String filePath = dirPath + table.getTableName();
+        String schemeFilePath = schemePath + table.getTableName();
         try {
             Path path = Paths.get(filePath);
             if (Files.exists(path)) {
@@ -53,9 +57,7 @@ public class TableFileFacade {
             }
 
             Path file = Files.createFile(path);
-
-            // TODO from scheme
-            String[] columns = {"entity", "shard"};
+            List<String> columns = Files.readAllLines(Paths.get(schemeFilePath));
             String header = String.join(DELIMITER, columns) + "\n";
             Files.write(file, header.getBytes(UTF_8), CREATE);
 

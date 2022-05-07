@@ -8,9 +8,15 @@ public class TableService {
     private final TableRepository tableRepository;
 
 
-    public void appendRow(String tableName, String id, String shardId) {
+    public void appendRow(String tableName, String id, String value) {
         Table table = tableRepository.findByName(tableName);
-        table.appendRow(id, shardId);
+        table.appendRow(id, value);
+        tableRepository.save(table);
+    }
+
+    public void appendRow(String tableName, String row) {
+        Table table = tableRepository.findByName(tableName);
+        table.appendRow(row);
         tableRepository.save(table);
     }
 
