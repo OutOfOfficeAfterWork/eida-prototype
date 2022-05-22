@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.outofoffice.lib.core.query.EidaDllGenerator;
 import org.outofoffice.common.socket.EidaSocketClient;
 
-import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ public class EidaManagerClient implements EidaDllClient, EidaDdlManagerClient {
     public List<String> getAllShardUrls(String tableName) {
         String dll = dllGenerator.createGetAllShardUrlsQuery(tableName);
         String response = eidaClient.request(managerServerUrl, dll);
-        return Arrays.asList(response.split(","));
+        return !response.isEmpty() ? asList(response.split(",")) : emptyList();
     }
 
     @Override

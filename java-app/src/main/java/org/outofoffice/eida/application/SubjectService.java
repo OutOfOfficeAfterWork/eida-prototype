@@ -14,7 +14,7 @@ public class SubjectService {
     private final MajorService majorService;
     private final SubjectRepository subjectRepository;
 
-    public void save(String name, String englishName, String majorName){
+    public void save(String name, String englishName, String majorName) {
         Major major = majorService.mustFind(majorName);
         Subject subject = new Subject(name, englishName, major);
         subjectRepository.insert(subject);
@@ -28,4 +28,9 @@ public class SubjectService {
         Predicate<Subject> where = subject -> subject.getMajor().getMajorName().equals(majorName);
         return subjectRepository.list(where);
     }
+
+    public List<Subject> findAll() {
+        return subjectRepository.listAll();
+    }
+
 }

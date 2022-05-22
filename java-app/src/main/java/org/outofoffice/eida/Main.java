@@ -54,7 +54,7 @@ public class Main {
         while (true) {
             System.out.println("############################");
             System.out.println("수행할 액션을 선택하세요(중로:-1)");
-            System.out.println("1. 전공등록, 2. 과목등록, 3. 학생등록, 4. 수강신청");
+            System.out.println("1. 전공등록, 2. 과목등록, 3. 학생등록, 4. 수강신청등록, 5. 수강신청내역(학생), 6. 수강신청내역(과목)");
             System.out.print("=>");
             int i = scanner.nextInt();
             if (i == -1) break;
@@ -144,7 +144,7 @@ public class Main {
         }
 
         System.out.print("로그인할 학생을 선택하세요:");
-        int sel = scanner.nextInt();
+        int sel = scanner.nextInt() - 1;
         scanner.nextLine();
         String code = codes.get(sel);
         Student student = studentMap.get(code);
@@ -168,11 +168,54 @@ public class Main {
     };
 
 
+    private static final Runnable onEnrollShowByStudent = () -> {
+        System.out.println("학생을 선택하세요");
+        List<Student> students = studentService.findAll();
+
+        Map<String, Student> studentMap = students.stream().collect(toMap(Student::getStudentCode, identity()));
+        List<String> codes = studentMap.keySet().stream().sorted().collect(toList());
+        for (int i = 0; i < studentMap.size(); i++) {
+            String code = codes.get(i);
+            Student student = studentMap.get(code);
+            String format = String.format("%d: %s(%s)", i + 1, student.getName(), code);
+            System.out.println(format);
+        }
+
+        System.out.print("로그인할 학생을 선택하세요:");
+        int sel = scanner.nextInt() - 1;
+        scanner.nextLine();
+        String code = codes.get(sel);
+
+        List<Enrolment> enrolments = enrolmentService.findByStudent(code);
+        List<Subject> subjects = enrolments.stream().map(Enrolment::getSubject).collect(toList());
+        subjects.forEach(System.out::println);
+    };
+
+    private static final Runnable onEnrollShowBySubject = () -> {
+        System.out.println("과목을 선택하세요");
+        List<Subject> subjects = subjectService.findAll();
+        Set<String> subjectNames = subjects.stream().map(Subject::getSubjectName).collect(toSet());
+        System.out.println("조회할 과목을 선택해주세요.\n" + String.join( ", ", subjectNames));
+        String selectedSubject = "";
+
+        while (!subjectNames.contains(selectedSubject)) {
+            if (!selectedSubject.equals("")) System.out.println("정신차리세요");
+            selectedSubject = scanner.nextLine();
+        }
+
+        List<Enrolment> enrolments = enrolmentService.findBySubject(selectedSubject);
+        List<Student> students = enrolments.stream().map(Enrolment::getStudent).collect(toList());
+        students.forEach(System.out::println);
+    };
+
+
     private static final Map<Integer, Runnable> MAP = Map.of(
         1, onSelectMajorRegister,
         2, onSelectSubject,
         3, onSelectStudent,
-        4, onEnroll
+        4, onEnroll,
+        5, onEnrollShowByStudent,
+        6, onEnrollShowBySubject
     );
 
 }

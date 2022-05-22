@@ -1,15 +1,16 @@
 package org.outofoffice.lib.core.ui;
 
+import org.outofoffice.common.exception.EidaException;
 import org.outofoffice.lib.context.EidaContext;
 import org.outofoffice.lib.core.client.EidaDllClient;
 import org.outofoffice.lib.core.client.EidaDmlClient;
-import org.outofoffice.common.exception.EidaException;
 import org.outofoffice.lib.util.ClassUtils;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.outofoffice.lib.util.StringUtils.getterName;
 import static org.outofoffice.lib.util.StringUtils.setterName;
@@ -92,8 +93,7 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
             packedTableBuilder.append(bodyString).append("\n");
         }
         String packedTableString = packedTableBuilder.toString();
-
-        return serializer.deserialize(packedTableString, entityClass());
+        return (!packedTableString.isEmpty()) ? serializer.deserialize(packedTableString, entityClass()) : emptyList();
     }
 
     public Optional<T> joinFind(ID id, String fieldName) {
@@ -124,8 +124,8 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
 
     public List<T> joinList(Predicate<T> where, String fieldName) {
         return list(where).stream()
-                .map(entity -> join(entity, fieldName))
-                .collect(toList());
+            .map(entity -> join(entity, fieldName))
+            .collect(toList());
     }
 
 }
