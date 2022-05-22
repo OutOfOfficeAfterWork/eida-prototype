@@ -18,6 +18,6 @@ public class SubjectService {
     }
 
     public Subject mustFind(String subjectName) {
-        return subjectRepository.find(subjectName).orElseThrow();
+        return subjectRepository.joinFind(subjectName, "major").orElseThrow();
     }
 }

@@ -95,7 +95,7 @@ public class EidaSerializer {
             else {
                 Constructor<? extends EidaEntity> fieldClassConstructor = (Constructor<? extends EidaEntity>) type.getConstructor();
                 EidaEntity linkedEntity = fieldClassConstructor.newInstance();
-                Class<?> id = linkedEntity.getClass().getDeclaredField("id").getType();
+                Class<?> id = linkedEntity.getClass().getDeclaredMethod("getId").getReturnType();
                 if (id.equals(Long.class)) {
                     linkedEntity.setId(Long.parseLong(values[j]));
                 } else if (id.equals(String.class)) {

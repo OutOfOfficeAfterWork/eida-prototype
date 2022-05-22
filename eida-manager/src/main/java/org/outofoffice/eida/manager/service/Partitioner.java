@@ -3,6 +3,7 @@ package org.outofoffice.eida.manager.service;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.outofoffice.eida.common.exception.TableNotFoundException;
 import org.outofoffice.eida.manager.domain.ShardMapping;
 import org.outofoffice.eida.manager.repository.ShardMappingRepository;
 import org.outofoffice.eida.common.table.TableRepository;
@@ -42,9 +43,7 @@ public class Partitioner {
 
     public String nextShardId(String tableName) {
         PriorityQueue<ShardElement> priorityQueue = tableQueueMap.get(tableName);
-        // TODO tableQueueMap update
-//        if (priorityQueue == null) throw new IllegalStateException("pq null");
-        if (priorityQueue == null) return "0";
+        if (priorityQueue == null) throw new TableNotFoundException(new IllegalStateException(tableName));
         if (priorityQueue.isEmpty()) throw new IllegalStateException("pq empty");
 
         return priorityQueue.peek().getShardId();

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.outofoffice.eida.domain.Major;
 import org.outofoffice.eida.domain.MajorRepository;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public class MajorService {
 
@@ -16,5 +18,9 @@ public class MajorService {
 
     public Major mustFind(String majorName) {
         return majorRepository.find(majorName).orElseThrow();
+    }
+
+    public List<Major> findAll() {
+        return majorRepository.listAll();
     }
 }

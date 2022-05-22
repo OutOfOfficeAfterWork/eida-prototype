@@ -1,8 +1,10 @@
 package org.outofoffice.eida.domain;
 
-import lombok.AllArgsConstructor;
+import lombok.*;
 import org.outofoffice.lib.core.ui.EidaEntity;
 
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class Major implements EidaEntity<String> {
     private String majorName;

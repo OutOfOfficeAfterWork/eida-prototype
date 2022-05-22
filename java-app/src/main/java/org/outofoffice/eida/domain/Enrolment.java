@@ -1,13 +1,14 @@
 package org.outofoffice.eida.domain;
 
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.outofoffice.lib.core.ui.EidaEntity;
 
+@Data
+@NoArgsConstructor
 public class Enrolment implements EidaEntity<String> {
     private String enrollmentId;
-    @Getter
     private Student student;
-    @Getter
     private Subject subject;
 
     public Enrolment (Student student, Subject subject) {
