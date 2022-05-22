@@ -5,6 +5,9 @@ import org.outofoffice.eida.domain.Major;
 import org.outofoffice.eida.domain.Subject;
 import org.outofoffice.eida.domain.SubjectRepository;
 
+import java.util.List;
+import java.util.function.Predicate;
+
 @RequiredArgsConstructor
 public class SubjectService {
 
@@ -19,5 +22,10 @@ public class SubjectService {
 
     public Subject mustFind(String subjectName) {
         return subjectRepository.joinFind(subjectName, "major").orElseThrow();
+    }
+
+    public List<Subject> findAllByMajorName(String majorName) {
+        Predicate<Subject> where = subject -> subject.getMajor().getMajorName().equals(majorName);
+        return subjectRepository.list(where);
     }
 }

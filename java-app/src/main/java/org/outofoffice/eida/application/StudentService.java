@@ -5,6 +5,8 @@ import org.outofoffice.eida.domain.Major;
 import org.outofoffice.eida.domain.Student;
 import org.outofoffice.eida.domain.StudentRepository;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public class StudentService {
     private final MajorService majorService;
@@ -17,6 +19,10 @@ public class StudentService {
     }
 
     public Student mustFind(String studentCode) {
-        return studentRepository.find(studentCode).orElseThrow();
+        return studentRepository.joinFind(studentCode, "major").orElseThrow();
+    }
+
+    public List<Student> findAll() {
+        return studentRepository.listAll();
     }
 }

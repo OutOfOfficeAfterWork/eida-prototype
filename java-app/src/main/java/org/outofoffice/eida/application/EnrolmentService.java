@@ -13,8 +13,13 @@ public class EnrolmentService {
         Student student = studentService.mustFind(studentCode);
         Subject subject = subjectService.mustFind(subjectName);
 
-        Enrolment enrolment = new Enrolment(student, subject);
+        String compositeKey = studentCode + "-" + subjectName;
+        Enrolment enrolment = new Enrolment(compositeKey, student, subject);
         enrolmentRepository.insert(enrolment);
     }
 
+    public Enrolment mustFind(String studentCode, String subjectName) {
+        String compositeKey = studentCode + "-" + subjectName;
+        return enrolmentRepository.find(compositeKey).orElseThrow();
+    }
 }
