@@ -14,6 +14,9 @@ import static org.outofoffice.lib.util.StringUtils.setterName;
 @Slf4j
 public class EidaSerializer {
 
+    private static final String NULL_STRING = "<null>";
+
+
     public <T extends EidaEntity<ID>, ID> String serialize(T entity) {
         try {
             return doSerialize(entity);
@@ -40,7 +43,7 @@ public class EidaSerializer {
         if (value instanceof EidaEntity<?>) {
             value = ((EidaEntity<?>) value).getId();
         }
-        return value;
+        return Optional.ofNullable(value).orElse(NULL_STRING);
     }
 
 
@@ -85,14 +88,16 @@ public class EidaSerializer {
     private <T extends EidaEntity<ID>, ID> T constructEntity(List<Method> setters, List<Class<?>> types, Constructor<T> constructor, String[] values) throws Exception {
         T entity = constructor.newInstance();
         for (int j = 0; j < values.length; j++) {
+            if (values[j].equals(NULL_STRING)) continue;
+
             Method setter = setters.get(j);
             Class<?> type = types.get(j);
+
             if (type.equals(Long.class)) {
                 setter.invoke(entity, Long.parseLong(values[j]));
             } else if (type.equals(String.class)) {
                 setter.invoke(entity, String.valueOf(values[j]));
-            }
-            else {
+            } else {
                 Constructor<? extends EidaEntity> fieldClassConstructor = (Constructor<? extends EidaEntity>) type.getConstructor();
                 EidaEntity linkedEntity = fieldClassConstructor.newInstance();
                 Class<?> id = linkedEntity.getClass().getDeclaredMethod("getId").getReturnType();

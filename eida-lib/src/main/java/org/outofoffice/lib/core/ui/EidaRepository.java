@@ -71,7 +71,7 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
         String tableString = shardClient.selectById(sourceShardUrl, tableName(), id);
         List<T> entities = serializer.deserialize(tableString, entityClass());
         if (entities.size() > 1) throw new EidaException("return value size > 1");
-        return Optional.ofNullable(!entities.isEmpty() ? entities.get(0) : null);
+        return entities.stream().findFirst();
     }
 
     public List<T> listAll() {
@@ -105,6 +105,8 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
 
         try {
             J emptyTarget = (J) entityClass.getDeclaredMethod(getterName(fieldName)).invoke(entity);
+            if (emptyTarget == null) return entity;
+
             FK targetId = emptyTarget.getId();
 
             Class<J> joinTargetClass = (Class<J>) entityClass.getDeclaredField(fieldName).getType();

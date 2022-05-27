@@ -8,7 +8,7 @@ import org.outofoffice.lib.core.ui.EidaEntity;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Enrolment implements EidaEntity<String> {
+public class Enrollment implements EidaEntity<String> {
     private String enrollmentId;
     private Student student;
     private Subject subject;

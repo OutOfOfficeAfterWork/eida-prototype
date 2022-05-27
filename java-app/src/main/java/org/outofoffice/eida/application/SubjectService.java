@@ -20,12 +20,25 @@ public class SubjectService {
         subjectRepository.insert(subject);
     }
 
+    public void save(String name, String englishName) {
+        Subject subject = new Subject(name, englishName, null);
+        subjectRepository.insert(subject);
+    }
+
     public Subject mustFind(String subjectName) {
         return subjectRepository.joinFind(subjectName, "major").orElseThrow();
     }
 
     public List<Subject> findAllByMajorName(String majorName) {
-        Predicate<Subject> where = subject -> subject.getMajor().getMajorName().equals(majorName);
+        Predicate<Subject> nonNull = subject -> subject.getMajor() != null;
+        Predicate<Subject> equal = subject -> subject.getMajor().getMajorName().equals(majorName);
+        Predicate<Subject> where = nonNull.and(equal);
+
+        return subjectRepository.list(where);
+    }
+
+    public List<Subject> findAllElectives() {
+        Predicate<Subject> where = subject -> subject.getMajor() == null;
         return subjectRepository.list(where);
     }
 

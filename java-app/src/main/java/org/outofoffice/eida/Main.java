@@ -1,7 +1,7 @@
 package org.outofoffice.eida;
 
 import org.outofoffice.common.socket.EidaSocketClient;
-import org.outofoffice.eida.application.EnrolmentService;
+import org.outofoffice.eida.application.EnrollmentService;
 import org.outofoffice.eida.application.MajorService;
 import org.outofoffice.eida.application.StudentService;
 import org.outofoffice.eida.application.SubjectService;
@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
@@ -30,8 +31,8 @@ public class Main {
     private static final StudentRepository studentRepository;
     private static final StudentService studentService;
 
-    private static final EnrolmentRepository enrolmentRepository;
-    private static final EnrolmentService enrolmentService;
+    private static final EnrollmentRepository enrolmentRepository;
+    private static final EnrollmentService enrolmentService;
 
     static {
         EidaContext.init(Main.class, new EidaSocketClient());
@@ -45,8 +46,8 @@ public class Main {
         studentRepository = (StudentRepository) EidaContext.getRepository(Student.class);
         studentService = new StudentService(majorService, studentRepository);
 
-        enrolmentRepository = (EnrolmentRepository) EidaContext.getRepository(Enrolment.class);
-        enrolmentService = new EnrolmentService(subjectService, studentService, enrolmentRepository);
+        enrolmentRepository = (EnrollmentRepository) EidaContext.getRepository(Enrollment.class);
+        enrolmentService = new EnrollmentService(subjectService, studentService, enrolmentRepository);
     }
 
 
@@ -82,6 +83,7 @@ public class Main {
         System.out.println("전공을 선택하세요");
         List<Major> majors = majorService.findAll();
         Set<String> majorNames = majors.stream().map(Major::getMajorName).collect(Collectors.toSet());
+        majorNames.add("교양");
         System.out.println("=>" +  String.join("\t", majorNames));
 
         String selectedMajor = "";
@@ -96,7 +98,11 @@ public class Main {
         System.out.print("영어이름을 입력하세요:");
         String sEnglishName = scanner.nextLine();
 
-        subjectService.save(subjectName, sEnglishName, selectedMajor);
+        if(selectedMajor.equals("교양")) {
+            subjectService.save(subjectName, sEnglishName);
+        } else {
+            subjectService.save(subjectName, sEnglishName, selectedMajor);
+        }
 
         Subject subject = subjectService.mustFind(subjectName);
         System.out.println(subject);
@@ -152,8 +158,10 @@ public class Main {
         String major = student.getMajor().getMajorName();
 
         List<Subject> subjectsInMajor = subjectService.findAllByMajorName(major);
+        List<Subject> subjectsInElectives = subjectService.findAllElectives();
 
-        Set<String> subjectNames = subjectsInMajor.stream().map(Subject::getSubjectName).collect(toSet());
+        Set<String> subjectNames = Stream.concat(subjectsInMajor.stream(), subjectsInElectives.stream())
+            .map(Subject::getSubjectName).collect(toSet());
         System.out.println("수강할 과목을 선택해주세요.\n" + String.join( ", ", subjectNames));
         String selectedSubject = "";
 
@@ -163,7 +171,7 @@ public class Main {
         }
 
         enrolmentService.insert(selectedSubject, code);
-        Enrolment enrolment = enrolmentService.mustFind(code, selectedSubject);
+        Enrollment enrolment = enrolmentService.mustFind(code, selectedSubject);
         System.out.println(enrolment);
     };
 
@@ -186,8 +194,8 @@ public class Main {
         scanner.nextLine();
         String code = codes.get(sel);
 
-        List<Enrolment> enrolments = enrolmentService.findByStudent(code);
-        List<Subject> subjects = enrolments.stream().map(Enrolment::getSubject).collect(toList());
+        List<Enrollment> enrolments = enrolmentService.findByStudent(code);
+        List<Subject> subjects = enrolments.stream().map(Enrollment::getSubject).collect(toList());
         subjects.forEach(System.out::println);
     };
 
@@ -203,8 +211,8 @@ public class Main {
             selectedSubject = scanner.nextLine();
         }
 
-        List<Enrolment> enrolments = enrolmentService.findBySubject(selectedSubject);
-        List<Student> students = enrolments.stream().map(Enrolment::getStudent).collect(toList());
+        List<Enrollment> enrolments = enrolmentService.findBySubject(selectedSubject);
+        List<Student> students = enrolments.stream().map(Enrollment::getStudent).collect(toList());
         students.forEach(System.out::println);
     };
 
