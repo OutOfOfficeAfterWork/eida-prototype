@@ -28,10 +28,7 @@ public class EidaInitializer {
         String beanName = toCamelCase(repository.getClass().getSimpleName());
         GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
         beanDefinition.setBeanClass(repository.getClass());
-        beanDefinition.setScope("singleton");
-        beanDefinition.setAutowireCandidate(true);
-        beanDefinition.setLazyInit(false);
-        beanDefinition.setAbstract(false);
+        beanDefinition.setInstanceSupplier(() -> repository);
         registry.registerBeanDefinition(beanName, beanDefinition);
     }
 

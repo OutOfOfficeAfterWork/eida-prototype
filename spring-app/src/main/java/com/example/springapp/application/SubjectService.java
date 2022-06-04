@@ -4,10 +4,12 @@ import com.example.springapp.domain.Major;
 import com.example.springapp.domain.Subject;
 import com.example.springapp.domain.SubjectRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.function.Predicate;
 
+@Service
 @RequiredArgsConstructor
 public class SubjectService {
 

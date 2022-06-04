@@ -5,9 +5,11 @@ import com.example.springapp.domain.EnrollmentRepository;
 import com.example.springapp.domain.Student;
 import com.example.springapp.domain.Subject;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class EnrollmentService {
     private final SubjectService subjectService;
