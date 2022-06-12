@@ -1,4 +1,4 @@
-package com.example.springapp;
+package com.example.springapp.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

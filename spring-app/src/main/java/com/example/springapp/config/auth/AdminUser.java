@@ -1,4 +1,4 @@
-package com.example.springapp.auth;
+package com.example.springapp.config.auth;
 
 import org.springframework.security.core.userdetails.User;
 

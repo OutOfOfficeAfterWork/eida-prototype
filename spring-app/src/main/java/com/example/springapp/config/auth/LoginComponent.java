@@ -1,4 +1,4 @@
-package com.example.springapp.auth;
+package com.example.springapp.config.auth;
 
 import com.example.springapp.application.StudentService;
 import com.example.springapp.domain.Student;
