@@ -9,7 +9,13 @@
         <label><input type="text" th:field="*{birthDate}" placeholder="생년월일=비밀번호"></label>
         <label><input type="text" th:field="*{name}" placeholder="이름"></label>
         <label><input type="text" th:field="*{gender}" placeholder="성별"></label>
-        <label><input type="text" th:field="*{majorName}" placeholder="전공이름"></label>
+        <label>
+            <select name="전공" th:name="majorName">
+                <option th:each="majorName : ${majorList}"
+                        th:value="${majorName}"
+                        th:utext="${majorName}"></option>
+            </select>
+        </label>
         <button type="submit" class="account-button" id="signup-button">
             submit
         </button>
