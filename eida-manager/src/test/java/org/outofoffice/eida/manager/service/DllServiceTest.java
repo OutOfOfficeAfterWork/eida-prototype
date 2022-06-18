@@ -132,8 +132,8 @@ class DllServiceTest {
 
         dllService.reportDelete(tableName, id);
 
-        Executable action = () -> dllService.getSourceShardUrl(tableName, id);
-        assertThrows(RowNotFoundException.class, action);
+        String sourceShardUrl = dllService.getSourceShardUrl(tableName, id);
+        assertThat(sourceShardUrl).isEqualTo("");
     }
 
 }

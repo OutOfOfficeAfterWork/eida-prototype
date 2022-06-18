@@ -1,6 +1,7 @@
 package org.outofoffice.lib.core.client;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface EidaDllClient {
@@ -9,7 +10,7 @@ public interface EidaDllClient {
 
     String getDestinationShardUrl(String tableName);
 
-    <ID> String getSourceShardUrl(String tableName, ID id);
+    <ID> Optional<String> getSourceShardUrl(String tableName, ID id);
 
     <ID> void postShardUrl(String shardUrl, String tableName, ID id);
 

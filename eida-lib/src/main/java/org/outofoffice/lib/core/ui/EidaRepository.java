@@ -52,12 +52,12 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
 
     public void update(T entity) {
         String serialized = serializer.serialize(entity);
-        String sourceShardUrl = managerClient.getSourceShardUrl(tableName(), entity.getId());
+        String sourceShardUrl = managerClient.getSourceShardUrl(tableName(), entity.getId()).orElseThrow();
         shardClient.update(sourceShardUrl, tableName(), serialized);
     }
 
     public void delete(ID id) {
-        String sourceShardUrl = managerClient.getSourceShardUrl(tableName(), id.toString());
+        String sourceShardUrl = managerClient.getSourceShardUrl(tableName(), id.toString()).orElseThrow();
         shardClient.delete(sourceShardUrl, tableName(), id);
         managerClient.deleteShardUrl(sourceShardUrl, tableName(), id);
     }
@@ -67,8 +67,10 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
     }
 
     public Optional<T> find(ID id) {
-        String sourceShardUrl = managerClient.getSourceShardUrl(tableName(), id);
-        String tableString = shardClient.selectById(sourceShardUrl, tableName(), id);
+        Optional<String> oSourceShardUrl = managerClient.getSourceShardUrl(tableName(), id);
+        if (oSourceShardUrl.isEmpty()) return Optional.empty();
+
+        String tableString = shardClient.selectById(oSourceShardUrl.get(), tableName(), id);
         List<T> entities = serializer.deserialize(tableString, entityClass());
         if (entities.size() > 1) throw new EidaException("return value size > 1");
         return entities.stream().findFirst();

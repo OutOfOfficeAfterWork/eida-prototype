@@ -5,6 +5,7 @@ import org.outofoffice.lib.core.query.EidaDllGenerator;
 import org.outofoffice.common.socket.EidaSocketClient;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -33,9 +34,10 @@ public class EidaManagerClient implements EidaDllClient, EidaDdlManagerClient {
     }
 
     @Override
-    public <ID> String getSourceShardUrl(String tableName, ID id) {
+    public <ID> Optional<String> getSourceShardUrl(String tableName, ID id) {
         String dll = dllGenerator.createGetSourceShardUrlQuery(tableName, id);
-        return eidaClient.request(managerServerUrl, dll);
+        String response = eidaClient.request(managerServerUrl, dll);
+        return Optional.of(response).filter(url-> !url.isEmpty());
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,8 +57,22 @@ public class EnrollmentController {
     }
 
     @PostMapping("/enroll/{studentCode}")
-    public String enroll(@PathVariable String studentCode, EnrollmentForm f) {
-        System.out.println(f);
+    public String enroll(@PathVariable String studentCode, EnrollmentForm form) {
+        List<EnrollmentForm.Subject> requestedSubjects = new ArrayList<>();
+        requestedSubjects.addAll(form.getMajor());
+        requestedSubjects.addAll(form.getElectives());
+
+        requestedSubjects
+            .forEach(reqSub -> {
+                boolean exist = enrollmentService.exist(reqSub.getSubjectName(), studentCode);
+
+                if (reqSub.isEnrolled() && !exist) {
+                    enrollmentService.insert(reqSub.getSubjectName(), studentCode);
+                } else if (!reqSub.isEnrolled() && exist) {
+                    enrollmentService.delete(reqSub.getSubjectName(), studentCode);
+                }
+            });
+
         return "redirect:" + ("/enrollment-list/" + studentCode);
     }
 }

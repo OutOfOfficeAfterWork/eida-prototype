@@ -38,4 +38,13 @@ public class EnrollmentService {
         return enrolmentRepository.joinList(e -> e.getSubject().getSubjectName().equals(subjectName), "student");
     }
 
+    public void delete(String subjectName, String studentCode) {
+        Enrollment enrollment = mustFind(studentCode, subjectName);
+        enrolmentRepository.delete(enrollment.getEnrollmentId());
+    }
+
+    public boolean exist(String subjectName, String studentCode) {
+        String compositeKey = studentCode + "-" + subjectName;
+        return enrolmentRepository.find(compositeKey).isPresent();
+    }
 }

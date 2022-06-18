@@ -8,6 +8,7 @@ import org.outofoffice.eida.manager.domain.ShardMapping;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
@@ -40,8 +41,10 @@ public class DllService {
 
     public String getSourceShardUrl(String tableName, String entityId) {
         Table table = tableService.findByName(tableName);
-        String row = table.getRow(entityId).orElseThrow(() -> new RowNotFoundException(tableName, entityId));
-        String shardId = row.split(",")[1];
+        Optional<String> oRow = table.getRow(entityId);
+        if (oRow.isEmpty()) return "";
+
+        String shardId = oRow.get().split(",")[1];
         ShardMapping shardMapping = shardMappingService.find();
         return shardMapping.getShardUrl(shardId).orElseThrow();
     }
