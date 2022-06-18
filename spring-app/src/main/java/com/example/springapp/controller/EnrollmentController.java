@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -75,4 +72,18 @@ public class EnrollmentController {
 
         return "redirect:" + ("/enrollment-list/" + studentCode);
     }
+
+    @GetMapping("/enrollment-list/{studentCode}")
+    public String enrollListByStudent(@PathVariable String studentCode, Model model) {
+        List<Enrollment> enrollments = enrollmentService.findByStudent(studentCode);
+        List<SubjectDto> enrolledSubjects = enrollments.stream()
+            .map(Enrollment::getSubject)
+            .map(SubjectDto::from)
+            .collect(Collectors.toList());
+
+        model.addAttribute("subjects", enrolledSubjects);
+
+        return "enrollment-list-by-student";
+    }
+
 }
