@@ -8,7 +8,8 @@
     <a href="/enrollment-list">수강신청내역</a>
 </div>
 <div th:if="${!#authentication.getName().equals('admin')}">
-    ne
+    <a th:href="@{'/enroll/' + ${#authentication.getName()}}">수강신청</a>
+    <a th:href="@{'/enrollment-list/' + ${#authentication.getName()}}">수강신청내역</a>
 </div>
 </body>
 
