@@ -1,0 +1,26 @@
+version: '2.1'
+
+services:
+  eida-manager:
+    image: eida-manager:latest
+    hostname: "eida-manager"
+    ports:
+      - "10325:10325"
+    volumes:
+      - /Library/EidaManager:/Library/EidaManager
+
+  eida-shard:
+    image: eida-shard:latest
+    hostname: "eida-shard"
+    ports:
+      - "10830:10830"
+    volumes:
+      - /Library/EidaShard:/Library/EidaShard
+
+  eida-shard2:
+    image: eida-shard:latest
+    hostname: "eida-shard2"
+    ports:
+      - "10831:10830"
+    volumes:
+      - /Users/josh/EidaShard:/Library/EidaShard

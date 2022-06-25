@@ -11,6 +11,9 @@
     <a th:href="@{'/enroll'}">수강신청</a>
     <a th:href="@{'/enrollment-list'}">수강신청내역</a>
 </div>
+<form th:action="@{/logout}" th:method="post">
+    <button type="submit" class="account-button">logout</button>
+</form>
 </body>
 
 </html>
