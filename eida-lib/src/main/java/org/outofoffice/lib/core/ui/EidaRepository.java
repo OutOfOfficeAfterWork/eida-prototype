@@ -44,10 +44,13 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
 
 
     public void insert(T entity) {
+        ID id = entity.getId();
+        if (isExist(id)) throw new EidaException("key is duplicated");
+
         String serialized = serializer.serialize(entity);
         String destinationShardUrl = managerClient.getDestinationShardUrl(tableName());
         shardClient.insert(destinationShardUrl, tableName(), serialized);
-        managerClient.postShardUrl(destinationShardUrl, tableName(), entity.getId());
+        managerClient.postShardUrl(destinationShardUrl, tableName(), id);
     }
 
     public void update(T entity) {
@@ -130,6 +133,11 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
         return list(where).stream()
             .map(entity -> join(entity, fieldName))
             .collect(toList());
+    }
+
+    public boolean isExist(ID id) {
+        Optional<String> oSourceShardUrl = managerClient.getSourceShardUrl(tableName(), id);
+        return oSourceShardUrl.isPresent();
     }
 
 }
