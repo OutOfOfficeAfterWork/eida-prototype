@@ -4,7 +4,7 @@
 <body>
 <h2>수강신청</h2>
 
-<form th:object="${enrollmentForm}" th:action="@{'/enroll/' + ${#authentication.getName()}}" th:method="post">
+<form th:object="${enrollmentForm}" th:action="@{/enroll}" th:method="post">
 
     <table>
     <tr th:each="major, stat :${enrollmentForm.major}">
