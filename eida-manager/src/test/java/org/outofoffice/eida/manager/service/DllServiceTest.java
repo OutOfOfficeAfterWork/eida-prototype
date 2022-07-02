@@ -3,42 +3,51 @@ package org.outofoffice.eida.manager.service;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
-import org.outofoffice.eida.common.exception.RowNotFoundException;
 import org.outofoffice.eida.common.table.Table;
 import org.outofoffice.eida.common.table.TableMapRepository;
 import org.outofoffice.eida.common.table.TableRepository;
 import org.outofoffice.eida.common.table.TableService;
+import org.outofoffice.eida.manager.infrastructure.SchemeMockRepository;
 import org.outofoffice.eida.manager.infrastructure.ShardMappingMockRepository;
+import org.outofoffice.eida.manager.repository.SchemeRepository;
 import org.outofoffice.eida.manager.repository.ShardMappingRepository;
 
+import java.util.Arrays;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 class DllServiceTest {
 
-    String header = "entityId,shardId";
-
     DllService dllService;
     TableRepository tableRepository;
     TableService tableService;
+    SchemeRepository schemeRepository;
+    SchemeService schemeService;
     ShardMappingRepository shardMappingRepository;
     ShardMappingService shardMappingService;
     Partitioner partitioner;
+
+    String header = "teamId,teamName";
+
 
     @BeforeEach
     void setup() {
         tableRepository = new TableMapRepository();
         tableService = new TableService(tableRepository);
 
+        schemeRepository = new SchemeMockRepository();
+        schemeService = new SchemeService(schemeRepository);
+
         shardMappingRepository = new ShardMappingMockRepository();
         shardMappingService = new ShardMappingService(shardMappingRepository);
 
         partitioner = new Partitioner(tableRepository, shardMappingRepository);
-        dllService = new DllService(tableService, shardMappingService, partitioner);
+        dllService = new DllService(tableService, shardMappingService, schemeService, partitioner);
+
+        schemeService.save("Team", header);
     }
 
     @AfterEach
@@ -54,13 +63,16 @@ class DllServiceTest {
         shardMappingService.appendRow("3", "localhost:10832");
         String tableName = "Team";
 
-        Table table = new Table(tableName, header);
+        Table table = new Table(tableName);
         table.appendRow("1", "1");
         table.appendRow("2", "2");
         tableRepository.save(table);
 
-        List<String> shardUrls = dllService.getAllShardUrls(tableName);
+        String[] response = dllService.getSources(tableName).split("\n");
+        List<String> shardUrls = Arrays.stream(response[0].split(",")).collect(toList());
+        String schemeString  = response[1];
         assertThat(shardUrls).isEqualTo(List.of("localhost:10830", "localhost:10831"));
+        assertThat(schemeString).isEqualTo(header);
     }
 
     @Test
@@ -69,13 +81,13 @@ class DllServiceTest {
         shardMappingService.appendRow("s1", "localhost:10830");
         shardMappingService.appendRow("s2", "localhost:10831");
 
-        Table table = new Table(tableName, header);
+        Table table = new Table(tableName);
         table.appendRow("e1", "s1");
         tableRepository.save(table);
 
         partitioner.init();
 
-        String shardUrl = dllService.getDestinationShardUrl(tableName);
+        String shardUrl = dllService.getDestination(tableName);
         assertThat(shardUrl).isEqualTo("localhost:10831");
     }
 
@@ -86,13 +98,15 @@ class DllServiceTest {
         String tableName = "Team";
         String id = "1";
 
-        Table table = new Table(tableName, header);
+        Table table = new Table(tableName);
         table.appendRow(id, "3");
         tableRepository.save(table);
 
-        String sourceShardUrl = dllService.getSourceShardUrl(tableName, id);
-
-        assertThat(sourceShardUrl).isEqualTo("localhost:10830");
+        String[] response = dllService.getSources(tableName).split("\n");
+        List<String> shardUrls = Arrays.stream(response[0].split(",")).collect(toList());
+        String schemeString  = response[1];
+        assertThat(shardUrls).isEqualTo(List.of("localhost:10830"));
+        assertThat(schemeString).isEqualTo(header);
     }
 
     @Test
@@ -103,7 +117,7 @@ class DllServiceTest {
         String shardId = "1";
         shardMappingService.appendRow(shardId, shardUrl);
 
-        Table table = new Table(tableName, header);
+        Table table = new Table(tableName);
         table.appendRow(id, shardId);
         tableRepository.save(table);
 
@@ -111,8 +125,11 @@ class DllServiceTest {
 
         dllService.reportInsert(shardUrl, tableName, id);
 
-        String sourceShardUrl = dllService.getSourceShardUrl(tableName, id);
-        assertThat(sourceShardUrl).isEqualTo(shardUrl);
+        String[] response = dllService.getSources(tableName).split("\n");
+        List<String> shardUrls = Arrays.stream(response[0].split(",")).collect(toList());
+        String schemeString  = response[1];
+        assertThat(shardUrls).isEqualTo(List.of(shardUrl));
+        assertThat(schemeString).isEqualTo(header);
     }
 
     @Test
@@ -122,7 +139,7 @@ class DllServiceTest {
         String id = "1";
         String shardId = "1";
 
-        Table table = new Table(tableName, header);
+        Table table = new Table(tableName);
         table.appendRow(id, shardId);
         tableRepository.save(table);
         shardMappingService.appendRow(shardId, shardUrl);
@@ -132,8 +149,11 @@ class DllServiceTest {
 
         dllService.reportDelete(tableName, id);
 
-        String sourceShardUrl = dllService.getSourceShardUrl(tableName, id);
-        assertThat(sourceShardUrl).isEqualTo("");
+        String[] response = dllService.getSource(tableName, id).split("\n");
+        String sourceShardUrl = response[0];
+        String scheme = response[1];
+        assertThat(sourceShardUrl).isEmpty();
+        assertThat(scheme).isEqualTo(header);
     }
 
 }

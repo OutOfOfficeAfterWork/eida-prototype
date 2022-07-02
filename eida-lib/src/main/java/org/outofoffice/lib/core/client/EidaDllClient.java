@@ -1,16 +1,13 @@
 package org.outofoffice.lib.core.client;
 
-import java.util.List;
-import java.util.Optional;
-
 
 public interface EidaDllClient {
 
-    List<String> getAllShardUrls(String tableName);
+    String getSources(String tableName);
 
-    String getDestinationShardUrl(String tableName);
+    String getDestination(String tableName);
 
-    <ID> Optional<String> getSourceShardUrl(String tableName, ID id);
+    <ID> String getSource(String tableName, ID id);
 
     <ID> void postShardUrl(String shardUrl, String tableName, ID id);
 

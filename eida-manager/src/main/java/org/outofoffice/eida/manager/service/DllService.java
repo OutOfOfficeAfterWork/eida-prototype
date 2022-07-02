@@ -6,7 +6,6 @@ import org.outofoffice.eida.common.table.Table;
 import org.outofoffice.eida.common.table.TableService;
 import org.outofoffice.eida.manager.domain.ShardMapping;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -19,34 +18,38 @@ public class DllService {
 
     private final TableService tableService;
     private final ShardMappingService shardMappingService;
+    private final SchemeService schemeService;
 
     private final Partitioner partitioner;
 
 
-    public List<String> getAllShardUrls(String tableName) {
+    public String getSources(String tableName) {
         Table table = tableService.findByName(tableName);
         Map<String, String> content = table.copyContent();
         Set<String> shardIds = content.values().stream()
             .map(line -> line.split(",")[1])
             .collect(toSet());
         ShardMapping shardMapping = shardMappingService.find();
-        return shardMapping.getShardUrls(shardIds);
+        String shardUrls = String.join(",", shardMapping.getShardUrls(shardIds));
+        String schemeString = schemeService.findByName(tableName);
+        return shardUrls + "\n" + schemeString;
     }
 
-    public String getDestinationShardUrl(String tableName) {
+    public String getDestination(String tableName) {
         String shardId = partitioner.nextShardId(tableName);
         ShardMapping shardMapping = shardMappingService.find();
         return shardMapping.getShardUrl(shardId).orElseThrow();
     }
 
-    public String getSourceShardUrl(String tableName, String entityId) {
+    public String getSource(String tableName, String entityId) {
         Table table = tableService.findByName(tableName);
-        Optional<String> oRow = table.getRow(entityId);
-        if (oRow.isEmpty()) return "";
-
-        String shardId = oRow.get().split(",")[1];
         ShardMapping shardMapping = shardMappingService.find();
-        return shardMapping.getShardUrl(shardId).orElseThrow();
+
+        Optional<String> oRow = table.getRow(entityId);
+        Optional<String> oShardId = oRow.map(s -> s.split(",")[1]);
+        String shardUrl = oShardId.map(i -> shardMapping.getShardUrl(i).orElseThrow()).orElse("");
+        String schemeString = schemeService.findByName(tableName);
+        return shardUrl + "\n" + schemeString;
     }
 
     public void reportInsert(String shardUrl, String tableName, String id) {

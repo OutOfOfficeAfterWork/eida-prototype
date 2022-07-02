@@ -34,36 +34,35 @@ class DmlServiceTest {
     @Test
     void selectAll() {
         String tableName = "user";
-        String scheme = "id,name";
 
-        Table table = new Table(tableName, scheme);
+        Table table = new Table(tableName);
         table.appendRow("1", "kemi");
         table.appendRow("2", "josh");
         tableRepository.save(table);
 
         String response = dmlService.selectAll(tableName);
-        assertThat(response).isEqualTo("id,name\n1,kemi\n2,josh");
+        assertThat(response).isEqualTo("1,kemi\n2,josh");
     }
 
     @Test
     void selectByTableNameAndId() {
         String tableName = "user";
 
-        Table table = new Table(tableName, "id,name");
+        Table table = new Table(tableName);
         table.appendRow("1", "kemi");
         table.appendRow("2", "josh");
         tableRepository.save(table);
 
         String response = dmlService.selectByTableNameAndId(tableName, "1");
-        assertThat(response).isEqualTo("id,name\n1,kemi");
+        assertThat(response).isEqualTo("1,kemi");
     }
 
     @Test
     void insert() {
         String tableName = "user";
-        String data = "id,name 3,eida";
+        String data = "3,eida";
 
-        Table table = new Table(tableName, "id,name");
+        Table table = new Table(tableName);
         table.appendRow("1", "kemi");
         table.appendRow("2", "josh");
         tableRepository.save(table);
@@ -71,29 +70,29 @@ class DmlServiceTest {
         dmlService.insert(tableName, data);
 
         String response = dmlService.selectByTableNameAndId(tableName, "3");
-        assertThat(response).isEqualTo("id,name\n3,eida");
+        assertThat(response).isEqualTo("3,eida");
     }
 
     @Test
     void update() {
         String tableName = "user";
-        String data = "id,name 1,josh";
+        String data = "1,josh";
 
-        Table table = new Table(tableName, "id,name");
+        Table table = new Table(tableName);
         table.appendRow("1", "kemi");
         tableRepository.save(table);
 
         dmlService.update(tableName, data);
 
         String response = dmlService.selectByTableNameAndId(tableName, "1");
-        assertThat(response).isEqualTo("id,name\n1,josh");
+        assertThat(response).isEqualTo("1,josh");
     }
 
     @Test
     void delete() {
         String tableName = "user";
 
-        Table table = new Table(tableName, "id,name");
+        Table table = new Table(tableName);
         table.appendRow("1", "kemi");
         tableRepository.save(table);
 

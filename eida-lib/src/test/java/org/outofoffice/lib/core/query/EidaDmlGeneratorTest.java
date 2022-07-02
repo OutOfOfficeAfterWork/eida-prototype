@@ -30,6 +30,6 @@ class EidaDmlGeneratorTest {
         EidaSerializer serializer = new EidaSerializer();
         String serialized = serializer.serialize(entity);
         String dmlQuery = dmlGenerator.createInsertQuery("member", serialized);
-        assertThat(dmlQuery).isEqualTo("insert, member id,name 1,kemi");
+        assertThat(dmlQuery).isEqualTo("insert, member 1,kemi");
     }
 }

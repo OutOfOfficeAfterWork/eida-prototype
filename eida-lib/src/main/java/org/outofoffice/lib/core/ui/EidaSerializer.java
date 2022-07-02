@@ -6,8 +6,13 @@ import org.outofoffice.common.exception.EidaException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.joining;
 import static org.outofoffice.lib.util.StringUtils.getterName;
 import static org.outofoffice.lib.util.StringUtils.setterName;
 
@@ -18,48 +23,43 @@ public class EidaSerializer {
 
 
     public <T extends EidaEntity<ID>, ID> String serialize(T entity) {
-        try {
-            return doSerialize(entity);
-        } catch (Exception e) {
-            throw new EidaException(e);
-        }
+        return doSerialize(entity);
     }
 
-    private <T extends EidaEntity<ID>, ID> String doSerialize(T entity) throws Exception {
-        StringJoiner header = new StringJoiner(",");
-        StringJoiner body = new StringJoiner(",");
-
+    private <T extends EidaEntity<ID>, ID> String doSerialize(T entity) {
         Field[] fields = entity.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            header.add(field.getName());
-            body.add(getValue(entity, field).toString());
-        }
-        return header + " " + body;
+        return Arrays.stream(fields)
+            .map(field -> getValue(entity, field))
+            .map(Object::toString)
+            .collect(joining(","));
     }
 
-    private <T extends EidaEntity<ID>, ID> Object getValue(T entity, Field field) throws Exception {
-        Method getter = entity.getClass().getMethod(getterName(field.getName()));
-        Object value = getter.invoke(entity);
-        if (value instanceof EidaEntity<?>) {
-            value = ((EidaEntity<?>) value).getId();
-        }
-        return Optional.ofNullable(value).orElse(NULL_STRING);
-    }
-
-
-    public <T extends EidaEntity<ID>, ID> List<T> deserialize(String tableString, Class<T> entityClass) {
+    private <T extends EidaEntity<ID>, ID> Object getValue(T entity, Field field) {
         try {
-            return doDeserialize(tableString, entityClass);
+            Method getter = entity.getClass().getMethod(getterName(field.getName()));
+            Object value = getter.invoke(entity);
+            if (value instanceof EidaEntity<?>) {
+                value = ((EidaEntity<?>) value).getId();
+            }
+            return Optional.ofNullable(value).orElse(NULL_STRING);
         } catch (Exception e) {
             throw new EidaException(e);
         }
     }
 
-    private <T extends EidaEntity<ID>, ID> List<T> doDeserialize(String tableString, Class<T> entityClass) throws Exception {
-        String[] lines = tableString.split("\n");
 
-        String header = lines[0];
-        String[] columns = header.split(",");
+    public <T extends EidaEntity<ID>, ID> List<T> deserialize(String schemeString, String tableString, Class<T> entityClass) {
+        try {
+            return doDeserialize(schemeString, tableString, entityClass);
+        } catch (Exception e) {
+            throw new EidaException(e);
+        }
+    }
+
+    private <T extends EidaEntity<ID>, ID> List<T> doDeserialize(String schemeString, String tableString, Class<T> entityClass) throws Exception {
+        if (tableString.isEmpty()) return emptyList();
+
+        String[] columns = schemeString.split(",");
 
         List<Method> setters = new ArrayList<>();
         List<Class<?>> types = new ArrayList<>();
@@ -75,8 +75,8 @@ public class EidaSerializer {
         constructor.setAccessible(true);
 
         List<T> entityList = new ArrayList<>();
-        for (int i = 1; i < lines.length; i++) {
-            String line = lines[i];
+        String[] lines = tableString.split("\n");
+        for (String line : lines) {
             String[] values = line.split(",");
 
             T entity = constructEntity(setters, types, constructor, values);

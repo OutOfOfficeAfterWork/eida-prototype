@@ -19,21 +19,22 @@ class EidaSerializerTest {
     void serialize() {
         TestEidaEntity testEidaEntity = new TestEidaEntity(3L, "luffy");
         String serialize = serializer.serialize(testEidaEntity);
-        assertThat(serialize).isEqualTo("id,name 3,luffy");
+        assertThat(serialize).isEqualTo("3,luffy");
     }
 
     @Test
     void serializeWithEntity() {
         KemiEntity entity = new KemiEntity(1L, "cs", new TestEidaEntity(3L, "luffy"));
         String serialize = serializer.serialize(entity);
-        assertThat(serialize).isEqualTo("id,major,testEidaEntity 1,cs,3");
+        assertThat(serialize).isEqualTo("1,cs,3");
     }
 
     @Test
     void deserializeSingleRow() {
-        String tableString = "id,name\n1,testName";
+        String schemeString = "id,name";
+        String tableString = "1,testName";
 
-        List<TestEidaEntity> entities = serializer.deserialize(tableString, TestEidaEntity.class);
+        List<TestEidaEntity> entities = serializer.deserialize(schemeString, tableString, TestEidaEntity.class);
 
         assertThat(entities).hasSize(1);
         assertThat(entities.get(0)).isEqualTo(new TestEidaEntity(1L, "testName"));
@@ -41,9 +42,10 @@ class EidaSerializerTest {
 
     @Test
     void deserializeMultiRow() {
-        String tableString = "id,name\n1,testName\n2,newName";
+        String schemeString = "id,name";
+        String tableString = "1,testName\n2,newName";
 
-        List<TestEidaEntity> entities = serializer.deserialize(tableString, TestEidaEntity.class);
+        List<TestEidaEntity> entities = serializer.deserialize(schemeString, tableString, TestEidaEntity.class);
 
         assertThat(entities).hasSize(2);
         assertThat(entities.get(0)).isEqualTo(new TestEidaEntity(1L, "testName"));
@@ -52,8 +54,9 @@ class EidaSerializerTest {
 
     @Test
     void deserializeWithEntity() {
-        String tableString = "id,major,testEidaEntity\n1,cs,3";
-        List<KemiEntity> entities = serializer.deserialize(tableString, KemiEntity.class);
+        String schemeString = "id,major,testEidaEntity";
+        String tableString = "1,cs,3";
+        List<KemiEntity> entities = serializer.deserialize(schemeString, tableString, KemiEntity.class);
         assertThat(entities.get(0)).isEqualTo(new KemiEntity(1L, "cs", new TestEidaEntity(3L, null)));
     }
 

@@ -18,29 +18,24 @@ public class DmlService {
 
     public String selectAll(String tableName) {
         Table table = tableService.findByName(tableName);
-        String header = table.getHeader() + "\n";
         Map<String, String> content = table.copyContent();
-        return header + String.join("\n", content.values());
+        return String.join("\n", content.values());
     }
 
     public String selectByTableNameAndId(String tableName, String id) {
         Table table = tableService.findByName(tableName);
-        String header = table.getHeader() + "\n";
-        String rowString = table.getRow(id).orElseThrow(() -> new RowNotFoundException(tableName, id));
-        return header + rowString;
+        return table.getRow(id).orElseThrow(() -> new RowNotFoundException(tableName, id));
     }
 
-    public void insert(String tableName, String data) {
+    public void insert(String tableName, String rowString) {
         Table table = tableService.findByName(tableName);
-        String rowString = data.split(" ", 2)[1];
         String id = rowString.split(DELIMITER, 2)[0];
         if (table.getRow(id).isPresent()) throw new DuplicatedKeyException(tableName, id);
 
         tableService.appendRow(tableName, rowString);
     }
 
-    public void update(String tableName, String data) {
-        String rowString = data.split(" ", 2)[1];
+    public void update(String tableName, String rowString) {
         String id = rowString.split(DELIMITER, 2)[0];
         tableService.deleteRow(tableName, id);
         tableService.appendRow(tableName, rowString);

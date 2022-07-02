@@ -13,6 +13,6 @@ public class GetDestQueryHandler implements QueryHandler {
     public String handle(String parameter) {
         String[] params = parameter.split(" ");
         String tableName = params[0];
-        return dllController.getDestinationShardUrl(tableName);
+        return dllController.getDestination(tableName);
     }
 }

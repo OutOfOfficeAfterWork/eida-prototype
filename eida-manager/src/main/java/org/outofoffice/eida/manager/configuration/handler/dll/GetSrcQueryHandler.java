@@ -14,6 +14,6 @@ public class GetSrcQueryHandler implements QueryHandler {
         String[] params = parameter.split(" ");
         String tableName = params[0];
         String id = params[1];
-        return dllController.getSourceShardUrl(tableName, id);
+        return dllController.getSource(tableName, id);
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static java.util.Collections.emptyList;
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 import static org.outofoffice.lib.util.StringUtils.getterName;
 import static org.outofoffice.lib.util.StringUtils.setterName;
@@ -48,19 +48,21 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
         if (isExist(id)) throw new EidaException("key is duplicated");
 
         String serialized = serializer.serialize(entity);
-        String destinationShardUrl = managerClient.getDestinationShardUrl(tableName());
+        String destinationShardUrl = managerClient.getDestination(tableName());
         shardClient.insert(destinationShardUrl, tableName(), serialized);
         managerClient.postShardUrl(destinationShardUrl, tableName(), id);
     }
 
     public void update(T entity) {
         String serialized = serializer.serialize(entity);
-        String sourceShardUrl = managerClient.getSourceShardUrl(tableName(), entity.getId()).orElseThrow();
+        String source = managerClient.getSource(tableName(), entity.getId());
+        String sourceShardUrl = source.split("\n", 2)[0];
         shardClient.update(sourceShardUrl, tableName(), serialized);
     }
 
     public void delete(ID id) {
-        String sourceShardUrl = managerClient.getSourceShardUrl(tableName(), id.toString()).orElseThrow();
+        String source = managerClient.getSource(tableName(), id);
+        String sourceShardUrl = source.split("\n", 2)[0];
         shardClient.delete(sourceShardUrl, tableName(), id);
         managerClient.deleteShardUrl(sourceShardUrl, tableName(), id);
     }
@@ -70,35 +72,35 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
     }
 
     public Optional<T> find(ID id) {
-        Optional<String> oSourceShardUrl = managerClient.getSourceShardUrl(tableName(), id);
-        if (oSourceShardUrl.isEmpty()) return Optional.empty();
+        String[] response = managerClient.getSource(tableName(), id).split("\n", 2);
 
-        String tableString = shardClient.selectById(oSourceShardUrl.get(), tableName(), id);
-        List<T> entities = serializer.deserialize(tableString, entityClass());
+        String sourceShardUrl = response[0];
+        if (sourceShardUrl.isEmpty()) return Optional.empty();
+
+        String schemeString = response[1];
+        String tableString = shardClient.selectById(sourceShardUrl, tableName(), id);
+
+        List<T> entities = serializer.deserialize(schemeString, tableString, entityClass());
         if (entities.size() > 1) throw new EidaException("return value size > 1");
         return entities.stream().findFirst();
     }
 
     public List<T> listAll() {
-        List<String> allShardUrls = managerClient.getAllShardUrls(tableName());
+        String[] response = managerClient.getSources(tableName()).split("\n");
+        String shardUrlsString = response[0];
+        String schemeString = response[1];
 
-        String header = null;
+        List<String> shardUrls = stream(shardUrlsString.split(","))
+            .filter(s -> !s.isEmpty())
+            .collect(toList());
+
         StringBuilder packedTableBuilder = new StringBuilder();
-        for (String shardUrl : allShardUrls) {
-            String tableString = shardClient.selectAll(shardUrl, tableName());
-            String[] headerAndBody = tableString.split("\n", 2);
-
-            String firstLine = headerAndBody[0];
-            if (header == null) {
-                header = firstLine;
-                packedTableBuilder.append(header).append("\n");
-            }
-
-            String bodyString = headerAndBody[1];
+        for (String shardUrl : shardUrls) {
+            String bodyString = shardClient.selectAll(shardUrl, tableName());
             packedTableBuilder.append(bodyString).append("\n");
         }
         String packedTableString = packedTableBuilder.toString();
-        return (!packedTableString.isEmpty()) ? serializer.deserialize(packedTableString, entityClass()) : emptyList();
+        return serializer.deserialize(schemeString, packedTableString, entityClass());
     }
 
     public Optional<T> joinFind(ID id, String fieldName) {
@@ -136,8 +138,9 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
     }
 
     public boolean isExist(ID id) {
-        Optional<String> oSourceShardUrl = managerClient.getSourceShardUrl(tableName(), id);
-        return oSourceShardUrl.isPresent();
+        String[] response = managerClient.getSource(tableName(), id).split("\n", 2);
+        String sourceShardUrl = response[0];
+        return !sourceShardUrl.isEmpty();
     }
 
 }

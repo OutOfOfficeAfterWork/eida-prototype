@@ -16,8 +16,7 @@ public class GetAllQueryHandler implements QueryHandler {
     public String handle(String parameter) {
         String[] params = parameter.split(" ");
         String tableName = params[0];
-        List<String> allShardUrls = dllController.getAllShardUrls(tableName);
-        return String.join(",", allShardUrls);
+        return dllController.getSources(tableName);
    }
 
 }

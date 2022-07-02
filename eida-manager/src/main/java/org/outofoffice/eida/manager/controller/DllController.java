@@ -3,8 +3,6 @@ package org.outofoffice.eida.manager.controller;
 import lombok.RequiredArgsConstructor;
 import org.outofoffice.eida.manager.service.DllService;
 
-import java.util.List;
-
 
 @RequiredArgsConstructor
 public class DllController {
@@ -12,16 +10,16 @@ public class DllController {
     private final DllService dllService;
 
 
-    public List<String> getAllShardUrls(String tableName) {
-        return dllService.getAllShardUrls(tableName);
+    public String getSources(String tableName) {
+        return dllService.getSources(tableName);
     }
 
-    public String getDestinationShardUrl(String tableName) {
-        return dllService.getDestinationShardUrl(tableName);
+    public String getDestination(String tableName) {
+        return dllService.getDestination(tableName);
     }
 
-    public String getSourceShardUrl(String tableName, String id) {
-        return dllService.getSourceShardUrl(tableName, id);
+    public String getSource(String tableName, String id) {
+        return dllService.getSource(tableName, id);
     }
 
     public void reportInsert(String shardUrl, String tableName, String id) {

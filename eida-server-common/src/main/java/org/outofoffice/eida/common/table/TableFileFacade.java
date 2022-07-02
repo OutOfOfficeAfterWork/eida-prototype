@@ -19,7 +19,6 @@ import static org.outofoffice.eida.common.table.Table.DELIMITER;
 public class TableFileFacade {
 
     private final String dirPath;
-    private final String schemePath;
 
 
     public Table findByName(String tableName) {
@@ -28,17 +27,14 @@ public class TableFileFacade {
         try {
             Path path = Paths.get(filePath);
             List<String> lines = Files.readAllLines(path);
-            String header = lines.get(0);
 
             Map<String, String> map = new HashMap<>();
-            int size = lines.size();
-            for (int i = 1; i < size; i++) {
-                String line = lines.get(i);
+            for (String line : lines) {
                 int idx = line.indexOf(DELIMITER);
                 String key = line.substring(0, idx);
                 map.put(key, line);
             }
-            return new Table(tableName, header, map);
+            return new Table(tableName, map);
         } catch (NoSuchFileException e) {
             throw new TableNotFoundException(e);
         } catch (IOException e) {
@@ -49,20 +45,14 @@ public class TableFileFacade {
 
     public void save(Table table) {
         String filePath = dirPath + table.getTableName();
-        String schemeFilePath = schemePath + table.getTableName();
         try {
             Path path = Paths.get(filePath);
             if (Files.exists(path)) {
                 Files.delete(path);
             }
 
-            Path file = Files.createFile(path);
-            List<String> columns = Files.readAllLines(Paths.get(schemeFilePath));
-            String header = String.join(DELIMITER, columns) + "\n";
-            Files.write(file, header.getBytes(UTF_8), CREATE);
-
             String lines = String.join("\n", table.copyContent().values());
-            Files.write(path, lines.getBytes(UTF_8), APPEND);
+            Files.write(path, lines.getBytes(UTF_8), CREATE);
         } catch (NoSuchFileException e) {
             throw new TableNotFoundException(e);
         } catch (FileAlreadyExistsException e) {

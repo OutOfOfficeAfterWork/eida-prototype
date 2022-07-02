@@ -33,11 +33,11 @@ class KemiRepositoryTest {
 
     @Test
     void find() {
-        socketClient.put(managerServerUrl, "get src, KemiEntity 1", "http://shard1:1234");
+        socketClient.put(managerServerUrl, "get src, KemiEntity 1", "http://shard1:1234\nid,major,testEidaEntity");
 
         EidaDmlGenerator eidaDmlGenerator = new EidaDmlGenerator();
         String dml = eidaDmlGenerator.createSelectByIdQuery("KemiEntity", 1);
-        socketClient.put("http://shard1:1234", dml, "id,major,testEidaEntity\n1,cs,2");
+        socketClient.put("http://shard1:1234", dml, "1,cs,2");
 
         KemiEntity expected = new KemiEntity(1L, "cs", new TestEidaEntity(2L, null));
 
@@ -49,10 +49,10 @@ class KemiRepositoryTest {
 
     @Test
     void join() {
-        socketClient.put(managerServerUrl, "get src, KemiEntity 1", "http://shard1:1234");
-        socketClient.put("http://shard1:1234", "select, KemiEntity 1", "id,major,testEidaEntity\n1,cs,2");
-        socketClient.put(managerServerUrl, "get src, TestEidaEntity 2", "http://shard2:1234");
-        socketClient.put("http://shard2:1234", "select, TestEidaEntity 2", "id,name\n2,josh");
+        socketClient.put(managerServerUrl, "get src, KemiEntity 1", "http://shard1:1234\nid,major,testEidaEntity");
+        socketClient.put("http://shard1:1234", "select, KemiEntity 1", "1,cs,2");
+        socketClient.put(managerServerUrl, "get src, TestEidaEntity 2", "http://shard2:1234\nid,name");
+        socketClient.put("http://shard2:1234", "select, TestEidaEntity 2", "2,josh");
 
         KemiEntity expected = new KemiEntity(1L, "cs", new TestEidaEntity(2L, "josh"));
 
@@ -64,13 +64,13 @@ class KemiRepositoryTest {
 
     @Test
     void joinList() {
-        socketClient.put(managerServerUrl, "get all, KemiEntity", "http://shard01:1234,http://shard02:1234");
-        socketClient.put("http://shard01:1234", "select all, KemiEntity", "id,major,testEidaEntity\n1,cs,2\n2,mathematics,3");
-        socketClient.put("http://shard02:1234", "select all, KemiEntity", "id,major,testEidaEntity\n3,physics,4\n4,cs,5");
-        socketClient.put(managerServerUrl, "get src, TestEidaEntity 2", "http://shard01:1234");
-        socketClient.put(managerServerUrl, "get src, TestEidaEntity 5", "http://shard02:1234");
-        socketClient.put("http://shard01:1234", "select, TestEidaEntity 2", "id,name\n2,kemi");
-        socketClient.put("http://shard02:1234", "select, TestEidaEntity 5", "id,name\n5,josh");
+        socketClient.put(managerServerUrl, "get all, KemiEntity", "http://shard01:1234,http://shard02:1234\nid,major,testEidaEntity");
+        socketClient.put("http://shard01:1234", "select all, KemiEntity", "1,cs,2\n2,mathematics,3");
+        socketClient.put("http://shard02:1234", "select all, KemiEntity", "3,physics,4\n4,cs,5");
+        socketClient.put(managerServerUrl, "get src, TestEidaEntity 2", "http://shard01:1234\nid,name");
+        socketClient.put(managerServerUrl, "get src, TestEidaEntity 5", "http://shard02:1234\nid,name");
+        socketClient.put("http://shard01:1234", "select, TestEidaEntity 2", "2,kemi");
+        socketClient.put("http://shard02:1234", "select, TestEidaEntity 5", "5,josh");
 
         List<KemiEntity> found = kemiRepository.joinList(e -> e.getMajor().equals("cs"), "testEidaEntity");
         assertThat(found).hasSize(2);

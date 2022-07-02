@@ -21,23 +21,21 @@ public class EidaManagerClient implements EidaDllClient, EidaDdlManagerClient {
 
 
     @Override
-    public List<String> getAllShardUrls(String tableName) {
+    public String getSources(String tableName) {
         String dll = dllGenerator.createGetAllShardUrlsQuery(tableName);
-        String response = eidaClient.request(managerServerUrl, dll);
-        return !response.isEmpty() ? asList(response.split(",")) : emptyList();
+        return eidaClient.request(managerServerUrl, dll);
     }
 
     @Override
-    public String getDestinationShardUrl(String tableName) {
+    public String getDestination(String tableName) {
         String dll = dllGenerator.createGetDestinationShardUrlQuery(tableName);
         return eidaClient.request(managerServerUrl, dll);
     }
 
     @Override
-    public <ID> Optional<String> getSourceShardUrl(String tableName, ID id) {
+    public <ID> String getSource(String tableName, ID id) {
         String dll = dllGenerator.createGetSourceShardUrlQuery(tableName, id);
-        String response = eidaClient.request(managerServerUrl, dll);
-        return Optional.of(response).filter(url-> !url.isEmpty());
+        return eidaClient.request(managerServerUrl, dll);
     }
 
     @Override

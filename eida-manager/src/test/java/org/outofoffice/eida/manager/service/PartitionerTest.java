@@ -41,7 +41,7 @@ class PartitionerTest {
         // shard1 : e1, e2
         // shard2 :
 
-        Table table = new Table(tableName, header);
+        Table table = new Table(tableName);
         table.appendRow("e1", "1");
         table.appendRow("e2", "1");
         tableRepository.save(table);
