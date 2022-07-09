@@ -7,7 +7,4 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan
 public class EidaConfiguration {
-
-    private final String managerServerUrl = "localhost:1234";
-
 }

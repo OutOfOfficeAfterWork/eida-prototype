@@ -41,7 +41,7 @@ public class EidaContext {
 
 
     public static void init(Class<?> mainClass, EidaSocketClient socket) {
-        log.info("Eida Context init: socket - {}", socket);
+        log.info("Initialize Starting: socket - {}", socket);
         propertyLoader = new EidaPropertyLoader(mainClass);
         repositoryScanner = new EidaRepositoryScanner(mainClass);
         try {
@@ -49,6 +49,7 @@ public class EidaContext {
         } catch (Exception e) {
             throw new EidaException(e);
         }
+        log.info("Initialize Finished");
     }
 
     private static <T extends EidaEntity<ID>, ID> void doInit(EidaSocketClient socket) throws Exception {

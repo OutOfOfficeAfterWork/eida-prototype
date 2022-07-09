@@ -36,7 +36,7 @@ public class EidaRepositoryScanner {
                 .map(this::diskPathToFullClassName)
                 .filter(fullClassName -> !fullClassName.equals(ABSTRACT_REPOSITORY_NAME))
                 .collect(toList());
-            log.info("Eida repository scan: names- {}", names);
+            log.debug("Repository scan Finished: names- {}", names);
             return names;
         }
     }

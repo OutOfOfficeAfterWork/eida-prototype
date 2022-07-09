@@ -23,7 +23,7 @@ public class EidaPropertyLoader {
         properties.load(new FileInputStream(getPropertyFileFromMainClass()));
 
         String managerServerUrl = properties.getProperty("managerServerUrl");
-        log.info("Eida Property load: managerServerUrl - {}", managerServerUrl);
+        log.debug("Property load Finished: managerServerUrl - {}", managerServerUrl);
         return managerServerUrl;
     }
 
