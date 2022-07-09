@@ -42,4 +42,18 @@ public class EidaShardClient implements EidaDmlClient, EidaDdlShardClient {
         eidaClient.request(shardUrl, dml);
     }
 
+    @Override
+    public void createTable(String shardUrl, String tableName) {
+
+    }
+
+    @Override
+    public void renameTable(String shardUrl, String currentName, String nextName) {
+
+    }
+
+    @Override
+    public void dropTable(String shardUrl, String tableName) {
+
+    }
 }

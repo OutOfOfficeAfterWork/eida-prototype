@@ -1,14 +1,10 @@
 package org.outofoffice.lib.core.client;
 
 import lombok.RequiredArgsConstructor;
-import org.outofoffice.lib.core.query.EidaDllGenerator;
 import org.outofoffice.common.socket.EidaSocketClient;
+import org.outofoffice.lib.core.query.EidaDllGenerator;
 
 import java.util.List;
-import java.util.Optional;
-
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 
 
 @RequiredArgsConstructor
@@ -50,4 +46,23 @@ public class EidaManagerClient implements EidaDllClient, EidaDdlManagerClient {
         eidaClient.request(managerServerUrl, dll);
     }
 
+    @Override
+    public List<String> getAllShardUrls() {
+        return null;
+    }
+
+    @Override
+    public void createTable(String tableName, List<String> columnNames) {
+
+    }
+
+    @Override
+    public void renameTable(String currentName, String nextName) {
+
+    }
+
+    @Override
+    public void dropTable(String tableName) {
+
+    }
 }

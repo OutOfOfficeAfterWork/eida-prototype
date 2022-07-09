@@ -8,6 +8,8 @@ import org.outofoffice.lib.core.ddl.param.CreateTableParam;
 import org.outofoffice.lib.core.ddl.param.DeleteTableParam;
 import org.outofoffice.lib.core.ddl.param.RenameTableParam;
 
+import java.util.List;
+
 
 @RequiredArgsConstructor
 public class EidaDdlDispatcher {
@@ -15,15 +17,32 @@ public class EidaDdlDispatcher {
     private final EidaDdlManagerClient eidaDdlManagerClient;
     private final EidaDdlShardClient eidaDdlShardClient;
 
-    public void create(CreateTableParam param) {
+    public void createTable(CreateTableParam param) {
+        String tableName = param.getTableName();
+        List<String> columnNames = param.getColumnNames();
+
+        eidaDdlManagerClient.createTable(tableName, columnNames);
+        List<String> allShardUrls = eidaDllClient.getAllShardUrls();
+        allShardUrls.forEach(shardUrl -> eidaDdlShardClient.createTable(shardUrl, tableName));
 
     }
 
-    public void rename(RenameTableParam toParam) {
+    public void renameTable(RenameTableParam param) {
+        String currentName = param.getCurrentName();
+        String nextName = param.getNextName();
+
+        eidaDdlManagerClient.renameTable(currentName, nextName);
+        List<String> allShardUrls = eidaDllClient.getAllShardUrls();
+        allShardUrls.forEach(shardUrl -> eidaDdlShardClient.renameTable(shardUrl, currentName, nextName));
 
     }
 
-    public void delete(DeleteTableParam toParam) {
+    public void deleteTable(DeleteTableParam param) {
+        String tableName = param.getTableName();
+
+        eidaDdlManagerClient.dropTable(tableName);
+        List<String> allShardUrls = eidaDllClient.getAllShardUrls();
+        allShardUrls.forEach(shardUrl -> eidaDdlShardClient.dropTable(shardUrl, tableName));
 
     }
 }

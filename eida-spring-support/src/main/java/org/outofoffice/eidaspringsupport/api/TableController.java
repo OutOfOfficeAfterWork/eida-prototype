@@ -17,19 +17,19 @@ public class TableController {
 
     @PostMapping
     public ResponseEntity<Void> createTable(@RequestBody CreateTableRequest req) {
-        eidaDdlDispatcher.create(req.toParam());
+        eidaDdlDispatcher.createTable(req.toParam());
         return ResponseEntity.ok().build();
     }
 
     @PutMapping
     public ResponseEntity<Void> renameTable(@RequestBody RenameTableRequest req) {
-        eidaDdlDispatcher.rename(req.toParam());
+        eidaDdlDispatcher.renameTable(req.toParam());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteTable(@RequestBody DeleteTableRequest req) {
-        eidaDdlDispatcher.delete(req.toParam());
+        eidaDdlDispatcher.deleteTable(req.toParam());
         return ResponseEntity.ok().build();
     }
 }
