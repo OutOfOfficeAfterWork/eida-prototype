@@ -44,4 +44,8 @@ public class ShardMapping {
     public Set<String> getAllShardIds() {
         return content.keySet();
     }
+
+    public Set<String> getAllShardUrls() {
+        return new HashSet<>(content.values());
+    }
 }

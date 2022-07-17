@@ -3,12 +3,19 @@ package org.outofoffice.eida.manager.controller;
 import lombok.RequiredArgsConstructor;
 import org.outofoffice.eida.manager.service.DllService;
 
+import java.util.List;
+import java.util.Set;
+
 
 @RequiredArgsConstructor
 public class DllController {
 
     private final DllService dllService;
 
+
+    public Set<String> getAllShardUrls() {
+        return dllService.getAllShardUrls();
+    }
 
     public String getSources(String tableName) {
         return dllService.getSources(tableName);
