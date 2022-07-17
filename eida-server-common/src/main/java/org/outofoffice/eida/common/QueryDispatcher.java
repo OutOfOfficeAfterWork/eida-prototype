@@ -12,7 +12,7 @@ public class QueryDispatcher {
     private final QueryHandlerMap queryHandlerMap;
 
     public EidaResponse send(String request) {
-        String[] s = request.split(", ");
+        String[] s = request.split(", ", 2);
         String command = s[0];
         String parameter = (s.length == 2) ? s[1] : "";
 

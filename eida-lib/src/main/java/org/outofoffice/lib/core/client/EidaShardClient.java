@@ -1,14 +1,16 @@
 package org.outofoffice.lib.core.client;
 
 import lombok.RequiredArgsConstructor;
-import org.outofoffice.lib.core.query.EidaDmlGenerator;
 import org.outofoffice.common.socket.EidaSocketClient;
+import org.outofoffice.lib.core.query.EidaDmlGenerator;
+import org.outofoffice.lib.core.query.EidaShardDdlGenerator;
 
 
 @RequiredArgsConstructor
 public class EidaShardClient implements EidaDmlClient, EidaDdlShardClient {
 
     private final EidaDmlGenerator dmlGenerator;
+    private final EidaShardDdlGenerator ddlGenerator;
     private final EidaSocketClient eidaClient;
 
 
@@ -44,16 +46,19 @@ public class EidaShardClient implements EidaDmlClient, EidaDdlShardClient {
 
     @Override
     public void createTable(String shardUrl, String tableName) {
-
+        String ddl = ddlGenerator.createCreateTableQuery(tableName);
+        eidaClient.request(shardUrl, ddl);
     }
 
     @Override
     public void renameTable(String shardUrl, String currentName, String nextName) {
-
+        String ddl = ddlGenerator.createRenameTableQuery(currentName, nextName);
+        eidaClient.request(shardUrl, ddl);
     }
 
     @Override
     public void dropTable(String shardUrl, String tableName) {
-
+        String ddl = ddlGenerator.createDropTableQuery(tableName);
+        eidaClient.request(shardUrl, ddl);
     }
 }
