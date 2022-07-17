@@ -8,6 +8,10 @@ public class TableService {
     private final TableRepository tableRepository;
 
 
+    public void create(String tableName) {
+        tableRepository.save(new Table(tableName));
+    }
+
     public void appendRow(String tableName, String id, String value) {
         Table table = tableRepository.findByName(tableName);
         table.appendRow(id, value);

@@ -2,15 +2,13 @@ package org.outofoffice.eida.manager.configuration;
 
 import lombok.NoArgsConstructor;
 import org.outofoffice.eida.common.table.*;
+import org.outofoffice.eida.manager.controller.DdlController;
 import org.outofoffice.eida.manager.domain.ShardMapping;
 import org.outofoffice.eida.manager.infrastructure.*;
 import org.outofoffice.eida.manager.repository.SchemeRepository;
 import org.outofoffice.eida.manager.repository.ShardMappingRepository;
-import org.outofoffice.eida.manager.service.SchemeService;
-import org.outofoffice.eida.manager.service.ShardMappingService;
+import org.outofoffice.eida.manager.service.*;
 import org.outofoffice.eida.manager.controller.DllController;
-import org.outofoffice.eida.manager.service.DllService;
-import org.outofoffice.eida.manager.service.Partitioner;
 
 import static lombok.AccessLevel.PRIVATE;
 import static org.outofoffice.eida.manager.configuration.ConfigConstant.*;
@@ -32,6 +30,9 @@ public class SingletonContainer {
     public static DllService DLL_SERVICE;
     public static DllController DLL_CONTROLLER;
 
+    public static DdlService DDL_SERVICE;
+    public static DdlController DDL_CONTROLLER;
+
     public static void init(boolean isTest) {
         TABLE_REPOSITORY = isTest ? new TableMapRepository() : new TableFileRepository(new TableFileFacade(TABLE_DIR_PATH));
         SCHEME_REPOSITORY = isTest ? new SchemeMockRepository() : new SchemeFileRepository(new SchemeFileFacade(SCHEME_DIR_PATH));
@@ -48,6 +49,9 @@ public class SingletonContainer {
 
         DLL_SERVICE = new DllService(TABLE_SERVICE, SHARD_MAPPING_SERVICE, SCHEME_SERVICE, PARTITIONER);
         DLL_CONTROLLER = new DllController(DLL_SERVICE);
+
+        DDL_SERVICE = new DdlService(SCHEME_SERVICE, TABLE_SERVICE);
+        DDL_CONTROLLER = new DdlController(DDL_SERVICE);
     }
 
     private static void setTestData() {
