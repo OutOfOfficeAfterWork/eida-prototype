@@ -23,7 +23,12 @@ public class DllService {
     private final Partitioner partitioner;
 
 
-    public String getSources(String tableName) {
+    public Set<String> getAllShardUrls() {
+        ShardMapping shardMapping = shardMappingService.find();
+        return shardMapping.getAllShardUrls();
+    }
+
+    public String getShardUrlsAndScheme(String tableName) {
         Table table = tableService.findByName(tableName);
         Map<String, String> content = table.copyContent();
         Set<String> shardIds = content.values().stream()

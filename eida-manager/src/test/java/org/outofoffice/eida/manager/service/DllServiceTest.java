@@ -68,7 +68,7 @@ class DllServiceTest {
         table.appendRow("2", "2");
         tableRepository.save(table);
 
-        String[] response = dllService.getSources(tableName).split("\n");
+        String[] response = dllService.getShardUrlsAndScheme(tableName).split("\n");
         List<String> shardUrls = Arrays.stream(response[0].split(",")).collect(toList());
         String schemeString  = response[1];
         assertThat(shardUrls).isEqualTo(List.of("localhost:10830", "localhost:10831"));
@@ -102,7 +102,7 @@ class DllServiceTest {
         table.appendRow(id, "3");
         tableRepository.save(table);
 
-        String[] response = dllService.getSources(tableName).split("\n");
+        String[] response = dllService.getShardUrlsAndScheme(tableName).split("\n");
         List<String> shardUrls = Arrays.stream(response[0].split(",")).collect(toList());
         String schemeString  = response[1];
         assertThat(shardUrls).isEqualTo(List.of("localhost:10830"));
@@ -125,7 +125,7 @@ class DllServiceTest {
 
         dllService.reportInsert(shardUrl, tableName, id);
 
-        String[] response = dllService.getSources(tableName).split("\n");
+        String[] response = dllService.getShardUrlsAndScheme(tableName).split("\n");
         List<String> shardUrls = Arrays.stream(response[0].split(",")).collect(toList());
         String schemeString  = response[1];
         assertThat(shardUrls).isEqualTo(List.of(shardUrl));

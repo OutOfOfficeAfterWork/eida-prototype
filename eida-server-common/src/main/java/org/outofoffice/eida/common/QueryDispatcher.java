@@ -14,7 +14,7 @@ public class QueryDispatcher {
     public EidaResponse send(String request) {
         String[] s = request.split(", ");
         String command = s[0];
-        String parameter = s[1];
+        String parameter = (s.length == 2) ? s[1] : "";
 
         try {
             String code = "OK";
