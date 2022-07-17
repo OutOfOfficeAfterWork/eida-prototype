@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.outofoffice.common.socket.EidaSocketClient;
 import org.outofoffice.lib.core.query.EidaDllGenerator;
 
+import java.util.Arrays;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 
 @RequiredArgsConstructor
@@ -48,7 +51,9 @@ public class EidaManagerClient implements EidaDllClient, EidaDdlManagerClient {
 
     @Override
     public List<String> getAllShardUrls() {
-        return null;
+        String dll = dllGenerator.createGetAllShardUrlsQuery();
+        String response = eidaClient.request(managerServerUrl, dll);
+        return Arrays.stream(response.split(",")).collect(toList());
     }
 
     @Override
