@@ -1,9 +1,12 @@
 package org.outofoffice.eida.shard.configuration.handler;
 
 import org.outofoffice.eida.common.QueryHandlerMap;
+import org.outofoffice.eida.shard.configuration.handler.ddl.CreateTableQueryHandler;
+import org.outofoffice.eida.shard.controller.DdlController;
 import org.outofoffice.eida.shard.controller.DmlController;
 import org.outofoffice.eida.shard.configuration.handler.dml.*;
 
+import static org.outofoffice.eida.shard.configuration.SingletonContainer.DDL_CONTROLLER;
 import static org.outofoffice.eida.shard.configuration.SingletonContainer.DML_CONTROLLER;
 
 
@@ -17,6 +20,11 @@ public class ShardServerQueryHandlerMap extends QueryHandlerMap {
         mappings.put("insert", new InsertQueryHandler(dmlController));
         mappings.put("update", new UpdateQueryHandler(dmlController));
         mappings.put("delete", new DeleteQueryHandler(dmlController));
+
+        DdlController ddlController = DDL_CONTROLLER;
+        mappings.put("create table", new CreateTableQueryHandler(ddlController));
+        // mappings.put("rename table", );
+        // mappings.put("delete table", );
 
         return this;
     }
