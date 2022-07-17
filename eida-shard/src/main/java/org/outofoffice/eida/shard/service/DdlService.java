@@ -12,4 +12,7 @@ public class DdlService {
         tableService.create(tableName);
     }
 
+    public void renameTable(String currentName, String nextName) {
+        tableService.rename(currentName, nextName);
+    }
 }

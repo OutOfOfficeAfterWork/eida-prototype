@@ -10,4 +10,8 @@ public class DdlController {
     public void createTable(String tableName) {
         ddlService.createTable(tableName);
     }
+
+    public void renameTable(String currentName, String nextName) {
+        ddlService.renameTable(currentName, nextName);
+    }
 }
