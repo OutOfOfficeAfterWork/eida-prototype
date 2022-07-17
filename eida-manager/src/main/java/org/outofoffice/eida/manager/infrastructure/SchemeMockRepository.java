@@ -18,4 +18,9 @@ public class SchemeMockRepository implements SchemeRepository {
     public String findByName(String tableName) {
         return map.get(tableName);
     }
+
+    @Override
+    public void rename(String currentName, String nextName) {
+        map.put(nextName, map.get(currentName));
+    }
 }

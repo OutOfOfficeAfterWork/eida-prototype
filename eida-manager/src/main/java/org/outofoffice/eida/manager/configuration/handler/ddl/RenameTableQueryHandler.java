@@ -10,6 +10,12 @@ public class RenameTableQueryHandler implements QueryHandler {
 
     @Override
     public String handle(String parameter) {
+        String[] params = parameter.split(" ", 2);
+        String currentName = params[0];
+        String nextName = params[1];
+
+        ddlController.renameTable(currentName, nextName);
+
         return null;
     }
 }

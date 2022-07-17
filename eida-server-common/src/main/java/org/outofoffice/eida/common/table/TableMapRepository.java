@@ -30,6 +30,11 @@ public class TableMapRepository implements TableRepository {
     }
 
     @Override
+    public void delete(Table table) {
+        map.remove(table.getTableName());
+    }
+
+    @Override
     public void clear() {
         map.clear();
     }

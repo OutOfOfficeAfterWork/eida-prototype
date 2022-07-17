@@ -46,4 +46,8 @@ public class Table {
     public Optional<String> getRow(String id) {
         return Optional.ofNullable(content.get(id));
     }
+
+    public Table renamed(String nextName) {
+        return new Table(nextName, copyContent());
+    }
 }

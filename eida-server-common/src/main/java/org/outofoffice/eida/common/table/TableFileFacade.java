@@ -81,6 +81,22 @@ public class TableFileFacade {
     }
 
 
+    public void delete(Table table) {
+        String filePath = dirPath + table.getTableName();
+        try {
+            Path path = Paths.get(filePath);
+            if (Files.exists(path)) {
+                Files.delete(path);
+            }
+        } catch (NoSuchFileException e) {
+            throw new TableNotFoundException(e);
+        } catch (FileAlreadyExistsException e) {
+            throw new EidaBadRequestException(e);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     public void clear() {
         throw new IllegalStateException("do not invoke");
     }

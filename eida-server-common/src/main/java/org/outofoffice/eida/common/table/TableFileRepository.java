@@ -25,6 +25,11 @@ public class TableFileRepository implements TableRepository {
     }
 
     @Override
+    public void delete(Table table) {
+        tableFileFacade.delete(table);
+    }
+
+    @Override
     public void clear() {
         tableFileFacade.clear();
     }

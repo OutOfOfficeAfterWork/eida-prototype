@@ -7,9 +7,15 @@ public class TableService {
 
     private final TableRepository tableRepository;
 
-
     public void create(String tableName) {
         tableRepository.save(new Table(tableName));
+    }
+
+    public void rename(String currentName, String nextName) {
+        Table currentTable = tableRepository.findByName(currentName);
+        Table renamedTable = currentTable.renamed(nextName);
+        tableRepository.save(renamedTable);
+        tableRepository.delete(currentTable);
     }
 
     public void appendRow(String tableName, String id, String value) {

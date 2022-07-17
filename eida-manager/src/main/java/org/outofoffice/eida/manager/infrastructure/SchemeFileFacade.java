@@ -42,4 +42,17 @@ public class SchemeFileFacade {
         }
     }
 
+    public void rename(String currentName, String nextName) {
+        try {
+            Path currPath = Paths.get(dirPath + currentName);
+            Path nextPath = Paths.get(dirPath + nextName);
+            if (Files.exists(nextPath)) throw new EidaBadRequestException("Next name already exists");
+
+            Files.move(currPath, nextPath);
+        } catch (NoSuchFileException e) {
+            throw new TableNotFoundException(e);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 }

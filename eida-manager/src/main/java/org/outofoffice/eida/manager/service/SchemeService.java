@@ -14,4 +14,8 @@ public class SchemeService {
     public String findByName(String tableName) {
         return schemeRepository.findByName(tableName);
     }
+
+    public void rename(String currentName, String nextName) {
+        schemeRepository.rename(currentName, nextName);
+    }
 }

@@ -16,4 +16,9 @@ public class SchemeFileRepository implements SchemeRepository {
     public String findByName(String tableName) {
         return schemeFileFacade.findByName(tableName);
     }
+
+    @Override
+    public void rename(String currentName, String nextName) {
+        schemeFileFacade.rename(currentName, nextName);
+    }
 }
