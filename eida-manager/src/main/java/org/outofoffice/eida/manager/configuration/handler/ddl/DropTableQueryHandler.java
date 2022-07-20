@@ -10,6 +10,7 @@ public class DropTableQueryHandler implements QueryHandler {
 
     @Override
     public String handle(String parameter) {
+        ddlController.dropTable(parameter);
         return null;
     }
 }

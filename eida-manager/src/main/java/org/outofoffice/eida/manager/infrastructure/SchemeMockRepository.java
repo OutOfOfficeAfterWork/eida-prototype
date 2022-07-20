@@ -23,4 +23,9 @@ public class SchemeMockRepository implements SchemeRepository {
     public void rename(String currentName, String nextName) {
         map.put(nextName, map.get(currentName));
     }
+
+    @Override
+    public void delete(String tableName) {
+        map.remove(tableName);
+    }
 }

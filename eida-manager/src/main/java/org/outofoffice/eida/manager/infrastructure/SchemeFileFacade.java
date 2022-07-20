@@ -55,4 +55,20 @@ public class SchemeFileFacade {
             throw new IllegalStateException(e);
         }
     }
+
+    public void delete(String tableName) {
+        String filePath = dirPath + tableName;
+        try {
+            Path path = Paths.get(filePath);
+            if (Files.exists(path)) {
+                Files.delete(path);
+            }
+        } catch (NoSuchFileException e) {
+            throw new TableNotFoundException(e);
+        } catch (FileAlreadyExistsException e) {
+            throw new EidaBadRequestException(e);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 }

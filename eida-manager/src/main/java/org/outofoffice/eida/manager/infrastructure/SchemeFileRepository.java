@@ -21,4 +21,9 @@ public class SchemeFileRepository implements SchemeRepository {
     public void rename(String currentName, String nextName) {
         schemeFileFacade.rename(currentName, nextName);
     }
+
+    @Override
+    public void delete(String tableName) {
+        schemeFileFacade.delete(tableName);
+    }
 }

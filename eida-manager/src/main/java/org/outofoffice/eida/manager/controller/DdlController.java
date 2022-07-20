@@ -16,6 +16,6 @@ public class DdlController {
     }
 
     public void dropTable(String tableName) {
-
+        ddlService.dropTable(tableName);
     }
 }

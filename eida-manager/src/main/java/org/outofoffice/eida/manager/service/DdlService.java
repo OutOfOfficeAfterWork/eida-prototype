@@ -18,4 +18,8 @@ public class DdlService {
         tableService.rename(currentName, nextName);
     }
 
+    public void dropTable(String tableName) {
+        schemeService.delete(tableName);
+        tableService.drop(tableName);
+    }
 }

@@ -18,4 +18,8 @@ public class SchemeService {
     public void rename(String currentName, String nextName) {
         schemeRepository.rename(currentName, nextName);
     }
+
+    public void delete(String tableName) {
+        schemeRepository.delete(tableName);
+    }
 }

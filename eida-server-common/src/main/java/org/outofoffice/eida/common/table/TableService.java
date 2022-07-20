@@ -39,4 +39,9 @@ public class TableService {
     public Table findByName(String tableName) {
         return tableRepository.findByName(tableName);
     }
+
+    public void drop(String tableName) {
+        Table table = tableRepository.findByName(tableName);
+        tableRepository.delete(table);
+    }
 }
