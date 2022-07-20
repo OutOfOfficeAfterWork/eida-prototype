@@ -14,4 +14,8 @@ public class DdlController {
     public void renameTable(String currentName, String nextName) {
         ddlService.renameTable(currentName, nextName);
     }
+
+    public void dropTable(String tableName) {
+        ddlService.dropTable(tableName);
+    }
 }
