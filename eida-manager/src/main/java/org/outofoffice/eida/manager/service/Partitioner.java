@@ -11,6 +11,7 @@ import org.outofoffice.eida.common.table.TableRepository;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.groupingBy;
@@ -30,13 +31,22 @@ public class Partitioner {
                 String tableName = table.getTableName();
                 Map<String, String> entityShardMap = table.copyContent();
 
-                List<ShardElement> shardElementList = new ArrayList<>();
-                entityShardMap.entrySet().forEach(entry -> entry.setValue(entry.getValue().split(",")[1]));
-                Map<String, List<Map.Entry<String, String>>> shardEntriesMap = entityShardMap.entrySet().stream()
-                    .collect(groupingBy(Map.Entry::getValue));
-                allShardIds.forEach(shardId ->
-                    shardElementList.add(new ShardElement(shardId, shardEntriesMap.getOrDefault(shardId, emptyList()).size()))
-                );
+                // count entity by shard
+                Map<String, Integer> shardCountMap = new HashMap<>();
+                entityShardMap.forEach((entity, row) -> {
+                    String shard = row.split(",")[1];
+                    int currEntityCountInShard = shardCountMap.getOrDefault(shard, 0);
+                    shardCountMap.put(shard, currEntityCountInShard + 1);
+                });
+
+                // data for shard entity count info
+                List<ShardElement> shardElementList = allShardIds.stream()
+                    .map(shard -> {
+                        int count = shardCountMap.getOrDefault(shard, 0);
+                        return new ShardElement(shard, count);
+                    })
+                    .collect(Collectors.toList());
+
                 tableQueueMap.put(tableName, new PriorityQueue<>(shardElementList));
             });
     }

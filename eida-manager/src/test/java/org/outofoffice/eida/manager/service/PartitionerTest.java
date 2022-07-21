@@ -41,13 +41,13 @@ class PartitionerTest {
         // shard1 : e1, e2
         // shard2 :
 
+        shardMappingService.appendRow("1", "localhost:10830");
+        shardMappingService.appendRow("2", "localhost:10831");
+
         Table table = new Table(tableName);
         table.appendRow("e1", "1");
         table.appendRow("e2", "1");
         tableRepository.save(table);
-
-        shardMappingService.appendRow("1", "localhost:10830");
-        shardMappingService.appendRow("2", "localhost:10831");
 
         partitioner.init();
 
