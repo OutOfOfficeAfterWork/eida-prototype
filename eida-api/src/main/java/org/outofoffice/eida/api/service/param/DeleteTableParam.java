@@ -1,4 +1,4 @@
-package org.outofoffice.lib.core.ddl.param;
+package org.outofoffice.eida.api.service.param;
 
 import lombok.Data;
 

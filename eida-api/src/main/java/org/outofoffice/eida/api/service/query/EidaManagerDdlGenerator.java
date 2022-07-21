@@ -1,8 +1,10 @@
-package org.outofoffice.lib.core.query;
+package org.outofoffice.eida.api.service.query;
+
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-
+@Component
 public class EidaManagerDdlGenerator {
 
     public String createCreateTableQuery(String tableName, List<String> columnNames) {

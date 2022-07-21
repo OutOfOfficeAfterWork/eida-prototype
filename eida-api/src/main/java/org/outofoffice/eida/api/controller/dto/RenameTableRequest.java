@@ -1,7 +1,7 @@
-package org.outofoffice.eidaspringsupport.api.dto;
+package org.outofoffice.eida.api.controller.dto;
 
 import lombok.Data;
-import org.outofoffice.lib.core.ddl.param.RenameTableParam;
+import org.outofoffice.eida.api.service.param.RenameTableParam;
 
 @Data
 public class RenameTableRequest {

@@ -1,7 +1,7 @@
-package org.outofoffice.eidaspringsupport.api.dto;
+package org.outofoffice.eida.api.controller.dto;
 
 import lombok.Data;
-import org.outofoffice.lib.core.ddl.param.DeleteTableParam;
+import org.outofoffice.eida.api.service.param.DeleteTableParam;
 
 @Data
 public class DeleteTableRequest {

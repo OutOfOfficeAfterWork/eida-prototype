@@ -1,5 +1,8 @@
-package org.outofoffice.lib.core.query;
+package org.outofoffice.eida.api.service.query;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class EidaShardDdlGenerator {
 
     public String createCreateTableQuery(String tableName) {

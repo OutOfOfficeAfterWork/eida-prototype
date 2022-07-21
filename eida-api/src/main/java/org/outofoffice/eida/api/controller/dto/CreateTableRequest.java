@@ -1,7 +1,7 @@
-package org.outofoffice.eidaspringsupport.api.dto;
+package org.outofoffice.eida.api.controller.dto;
 
 import lombok.Data;
-import org.outofoffice.lib.core.ddl.param.CreateTableParam;
+import org.outofoffice.eida.api.service.param.CreateTableParam;
 
 import java.util.List;
 

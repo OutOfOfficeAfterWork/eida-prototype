@@ -3,10 +3,6 @@ package org.outofoffice.lib.core.query;
 
 public class EidaDllGenerator {
 
-    public String createGetAllShardUrlsQuery() {
-        return  "get all";
-    }
-
     public String createGetAllShardUrlsQuery(String tableName) {
         return  "get all, " + tableName;
     }
