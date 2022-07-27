@@ -2,6 +2,9 @@ package org.outofoffice.eida.common.table;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+import java.util.Set;
+
 @RequiredArgsConstructor
 public class TableService {
 
@@ -43,5 +46,9 @@ public class TableService {
     public void drop(String tableName) {
         Table table = tableRepository.findByName(tableName);
         tableRepository.delete(table);
+    }
+
+    public List<Table> findAll() {
+        return tableRepository.findAll();
     }
 }

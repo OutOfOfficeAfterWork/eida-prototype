@@ -3,6 +3,7 @@ package org.outofoffice.eida.manager.configuration.handler;
 import org.outofoffice.eida.common.QueryHandlerMap;
 import org.outofoffice.eida.manager.configuration.handler.ddl.CreateTableQueryHandler;
 import org.outofoffice.eida.manager.configuration.handler.ddl.DropTableQueryHandler;
+import org.outofoffice.eida.manager.configuration.handler.ddl.GetAllTableQueryHandler;
 import org.outofoffice.eida.manager.configuration.handler.ddl.RenameTableQueryHandler;
 import org.outofoffice.eida.manager.controller.DdlController;
 import org.outofoffice.eida.manager.controller.DllController;
@@ -28,6 +29,7 @@ public class ManagerServerQueryHandlerMap extends QueryHandlerMap {
         mappings.put("create table", new CreateTableQueryHandler(ddlController));
         mappings.put("rename table", new RenameTableQueryHandler(ddlController));
         mappings.put("drop table", new DropTableQueryHandler(ddlController));
+        mappings.put("get all table", new GetAllTableQueryHandler(ddlController));
 
         return this;
     }

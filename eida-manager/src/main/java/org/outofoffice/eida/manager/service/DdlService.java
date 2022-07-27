@@ -1,7 +1,14 @@
 package org.outofoffice.eida.manager.service;
 
 import lombok.RequiredArgsConstructor;
+import org.outofoffice.eida.common.table.Table;
 import org.outofoffice.eida.common.table.TableService;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toSet;
 
 @RequiredArgsConstructor
 public class DdlService {
@@ -25,5 +32,12 @@ public class DdlService {
         schemeService.delete(tableName);
         tableService.drop(tableName);
         partitioner.deleteTableQueue(tableName);
+    }
+
+    public Set<String> getAllTables() {
+        List<Table> tables = tableService.findAll();
+        return tables.stream()
+            .map(Table::getTableName)
+            .collect(toSet());
     }
 }

@@ -3,6 +3,9 @@ package org.outofoffice.eida.manager.controller;
 import lombok.RequiredArgsConstructor;
 import org.outofoffice.eida.manager.service.DdlService;
 
+import java.util.List;
+import java.util.Set;
+
 @RequiredArgsConstructor
 public class DdlController {
     private final DdlService ddlService;
@@ -18,4 +21,9 @@ public class DdlController {
     public void dropTable(String tableName) {
         ddlService.dropTable(tableName);
     }
+
+    public Set<String> getAllTables() {
+        return ddlService.getAllTables();
+    }
+
 }
