@@ -19,6 +19,7 @@ public class ManagerServerQueryHandlerMap extends QueryHandlerMap {
     public QueryHandlerMap configureMappings() {
 
         DllController dllController = DLL_CONTROLLER;
+        mappings.put("add shard", new AddShardQueryHandler(dllController));
         mappings.put("get all", new GetAllQueryHandler(dllController));
         mappings.put("get dst", new GetDestQueryHandler(dllController));
         mappings.put("get src", new GetSrcQueryHandler(dllController));

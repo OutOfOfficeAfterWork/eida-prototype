@@ -62,9 +62,9 @@ public class SingletonContainer {
         TABLE_REPOSITORY.save(userTable);
 
         ShardMapping shardMapping = new ShardMapping();
-        shardMapping.appendRow("1", "localhost:10830");
-        shardMapping.appendRow("2", "localhost:10831");
-        shardMapping.appendRow("3", "localhost:10832");
+        shardMapping.appendRow("localhost:10830");
+        shardMapping.appendRow("localhost:10831");
+        shardMapping.appendRow("localhost:10832");
         SHARD_MAPPING_REPOSITORY.save(shardMapping);
 
         String scheme = "id,value";

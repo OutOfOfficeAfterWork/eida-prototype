@@ -25,16 +25,16 @@ public class Partitioner {
 
     public void init() {
         ShardMapping shardMapping = shardMappingRepository.find();
-        Set<String> allShardIds = shardMapping.getAllShardIds();
+        Set<Integer> allShardIds = shardMapping.getAllShardIds();
         tableRepository.findAll()
             .forEach(table -> {
                 String tableName = table.getTableName();
                 Map<String, String> entityShardMap = table.copyContent();
 
                 // count entity by shard
-                Map<String, Integer> shardCountMap = new HashMap<>();
+                Map<Integer, Integer> shardCountMap = new HashMap<>();
                 entityShardMap.forEach((entity, row) -> {
-                    String shard = row.split(",")[1];
+                    Integer shard = Integer.parseInt(row.split(",")[1]);
                     int currEntityCountInShard = shardCountMap.getOrDefault(shard, 0);
                     shardCountMap.put(shard, currEntityCountInShard + 1);
                 });
@@ -56,7 +56,8 @@ public class Partitioner {
         if (priorityQueue == null) throw new TableNotFoundException(new IllegalStateException(tableName));
         if (priorityQueue.isEmpty()) throw new IllegalStateException("pq empty");
 
-        return priorityQueue.peek().getShardId();
+        return priorityQueue.peek().getShardId()
+            + ""; // TODO
     }
 
     public void arrange(String tableName) {
@@ -72,7 +73,7 @@ public class Partitioner {
 
     public void addTableQueue(String tableName) {
         ShardMapping shardMapping = shardMappingRepository.find();
-        Set<String> allShardIds = shardMapping.getAllShardIds();
+        Set<Integer> allShardIds = shardMapping.getAllShardIds();
 
         List<ShardElement> shardElementList = allShardIds.stream()
             .map(ShardElement::empty)
@@ -94,7 +95,7 @@ public class Partitioner {
     @Data
     @AllArgsConstructor(access = PRIVATE)
     private static class ShardElement implements Comparable<ShardElement> {
-        private final String shardId;
+        private final int shardId;
         private int rowCount;
 
         public void addCount() {
@@ -106,15 +107,15 @@ public class Partitioner {
             int compareCount = Integer.compare(rowCount, o.rowCount);
             return (compareCount != 0)
                 ? compareCount
-                : String.CASE_INSENSITIVE_ORDER.compare(shardId, o.shardId);
+                : Integer.compare(shardId, o.shardId);
         }
 
 
-        public static ShardElement of(String shardId, int rowCount) {
+        public static ShardElement of(int shardId, int rowCount) {
             return new ShardElement(shardId, rowCount);
         }
 
-        public static ShardElement empty(String shardId) {
+        public static ShardElement empty(int shardId) {
             return new ShardElement(shardId, 0);
         }
 

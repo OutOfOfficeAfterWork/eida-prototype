@@ -10,9 +10,9 @@ public class ShardMappingService {
     private final ShardMappingRepository shardMappingRepository;
 
 
-    public void appendRow(String shardId, String shardUrl) {
+    public void appendRow(String shardUrl) {
         ShardMapping shardMapping = shardMappingRepository.find();
-        shardMapping.appendRow(shardId, shardUrl);
+        shardMapping.appendRow(shardUrl);
         shardMappingRepository.save(shardMapping);
     }
 

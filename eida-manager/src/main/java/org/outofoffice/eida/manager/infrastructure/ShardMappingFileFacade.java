@@ -30,12 +30,12 @@ public class ShardMappingFileFacade {
             Path path = Paths.get(filePath);
             List<String> lines = Files.readAllLines(path);
 
-            Map<String, String> map = new HashMap<>();
+            Map<Integer, String> map = new HashMap<>();
             int size = lines.size();
             for (int i = 1; i < size; i++) {
                 String line = lines.get(i);
                 String[] tokens = line.split(DELIMITER, 2);
-                map.put(tokens[0], tokens[1]);
+                map.put(Integer.parseInt(tokens[0]), tokens[1]);
             }
             return new ShardMapping(map);
         } catch (IOException e) {
@@ -57,7 +57,7 @@ public class ShardMappingFileFacade {
             Files.write(file, header.getBytes(UTF_8), CREATE);
 
             String lines = shardMapping.copyContent().entrySet().stream()
-                .map(e -> join(DELIMITER, e.getKey(), e.getValue()))
+                .map(e -> join(DELIMITER, e.getKey().toString(), e.getValue()))
                 .collect(joining("\n"));
             Files.write(path, lines.getBytes(UTF_8), APPEND);
         } catch (IOException e) {

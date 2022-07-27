@@ -58,9 +58,9 @@ class DllServiceTest {
 
     @Test
     void getAllShardUrls() {
-        shardMappingService.appendRow("1", "localhost:10830");
-        shardMappingService.appendRow("2", "localhost:10831");
-        shardMappingService.appendRow("3", "localhost:10832");
+        shardMappingService.appendRow("localhost:10830");
+        shardMappingService.appendRow("localhost:10831");
+        shardMappingService.appendRow("localhost:10832");
         String tableName = "Team";
 
         Table table = new Table(tableName);
@@ -70,7 +70,7 @@ class DllServiceTest {
 
         String[] response = dllService.getShardUrlsAndScheme(tableName).split("\n");
         List<String> shardUrls = Arrays.stream(response[0].split(",")).collect(toList());
-        String schemeString  = response[1];
+        String schemeString = response[1];
         assertThat(shardUrls).isEqualTo(List.of("localhost:10830", "localhost:10831"));
         assertThat(schemeString).isEqualTo(header);
     }
@@ -78,11 +78,11 @@ class DllServiceTest {
     @Test
     void getDestinationShardUrl() {
         String tableName = "Team";
-        shardMappingService.appendRow("s1", "localhost:10830");
-        shardMappingService.appendRow("s2", "localhost:10831");
+        shardMappingService.appendRow("localhost:10830");
+        shardMappingService.appendRow("localhost:10831");
 
         Table table = new Table(tableName);
-        table.appendRow("e1", "s1");
+        table.appendRow("e1", "1");
         tableRepository.save(table);
 
         partitioner.init();
@@ -93,18 +93,18 @@ class DllServiceTest {
 
     @Test
     void getSourceShardUrl() {
-        shardMappingService.appendRow("3", "localhost:10830");
+        shardMappingService.appendRow("localhost:10830");
 
         String tableName = "Team";
         String id = "1";
 
         Table table = new Table(tableName);
-        table.appendRow(id, "3");
+        table.appendRow(id, "1");
         tableRepository.save(table);
 
         String[] response = dllService.getShardUrlsAndScheme(tableName).split("\n");
         List<String> shardUrls = Arrays.stream(response[0].split(",")).collect(toList());
-        String schemeString  = response[1];
+        String schemeString = response[1];
         assertThat(shardUrls).isEqualTo(List.of("localhost:10830"));
         assertThat(schemeString).isEqualTo(header);
     }
@@ -115,7 +115,7 @@ class DllServiceTest {
         String tableName = "Team";
         String id = "1";
         String shardId = "1";
-        shardMappingService.appendRow(shardId, shardUrl);
+        shardMappingService.appendRow(shardUrl);
 
         Table table = new Table(tableName);
         table.appendRow(id, shardId);
@@ -127,7 +127,7 @@ class DllServiceTest {
 
         String[] response = dllService.getShardUrlsAndScheme(tableName).split("\n");
         List<String> shardUrls = Arrays.stream(response[0].split(",")).collect(toList());
-        String schemeString  = response[1];
+        String schemeString = response[1];
         assertThat(shardUrls).isEqualTo(List.of(shardUrl));
         assertThat(schemeString).isEqualTo(header);
     }
@@ -142,7 +142,7 @@ class DllServiceTest {
         Table table = new Table(tableName);
         table.appendRow(id, shardId);
         tableRepository.save(table);
-        shardMappingService.appendRow(shardId, shardUrl);
+        shardMappingService.appendRow(shardUrl);
 
         partitioner.init();
         dllService.reportInsert(shardUrl, tableName, id);

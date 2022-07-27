@@ -23,6 +23,11 @@ public class DllService {
     private final Partitioner partitioner;
 
 
+    public void addShard(String url) {
+        shardMappingService.appendRow(url);
+        //partioner
+    }
+
     public Set<String> getAllShardUrls() {
         ShardMapping shardMapping = shardMappingService.find();
         return shardMapping.getAllShardUrls();
@@ -59,8 +64,8 @@ public class DllService {
 
     public void reportInsert(String shardUrl, String tableName, String id) {
         ShardMapping shardMapping = shardMappingService.find();
-        String shardId = shardMapping.getShardId(shardUrl).orElseThrow();
-        tableService.appendRow(tableName, id, shardId);
+        Integer shardId = shardMapping.getShardId(shardUrl).orElseThrow();
+        tableService.appendRow(tableName, id, shardId.toString());
         partitioner.arrange(tableName);
     }
 

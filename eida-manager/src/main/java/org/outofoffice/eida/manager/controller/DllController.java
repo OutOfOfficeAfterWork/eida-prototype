@@ -12,6 +12,10 @@ public class DllController {
     private final DllService dllService;
 
 
+    public void addShard(String url) {
+        dllService.addShard(url);
+    }
+
     public Set<String> getAllShardUrls() {
         return dllService.getAllShardUrls();
     }
