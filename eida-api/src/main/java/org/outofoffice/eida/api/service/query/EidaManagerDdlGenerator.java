@@ -19,4 +19,7 @@ public class EidaManagerDdlGenerator {
         return "drop table, " + tableName;
     }
 
+    public String createGetAllTablesQuery() {
+        return "get all table";
+    }
 }

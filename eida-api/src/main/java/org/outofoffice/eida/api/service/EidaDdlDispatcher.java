@@ -43,4 +43,10 @@ public class EidaDdlDispatcher {
         allShardUrls.forEach(shardUrl -> shardClient.dropTable(shardUrl, tableName));
     }
 
+    public void addShard(String url) {
+        managerClient.addShard(url);
+        List<String> tables = managerClient.getAllTables();
+        tables.forEach(table -> shardClient.createTable(url, table));
+    }
+
 }

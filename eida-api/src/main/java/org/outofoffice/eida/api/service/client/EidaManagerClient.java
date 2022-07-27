@@ -42,4 +42,15 @@ public class EidaManagerClient {
         String ddl = ddlGenerator.createDropTableQuery(tableName);
         eidaClient.request(managerServerUrl, ddl);
     }
+
+    public void addShard(String url) {
+        String dll = dllGenerator.createAddShardQuery(url);
+        eidaClient.request(managerServerUrl, dll);
+    }
+
+    public List<String> getAllTables() {
+        String ddl = ddlGenerator.createGetAllTablesQuery();
+        String response = eidaClient.request(managerServerUrl, ddl);
+        return Arrays.stream(response.split(",")).collect(toList());
+    }
 }
