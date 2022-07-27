@@ -50,7 +50,7 @@ public class SingletonContainer {
         DLL_SERVICE = new DllService(TABLE_SERVICE, SHARD_MAPPING_SERVICE, SCHEME_SERVICE, PARTITIONER);
         DLL_CONTROLLER = new DllController(DLL_SERVICE);
 
-        DDL_SERVICE = new DdlService(SCHEME_SERVICE, TABLE_SERVICE);
+        DDL_SERVICE = new DdlService(SCHEME_SERVICE, TABLE_SERVICE, PARTITIONER);
         DDL_CONTROLLER = new DdlController(DDL_SERVICE);
     }
 

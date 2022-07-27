@@ -4,17 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.outofoffice.eida.common.exception.TableNotFoundException;
+import org.outofoffice.eida.common.table.TableRepository;
 import org.outofoffice.eida.manager.domain.ShardMapping;
 import org.outofoffice.eida.manager.repository.ShardMappingRepository;
-import org.outofoffice.eida.common.table.TableRepository;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.groupingBy;
+import static lombok.AccessLevel.PRIVATE;
+
 
 @RequiredArgsConstructor
 public class Partitioner {
@@ -43,7 +43,7 @@ public class Partitioner {
                 List<ShardElement> shardElementList = allShardIds.stream()
                     .map(shard -> {
                         int count = shardCountMap.getOrDefault(shard, 0);
-                        return new ShardElement(shard, count);
+                        return ShardElement.of(shard, count);
                     })
                     .collect(Collectors.toList());
 
@@ -69,8 +69,30 @@ public class Partitioner {
         priorityQueue.add(shardElement);
     }
 
+
+    public void addTableQueue(String tableName) {
+        ShardMapping shardMapping = shardMappingRepository.find();
+        Set<String> allShardIds = shardMapping.getAllShardIds();
+
+        List<ShardElement> shardElementList = allShardIds.stream()
+            .map(ShardElement::empty)
+            .collect(Collectors.toList());
+
+        tableQueueMap.put(tableName, new PriorityQueue<>(shardElementList));
+    }
+
+    public void renameTableQueue(String currentName, String nextName) {
+        PriorityQueue<ShardElement> queue = tableQueueMap.get(currentName);
+        tableQueueMap.put(nextName, queue);
+    }
+
+    public void deleteTableQueue(String tableName) {
+        tableQueueMap.remove(tableName);
+    }
+
+
     @Data
-    @AllArgsConstructor
+    @AllArgsConstructor(access = PRIVATE)
     private static class ShardElement implements Comparable<ShardElement> {
         private final String shardId;
         private int rowCount;
@@ -86,6 +108,16 @@ public class Partitioner {
                 ? compareCount
                 : String.CASE_INSENSITIVE_ORDER.compare(shardId, o.shardId);
         }
+
+
+        public static ShardElement of(String shardId, int rowCount) {
+            return new ShardElement(shardId, rowCount);
+        }
+
+        public static ShardElement empty(String shardId) {
+            return new ShardElement(shardId, 0);
+        }
+
     }
 
 }
