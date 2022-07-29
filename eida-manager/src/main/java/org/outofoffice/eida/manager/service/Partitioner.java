@@ -51,13 +51,12 @@ public class Partitioner {
             });
     }
 
-    public String nextShardId(String tableName) {
+    public int nextShardId(String tableName) {
         PriorityQueue<ShardElement> priorityQueue = tableQueueMap.get(tableName);
         if (priorityQueue == null) throw new TableNotFoundException(new IllegalStateException(tableName));
         if (priorityQueue.isEmpty()) throw new IllegalStateException("pq empty");
 
-        return priorityQueue.peek().getShardId()
-            + ""; // TODO
+        return priorityQueue.peek().getShardId();
     }
 
     public void arrange(String tableName) {

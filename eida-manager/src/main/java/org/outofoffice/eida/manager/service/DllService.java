@@ -36,8 +36,8 @@ public class DllService {
     public String getShardUrlsAndScheme(String tableName) {
         Table table = tableService.findByName(tableName);
         Map<String, String> content = table.copyContent();
-        Set<String> shardIds = content.values().stream()
-            .map(line -> line.split(",")[1])
+        Set<Integer> shardIds = content.values().stream()
+            .map(line -> Integer.parseInt(line.split(",")[1]))
             .collect(toSet());
         ShardMapping shardMapping = shardMappingService.find();
         String shardUrls = String.join(",", shardMapping.getShardUrls(shardIds));
@@ -46,7 +46,7 @@ public class DllService {
     }
 
     public String getDestination(String tableName) {
-        String shardId = partitioner.nextShardId(tableName);
+        int shardId = partitioner.nextShardId(tableName);
         ShardMapping shardMapping = shardMappingService.find();
         return shardMapping.getShardUrl(shardId).orElseThrow();
     }
@@ -56,7 +56,7 @@ public class DllService {
         ShardMapping shardMapping = shardMappingService.find();
 
         Optional<String> oRow = table.getRow(entityId);
-        Optional<String> oShardId = oRow.map(s -> s.split(",")[1]);
+        Optional<Integer> oShardId = oRow.map(s -> Integer.parseInt(s.split(",")[1]));
         String shardUrl = oShardId.map(i -> shardMapping.getShardUrl(i).orElseThrow()).orElse("");
         String schemeString = schemeService.findByName(tableName);
         return shardUrl + "\n" + schemeString;

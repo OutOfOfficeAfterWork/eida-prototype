@@ -28,12 +28,11 @@ public class ShardMapping {
         content.put(shardId, shardUrl);
     }
 
-    public Optional<String> getShardUrl(String shardId) {
-        // TODO string to int
-        return Optional.ofNullable(content.get(Integer.parseInt(shardId)));
+    public Optional<String> getShardUrl(int shardId) {
+        return Optional.ofNullable(content.get(shardId));
     }
 
-    public List<String> getShardUrls(Set<String> shardIds) {
+    public List<String> getShardUrls(Set<Integer> shardIds) {
         return shardIds.stream()
             .map(shardId -> getShardUrl(shardId).orElse(null))
             .filter(Objects::nonNull)

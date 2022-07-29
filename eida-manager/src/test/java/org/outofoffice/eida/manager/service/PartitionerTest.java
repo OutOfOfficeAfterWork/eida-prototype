@@ -51,18 +51,18 @@ class PartitionerTest {
 
         partitioner.init();
 
-        String s1 = partitioner.nextShardId(tableName); // shard2
+        int s1 = partitioner.nextShardId(tableName); // shard2
         partitioner.arrange(tableName);
 
-        String s2 = partitioner.nextShardId(tableName); // shard2
+        int s2 = partitioner.nextShardId(tableName); // shard2
         partitioner.arrange(tableName);
 
-        String s3 = partitioner.nextShardId(tableName); // shard1
+        int s3 = partitioner.nextShardId(tableName); // shard1
         partitioner.arrange(tableName);
 
-        assertThat(s1).isEqualTo("2");
-        assertThat(s2).isEqualTo("2");
-        assertThat(s3).isEqualTo("1");
+        assertThat(s1).isEqualTo(2);
+        assertThat(s2).isEqualTo(2);
+        assertThat(s3).isEqualTo(1);
     }
 
 }
