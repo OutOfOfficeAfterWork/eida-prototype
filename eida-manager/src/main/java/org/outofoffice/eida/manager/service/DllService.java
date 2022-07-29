@@ -25,7 +25,7 @@ public class DllService {
 
     public void addShard(String url) {
         shardMappingService.appendRow(url);
-        //partioner
+        partitioner.addShardElement(url);
     }
 
     public Set<String> getAllShardUrls() {
@@ -64,7 +64,7 @@ public class DllService {
 
     public void reportInsert(String shardUrl, String tableName, String id) {
         ShardMapping shardMapping = shardMappingService.find();
-        Integer shardId = shardMapping.getShardId(shardUrl).orElseThrow();
+        Integer shardId = shardMapping.getShardId(shardUrl);
         tableService.appendRow(tableName, id, shardId.toString());
         partitioner.arrange(tableName);
     }

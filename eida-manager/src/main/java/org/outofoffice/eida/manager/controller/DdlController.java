@@ -3,7 +3,6 @@ package org.outofoffice.eida.manager.controller;
 import lombok.RequiredArgsConstructor;
 import org.outofoffice.eida.manager.service.DdlService;
 
-import java.util.List;
 import java.util.Set;
 
 @RequiredArgsConstructor

@@ -69,6 +69,11 @@ public class Partitioner {
         priorityQueue.add(shardElement);
     }
 
+    public void addShardElement(String shardUrl) {
+        ShardMapping shardMapping = shardMappingRepository.find();
+        int shardId = shardMapping.getShardId(shardUrl);
+        tableQueueMap.values().forEach(pq -> pq.add(ShardElement.empty(shardId)));
+    }
 
     public void addTableQueue(String tableName) {
         ShardMapping shardMapping = shardMappingRepository.find();

@@ -39,11 +39,12 @@ public class ShardMapping {
             .collect(Collectors.toList());
     }
 
-    public Optional<Integer> getShardId(String shardUrl) {
+    public Integer getShardId(String shardUrl) {
         return content.entrySet().stream()
             .filter(e -> e.getValue().equals(shardUrl))
             .map(Map.Entry::getKey)
-            .findFirst();
+            .findFirst()
+            .orElseThrow();
     }
 
     public Set<Integer> getAllShardIds() {
