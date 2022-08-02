@@ -25,4 +25,16 @@ public class DdlController {
         return ddlService.getAllTables();
     }
 
+    public void createColumn(String tableName, String columnName) {
+        ddlService.createColumn(tableName, columnName);
+    }
+
+    public void renameColumn(String tableName, String currentName, String nextName) {
+        ddlService.renameColumn(tableName, currentName, nextName);
+    }
+
+    public int deleteColumn(String tableName, String columnName) {
+        return ddlService.deleteColumn(tableName, columnName);
+    }
+
 }

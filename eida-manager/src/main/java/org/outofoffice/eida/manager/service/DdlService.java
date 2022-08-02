@@ -6,7 +6,6 @@ import org.outofoffice.eida.common.table.TableService;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -40,4 +39,18 @@ public class DdlService {
             .map(Table::getTableName)
             .collect(toSet());
     }
+
+
+    public void createColumn(String tableName, String columnName) {
+        schemeService.createColumn(tableName, columnName);
+    }
+
+    public void renameColumn(String tableName, String currentName, String nextName) {
+        schemeService.renameColumn(tableName, currentName, nextName);
+    }
+
+    public int deleteColumn(String tableName, String columnName) {
+        return schemeService.deleteColumn(tableName, columnName);
+    }
+
 }
