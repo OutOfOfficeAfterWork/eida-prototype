@@ -16,4 +16,12 @@ public class EidaShardDdlGenerator {
     public String createDropTableQuery(String tableName) {
         return "drop table, " + tableName;
     }
+
+    public String createCreateColumnQuery(String tableName, String defaultValue) {
+        return "create column, " + tableName + " " + defaultValue;
+    }
+
+    public String createDeleteColumnQuery(String tableName, int columnIndex) {
+        return "delete column, " + tableName + " " + columnIndex;
+    }
 }

@@ -25,4 +25,14 @@ public class EidaShardClient {
         String ddl = ddlGenerator.createDropTableQuery(tableName);
         eidaClient.request(shardUrl, ddl);
     }
+
+    public void createColumn(String shardUrl, String tableName, String defaultValue) {
+        String ddl = ddlGenerator.createCreateColumnQuery(tableName, defaultValue);
+        eidaClient.request(shardUrl, ddl);
+    }
+
+    public void deleteColumn(String shardUrl, String tableName, int columnIndex) {
+        String ddl = ddlGenerator.createDeleteColumnQuery(tableName, columnIndex);
+        eidaClient.request(shardUrl, ddl);
+    }
 }

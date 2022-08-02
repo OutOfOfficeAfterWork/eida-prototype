@@ -53,4 +53,20 @@ public class EidaManagerClient {
         String response = eidaClient.request(managerServerUrl, ddl);
         return Arrays.stream(response.split(",")).collect(toList());
     }
+
+    public void createColumn(String tableName, String columnName) {
+        String ddl = ddlGenerator.createCreateColumnQuery(tableName, columnName);
+        eidaClient.request(managerServerUrl, ddl);
+    }
+
+    public void renameColumn(String tableName, String currentName, String nextName) {
+        String ddl = ddlGenerator.createRenameColumnQuery(tableName, currentName, nextName);
+        eidaClient.request(managerServerUrl, ddl);
+    }
+
+    public int deleteColumn(String tableName, String columnName) {
+        String ddl = ddlGenerator.createDeleteColumnQuery(tableName, columnName);
+        String response = eidaClient.request(managerServerUrl, ddl);
+        return Integer.parseInt(response);
+    }
 }
