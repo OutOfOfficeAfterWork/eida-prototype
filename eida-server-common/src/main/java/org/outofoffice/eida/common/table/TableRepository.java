@@ -8,4 +8,5 @@ public interface TableRepository {
     List<Table> findAll();
     void delete(Table table);
     void clear();
+    boolean existByName(String tableName);
 }

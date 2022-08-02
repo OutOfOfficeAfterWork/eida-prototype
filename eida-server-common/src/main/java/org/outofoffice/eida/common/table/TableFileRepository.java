@@ -33,4 +33,9 @@ public class TableFileRepository implements TableRepository {
     public void clear() {
         tableFileFacade.clear();
     }
+
+    @Override
+    public boolean existByName(String tableName) {
+        return tableFileFacade.existByName(tableName);
+    }
 }

@@ -51,4 +51,8 @@ public class TableService {
     public List<Table> findAll() {
         return tableRepository.findAll();
     }
+
+    public boolean existByName(String tableName) {
+        return tableRepository.existByName(tableName);
+    }
 }

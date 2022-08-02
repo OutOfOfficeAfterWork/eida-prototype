@@ -1,6 +1,7 @@
 package org.outofoffice.eida.manager.service;
 
 import lombok.RequiredArgsConstructor;
+import org.outofoffice.eida.common.exception.EidaBadRequestException;
 import org.outofoffice.eida.common.table.Table;
 import org.outofoffice.eida.common.table.TableService;
 
@@ -16,12 +17,20 @@ public class DdlService {
     private final Partitioner partitioner;
 
     public void createTable(String tableName, String scheme) {
+        if (tableService.existByName(tableName)) {
+            throw new EidaBadRequestException("duplicated table name");
+        }
+
         schemeService.save(tableName, scheme);
         tableService.create(tableName);
         partitioner.addTableQueue(tableName);
     }
 
     public void renameTable(String currentName, String nextName) {
+        if (tableService.existByName(nextName)) {
+            throw new EidaBadRequestException("duplicated table name");
+        }
+
         schemeService.rename(currentName, nextName);
         tableService.rename(currentName, nextName);
         partitioner.renameTableQueue(currentName, nextName);

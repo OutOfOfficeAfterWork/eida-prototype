@@ -7,11 +7,12 @@ import org.outofoffice.eida.common.exception.TableNotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static org.outofoffice.eida.common.table.Table.DELIMITER;
 
@@ -20,6 +21,12 @@ public class TableFileFacade {
 
     private final String dirPath;
 
+
+    public boolean existByName(String tableName) {
+        String filePath = dirPath + tableName;
+        Path path = Paths.get(filePath);
+        return Files.exists(path);
+    }
 
     public Table findByName(String tableName) {
         String filePath = dirPath + tableName;

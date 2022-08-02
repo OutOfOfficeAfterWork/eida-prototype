@@ -38,4 +38,9 @@ public class TableMapRepository implements TableRepository {
     public void clear() {
         map.clear();
     }
+
+    @Override
+    public boolean existByName(String tableName) {
+        return map.containsKey(tableName);
+    }
 }
