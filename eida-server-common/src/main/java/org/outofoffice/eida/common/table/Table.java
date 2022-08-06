@@ -1,10 +1,12 @@
 package org.outofoffice.eida.common.table;
 
 import lombok.Getter;
+import org.outofoffice.eida.common.exception.EidaBadRequestException;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toSet;
 
 public class Table {
 
@@ -49,5 +51,21 @@ public class Table {
 
     public Table renamed(String nextName) {
         return new Table(nextName, copyContent());
+    }
+
+    public void appendColumn(String value) {
+        content.forEach((k, v) -> {
+            String row = v + "," + value;
+            content.put(k, row);
+        });
+    }
+
+    public void deleteColumn(int columnIndex) {
+        content.forEach((k, v) -> {
+            List<String> columns = Arrays.asList(v.split(","));
+            columns.remove(columnIndex);
+            String row = String.join(",", columns);
+            content.put(k, row);
+        });
     }
 }

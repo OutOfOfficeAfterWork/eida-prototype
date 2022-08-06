@@ -21,6 +21,23 @@ public class TableService {
         tableRepository.delete(currentTable);
     }
 
+    public void drop(String tableName) {
+        Table table = tableRepository.findByName(tableName);
+        tableRepository.delete(table);
+    }
+
+    public void appendColumn(String tableName, String value) {
+        Table table = tableRepository.findByName(tableName);
+        table.appendColumn(value);
+        tableRepository.save(table);
+    }
+
+    public void deleteColumn(String tableName, int columnIndex) {
+        Table table = tableRepository.findByName(tableName);
+        table.deleteColumn(columnIndex);
+        tableRepository.save(table);
+    }
+
     public void appendRow(String tableName, String id, String value) {
         Table table = tableRepository.findByName(tableName);
         table.appendRow(id, value);
@@ -41,11 +58,6 @@ public class TableService {
 
     public Table findByName(String tableName) {
         return tableRepository.findByName(tableName);
-    }
-
-    public void drop(String tableName) {
-        Table table = tableRepository.findByName(tableName);
-        tableRepository.delete(table);
     }
 
     public List<Table> findAll() {

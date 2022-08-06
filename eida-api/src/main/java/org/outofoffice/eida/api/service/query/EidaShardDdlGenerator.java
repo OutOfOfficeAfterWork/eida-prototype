@@ -18,7 +18,10 @@ public class EidaShardDdlGenerator {
     }
 
     public String createCreateColumnQuery(String tableName, String defaultValue) {
-        return "create column, " + tableName + " " + defaultValue;
+        String value = (defaultValue == null)
+            ? ""
+            : " " + defaultValue;
+        return "create column, " + tableName + value;
     }
 
     public String createDeleteColumnQuery(String tableName, int columnIndex) {

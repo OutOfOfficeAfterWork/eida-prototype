@@ -18,4 +18,17 @@ public class DdlController {
     public void dropTable(String tableName) {
         ddlService.dropTable(tableName);
     }
+
+    public void createColumn(String tableName) {
+        createColumn(tableName, "<null>");
+    }
+
+    public void createColumn(String tableName, String defaultValue) {
+        ddlService.createColumn(tableName, defaultValue);
+    }
+
+    public void deleteColumn(String tableName, int columnIndex) {
+        ddlService.deleteColumn(tableName, columnIndex);
+    }
+
 }
