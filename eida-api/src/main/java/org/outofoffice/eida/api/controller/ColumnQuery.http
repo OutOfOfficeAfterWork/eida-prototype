@@ -1,0 +1,28 @@
+###
+POST localhost:8080/api/column
+Content-Type: application/json
+
+{
+  "tableName" : "Entity",
+  "columnName" : "defaultv2",
+  "defaultValue" : "v2"
+}
+
+###
+PUT localhost:8080/api/column
+Content-Type: application/json
+
+{
+  "tableName" : "Entity",
+  "currentName": "value1",
+  "nextName": "value"
+}
+
+###
+DELETE localhost:8080/api/column
+Content-Type: application/json
+
+{
+  "tableName": "Entity",
+  "columnName" : "defaultv2"
+}

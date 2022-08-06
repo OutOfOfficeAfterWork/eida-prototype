@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.outofoffice.eida.common.exception.EidaBadRequestException;
 import org.outofoffice.eida.manager.repository.SchemeRepository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.*;
 
 @RequiredArgsConstructor
 public class SchemeService {
@@ -56,7 +56,7 @@ public class SchemeService {
 
     public int deleteColumn(String tableName, String columnName) {
         String scheme = schemeRepository.findByName(tableName);
-        List<String> columns = Arrays.asList(scheme.split(","));
+        List<String> columns = new ArrayList<>(Arrays.asList(scheme.split(",")));
         int idx = columns.indexOf(columnName);
         if (idx == 0) {
             throw new EidaBadRequestException("cannot remove primary key");

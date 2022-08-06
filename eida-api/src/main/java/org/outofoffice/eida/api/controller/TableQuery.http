@@ -3,8 +3,8 @@ POST localhost:8080/api/table
 Content-Type: application/json
 
 {
-  "tableName" : "Student",
-  "columnNames" : ["studentCode", "name", "birthDate", "gender", "major"]
+  "tableName" : "Entity",
+  "columnNames" : ["key", "value"]
 }
 
 ###
@@ -12,8 +12,8 @@ PUT localhost:8080/api/table
 Content-Type: application/json
 
 {
-  "currentName": "Student1",
-  "nextName": "Student"
+  "currentName": "Entity1",
+  "nextName": "Entity"
 }
 
 ###

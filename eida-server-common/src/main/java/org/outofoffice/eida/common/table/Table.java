@@ -62,7 +62,7 @@ public class Table {
 
     public void deleteColumn(int columnIndex) {
         content.forEach((k, v) -> {
-            List<String> columns = Arrays.asList(v.split(","));
+            List<String> columns = new ArrayList<>(Arrays.asList(v.split(",")));
             columns.remove(columnIndex);
             String row = String.join(",", columns);
             content.put(k, row);

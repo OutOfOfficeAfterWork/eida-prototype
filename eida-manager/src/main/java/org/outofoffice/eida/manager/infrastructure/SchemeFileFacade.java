@@ -19,6 +19,8 @@ public class SchemeFileFacade {
         try {
             String schemeFilePath = dirPath + "/" + tableName;
             return Files.readString(Paths.get(schemeFilePath)).trim();
+        } catch (NoSuchFileException e) {
+            throw new TableNotFoundException(e);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
