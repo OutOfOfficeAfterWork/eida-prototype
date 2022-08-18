@@ -3,6 +3,7 @@ package org.outofoffice.eida.manager.configuration;
 import lombok.NoArgsConstructor;
 import org.outofoffice.eida.common.table.*;
 import org.outofoffice.eida.manager.controller.DdlController;
+import org.outofoffice.eida.manager.controller.SequenceController;
 import org.outofoffice.eida.manager.domain.ShardMapping;
 import org.outofoffice.eida.manager.infrastructure.*;
 import org.outofoffice.eida.manager.repository.SchemeRepository;
@@ -33,6 +34,10 @@ public class SingletonContainer {
     public static DdlService DDL_SERVICE;
     public static DdlController DDL_CONTROLLER;
 
+    public static SequenceService SEQUENCE_SERVICE;
+    public static SequenceController SEQUENCE_CONTROLLER;
+
+
     public static void init(boolean isTest) {
         TABLE_REPOSITORY = isTest ? new TableMapRepository() : new TableFileRepository(new TableFileFacade(TABLE_DIR_PATH));
         SCHEME_REPOSITORY = isTest ? new SchemeMockRepository() : new SchemeFileRepository(new SchemeFileFacade(SCHEME_DIR_PATH));
@@ -52,6 +57,9 @@ public class SingletonContainer {
 
         DDL_SERVICE = new DdlService(SCHEME_SERVICE, TABLE_SERVICE, PARTITIONER);
         DDL_CONTROLLER = new DdlController(DDL_SERVICE);
+
+        SEQUENCE_SERVICE = new SequenceService(new SequenceFileFacade(SEQUENCE_FILE_PATH));
+        SEQUENCE_CONTROLLER = new SequenceController(SEQUENCE_SERVICE);
     }
 
     private static void setTestData() {

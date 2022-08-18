@@ -5,9 +5,9 @@ import org.outofoffice.eida.manager.configuration.handler.ddl.*;
 import org.outofoffice.eida.manager.configuration.handler.dll.*;
 import org.outofoffice.eida.manager.controller.DdlController;
 import org.outofoffice.eida.manager.controller.DllController;
+import org.outofoffice.eida.manager.controller.SequenceController;
 
-import static org.outofoffice.eida.manager.configuration.SingletonContainer.DDL_CONTROLLER;
-import static org.outofoffice.eida.manager.configuration.SingletonContainer.DLL_CONTROLLER;
+import static org.outofoffice.eida.manager.configuration.SingletonContainer.*;
 
 
 public class ManagerServerQueryHandlerMap extends QueryHandlerMap {
@@ -32,6 +32,9 @@ public class ManagerServerQueryHandlerMap extends QueryHandlerMap {
         mappings.put("rename column", new RenameColumnQueryHandler(ddlController));
         mappings.put("delete column", new DeleteColumnQueryHandler(ddlController));
         mappings.put("get scheme", new GetSchemeQueryHandler(ddlController));
+
+        SequenceController sequenceController = SEQUENCE_CONTROLLER;
+        mappings.put("nextval", new NextValQueryHandler(sequenceController));
 
         return this;
     }
