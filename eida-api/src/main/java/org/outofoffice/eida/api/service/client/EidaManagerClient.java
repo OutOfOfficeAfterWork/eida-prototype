@@ -64,6 +64,12 @@ public class EidaManagerClient {
         eidaClient.request(managerServerUrl, ddl);
     }
 
+    public List<String> getScheme(String tableName) {
+        String ddl = ddlGenerator.createGetSchemeQuery(tableName);
+        String response = eidaClient.request(managerServerUrl, ddl);
+        return Arrays.stream(response.split(",")).collect(toList());
+    }
+
     public int deleteColumn(String tableName, String columnName) {
         String ddl = ddlGenerator.createDeleteColumnQuery(tableName, columnName);
         String response = eidaClient.request(managerServerUrl, ddl);

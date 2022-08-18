@@ -34,4 +34,8 @@ public class EidaManagerDdlGenerator {
     public String createDeleteColumnQuery(String tableName, String columnName) {
         return "delete column, " + tableName + " " + columnName;
     }
+
+    public String createGetSchemeQuery(String tableName) {
+        return "get scheme, " + tableName;
+    }
 }

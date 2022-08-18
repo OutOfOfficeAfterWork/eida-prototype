@@ -31,6 +31,7 @@ public class ManagerServerQueryHandlerMap extends QueryHandlerMap {
         mappings.put("create column", new CreateColumnQueryHandler(ddlController));
         mappings.put("rename column", new RenameColumnQueryHandler(ddlController));
         mappings.put("delete column", new DeleteColumnQueryHandler(ddlController));
+        mappings.put("get scheme", new GetSchemeQueryHandler(ddlController));
 
         return this;
     }
