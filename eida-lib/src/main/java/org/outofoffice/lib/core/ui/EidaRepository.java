@@ -2,8 +2,8 @@ package org.outofoffice.lib.core.ui;
 
 import org.outofoffice.common.exception.EidaException;
 import org.outofoffice.lib.context.EidaContext;
-import org.outofoffice.lib.core.client.EidaDllClient;
-import org.outofoffice.lib.core.client.EidaDmlClient;
+import org.outofoffice.lib.core.client.EidaManagerClient;
+import org.outofoffice.lib.core.client.EidaShardClient;
 import org.outofoffice.lib.util.ClassUtils;
 
 import java.util.List;
@@ -18,12 +18,12 @@ import static org.outofoffice.lib.util.StringUtils.setterName;
 
 public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
 
-    private EidaDllClient managerClient;
-    private EidaDmlClient shardClient;
+    private EidaManagerClient managerClient;
+    private EidaShardClient shardClient;
     private EidaSerializer serializer;
 
 
-    public void init(EidaDllClient managerClient, EidaDmlClient shardClient, EidaSerializer serializer) {
+    public void init(EidaManagerClient managerClient, EidaShardClient shardClient, EidaSerializer serializer) {
         this.managerClient = managerClient;
         this.shardClient = shardClient;
         this.serializer = serializer;

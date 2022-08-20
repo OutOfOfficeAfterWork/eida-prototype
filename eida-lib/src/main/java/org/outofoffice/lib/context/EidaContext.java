@@ -2,8 +2,6 @@ package org.outofoffice.lib.context;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.outofoffice.lib.core.client.EidaDllClient;
-import org.outofoffice.lib.core.client.EidaDmlClient;
 import org.outofoffice.lib.core.client.EidaManagerClient;
 import org.outofoffice.lib.core.client.EidaShardClient;
 import org.outofoffice.lib.core.query.EidaDllGenerator;
@@ -55,8 +53,8 @@ public class EidaContext {
     private static <T extends EidaEntity<ID>, ID> void doInit(EidaSocketClient socket) throws Exception {
         String managerServerUrl = propertyLoader.getManagerServerUrl();
 
-        EidaDllClient managerClient = new EidaManagerClient(new EidaDllGenerator(), socket, managerServerUrl);
-        EidaDmlClient shardClient = new EidaShardClient(new EidaDmlGenerator(), socket);
+        EidaManagerClient managerClient = new EidaManagerClient(new EidaDllGenerator(), socket, managerServerUrl);
+        EidaShardClient shardClient = new EidaShardClient(new EidaDmlGenerator(), socket);
         EidaSerializer serializer = new EidaSerializer();
 
         List<String> repositoryClassNames = repositoryScanner.scan();
@@ -69,7 +67,7 @@ public class EidaContext {
     }
 
     private static <T extends EidaEntity<ID>, ID> EidaRepository<T, ID> repositoryInstance(
-            Class<EidaRepository<T, ID>> repositoryClass, EidaDllClient managerClient, EidaDmlClient shardClient, EidaSerializer serializer
+            Class<EidaRepository<T, ID>> repositoryClass, EidaManagerClient managerClient, EidaShardClient shardClient, EidaSerializer serializer
     ) throws Exception {
         EidaRepository<T, ID> repository = repositoryClass.getDeclaredConstructor().newInstance();
         repository.init(managerClient, shardClient, serializer);
