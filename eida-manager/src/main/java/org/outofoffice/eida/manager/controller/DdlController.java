@@ -37,4 +37,8 @@ public class DdlController {
         return ddlService.deleteColumn(tableName, columnName);
     }
 
+    public String getScheme(String tableName) {
+        return ddlService.getScheme(tableName);
+    }
+
 }

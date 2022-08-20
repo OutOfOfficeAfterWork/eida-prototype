@@ -65,6 +65,14 @@ public class EidaDdlDispatcher {
         managerClient.renameColumn(tableName, currentName, nextName);
     }
 
+    public List<String> getAllTables() {
+        return managerClient.getAllTables();
+    }
+
+    public List<String> getScheme(String tableName) {
+        return managerClient.getScheme(tableName);
+    }
+
     public void deleteColumn(DeleteColumnParam param) {
         String tableName = param.getTableName();
         String columnName = param.getColumnName();

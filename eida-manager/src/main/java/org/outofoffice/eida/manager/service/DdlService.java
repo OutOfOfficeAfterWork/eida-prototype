@@ -62,4 +62,8 @@ public class DdlService {
         return schemeService.deleteColumn(tableName, columnName);
     }
 
+    public String getScheme(String tableName) {
+        return schemeService.findByName(tableName);
+    }
+
 }

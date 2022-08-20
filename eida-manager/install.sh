@@ -6,3 +6,6 @@ sudo mkdir /Library/EidaManager/Scheme
 sudo chmod 757 /Library/EidaManager/Scheme
 sudo touch /Library/EidaManager/shard-mapping
 sudo chmod 757 /Library/EidaManager/shard-mapping
+sudo touch /Library/EidaManager/sequence
+sudo chmod 757 /Library/EidaManager/sequence
+echo "0" >> /Library/EidaManager/sequence
