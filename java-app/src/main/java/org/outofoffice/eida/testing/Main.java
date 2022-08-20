@@ -14,11 +14,11 @@ public class Main {
         entityService = new EntityService(entityRepository);
     }
     public static void main(String[] args) {
-        entityService.insert(new Entity("k6", "v6"));
-        entityService.insert(new Entity("k7", "v7"));
-        entityService.insert(new Entity("k8", "v8"));
-        entityService.insert(new Entity("k9", "v9"));
-        entityService.insert(new Entity("k10", "v10"));
-        entityService.insert(new Entity("k11", "v11"));
+        entityService.insert(Entity.of("k1", "v1"));
+        entityService.insert(Entity.of("k2", "v2"));
+        entityService.insert(Entity.of("k3", "v3"));
+        entityService.insert(Entity.of("k4", "v4"));
+        entityService.insert(Entity.of("k5", "v5"));
+        entityService.insert(Entity.of("k6", "v6"));
     }
 }

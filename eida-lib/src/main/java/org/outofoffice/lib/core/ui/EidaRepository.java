@@ -45,6 +45,12 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
 
     public void insert(T entity) {
         ID id = entity.getId();
+        if (id == null) { // annotated
+            Long l = managerClient.nextVal();
+            id = (ID) l;
+            entity.setId(id);
+        }
+
         if (isExist(id)) throw new EidaException("key is duplicated");
 
         String serialized = serializer.serialize(entity);

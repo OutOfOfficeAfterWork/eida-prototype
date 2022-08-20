@@ -39,4 +39,10 @@ public class EidaManagerClient {
         eidaClient.request(managerServerUrl, dll);
     }
 
+    public Long nextVal() {
+        String query = "nextval";
+        String value = eidaClient.request(managerServerUrl, query);
+        return Long.parseLong(value);
+    }
+
 }
