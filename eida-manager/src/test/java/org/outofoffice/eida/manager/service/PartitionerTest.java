@@ -1,39 +1,27 @@
 package org.outofoffice.eida.manager.service;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.outofoffice.eida.manager.infrastructure.ShardMappingMockRepository;
-import org.outofoffice.eida.manager.repository.ShardMappingRepository;
-import org.outofoffice.eida.common.table.Table;
-import org.outofoffice.eida.common.table.TableMapRepository;
-import org.outofoffice.eida.common.table.TableRepository;
+import org.outofoffice.eida.common.io.EidaFileFacade;
+import org.outofoffice.eida.common.table.TableService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PartitionerTest {
 
-    String header = "entityId,shardId";
-
     Partitioner partitioner;
 
-    TableRepository tableRepository;
-    ShardMappingRepository shardMappingRepository;
+    EidaFileFacade eidaFileFacade;
+    TableService tableService;
     ShardMappingService shardMappingService;
 
     @BeforeEach
     void setup() {
-        tableRepository = new TableMapRepository();
-        shardMappingRepository = new ShardMappingMockRepository();
-        partitioner = new Partitioner(tableRepository, shardMappingRepository);
-
-        shardMappingService = new ShardMappingService(shardMappingRepository);
+        tableService = new TableService(null, eidaFileFacade);
+        shardMappingService = new ShardMappingService(null, eidaFileFacade);
+        partitioner = new Partitioner(tableService, shardMappingService);
     }
 
-    @AfterEach
-    void clear() {
-        tableRepository.clear();
-    }
 
     @Test
     void test() {
@@ -44,10 +32,9 @@ class PartitionerTest {
         shardMappingService.appendRow("localhost:10830");
         shardMappingService.appendRow("localhost:10831");
 
-        Table table = new Table(tableName);
-        table.appendRow("e1", "1");
-        table.appendRow("e2", "1");
-        tableRepository.save(table);
+        tableService.create(tableName);
+        tableService.appendRow(tableName, "e1", "1");
+        tableService.appendRow(tableName, "e2", "1");
 
         partitioner.init();
 

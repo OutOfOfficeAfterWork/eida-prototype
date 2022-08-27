@@ -1,18 +1,24 @@
 package org.outofoffice.eida.manager.service;
 
 import lombok.RequiredArgsConstructor;
-import org.outofoffice.eida.manager.infrastructure.SequenceFileFacade;
+import org.outofoffice.eida.common.io.EidaFileFacade;
+
+import java.util.List;
+
+import static java.util.Collections.singletonList;
 
 
 @RequiredArgsConstructor
 public class SequenceService {
 
-    private final SequenceFileFacade sequenceFileFacade;
+    private final String filePath;
+    private final EidaFileFacade eidaFileFacade;
 
     public long nextVal() {
-        long currVal = sequenceFileFacade.find();
+        List<String> allLines = eidaFileFacade.getAllLines(filePath);
+        long currVal = allLines.stream().findFirst().map(Long::parseLong).orElseThrow();
         long nextVal = currVal + 1;
-        sequenceFileFacade.save(nextVal);
+        eidaFileFacade.update(filePath, singletonList(String.valueOf(nextVal)));
         return nextVal;
     }
 

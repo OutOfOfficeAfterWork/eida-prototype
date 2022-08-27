@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.outofoffice.eida.common.exception.TableNotFoundException;
-import org.outofoffice.eida.common.table.TableRepository;
+import org.outofoffice.eida.common.table.Table;
+import org.outofoffice.eida.common.table.TableService;
 import org.outofoffice.eida.manager.domain.ShardMapping;
-import org.outofoffice.eida.manager.repository.ShardMappingRepository;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,17 +18,17 @@ import static lombok.AccessLevel.PRIVATE;
 
 @RequiredArgsConstructor
 public class Partitioner {
-    private final TableRepository tableRepository;
-    private final ShardMappingRepository shardMappingRepository;
+    private final TableService tableService;
+    private final ShardMappingService shardMappingService;
 
     private final ConcurrentMap<String, PriorityQueue<ShardElement>> tableQueueMap = new ConcurrentHashMap<>();
 
     public void init() {
-        ShardMapping shardMapping = shardMappingRepository.find();
+        ShardMapping shardMapping = shardMappingService.find();
         Set<Integer> allShardIds = shardMapping.getAllShardIds();
-        tableRepository.findAll()
-            .forEach(table -> {
-                String tableName = table.getTableName();
+        tableService.findAllFileNames()
+            .forEach(tableName -> {
+                Table table = tableService.findByName(tableName);
                 Map<String, String> entityShardMap = table.copyContent();
 
                 // count entity by shard
@@ -70,13 +70,13 @@ public class Partitioner {
     }
 
     public void addShardElement(String shardUrl) {
-        ShardMapping shardMapping = shardMappingRepository.find();
+        ShardMapping shardMapping = shardMappingService.find();
         int shardId = shardMapping.getShardId(shardUrl);
         tableQueueMap.values().forEach(pq -> pq.add(ShardElement.empty(shardId)));
     }
 
     public void addTableQueue(String tableName) {
-        ShardMapping shardMapping = shardMappingRepository.find();
+        ShardMapping shardMapping = shardMappingService.find();
         Set<Integer> allShardIds = shardMapping.getAllShardIds();
 
         List<ShardElement> shardElementList = allShardIds.stream()

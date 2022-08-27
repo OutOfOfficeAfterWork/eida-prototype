@@ -13,9 +13,7 @@ public class ManagerServerApplication {
     private static final int PORT = 10325;
 
     public static void main(String[] args) {
-        boolean isTest = (args.length != 0) && (args[0].equals("test"));
-        log.info("isTest: {}", isTest);
-        SingletonContainer.init(isTest);
+        SingletonContainer.init();
 
         QueryHandlerMap queryHandlerMap = new ManagerServerQueryHandlerMap().configureMappings();
         QueryDispatcher queryDispatcher = new QueryDispatcher(queryHandlerMap);

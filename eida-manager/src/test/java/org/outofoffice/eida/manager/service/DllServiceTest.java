@@ -1,16 +1,9 @@
 package org.outofoffice.eida.manager.service;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.outofoffice.eida.common.table.Table;
-import org.outofoffice.eida.common.table.TableMapRepository;
-import org.outofoffice.eida.common.table.TableRepository;
+import org.outofoffice.eida.common.io.EidaFileFacade;
 import org.outofoffice.eida.common.table.TableService;
-import org.outofoffice.eida.manager.infrastructure.SchemeMockRepository;
-import org.outofoffice.eida.manager.infrastructure.ShardMappingMockRepository;
-import org.outofoffice.eida.manager.repository.SchemeRepository;
-import org.outofoffice.eida.manager.repository.ShardMappingRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,12 +14,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class DllServiceTest {
 
+    EidaFileFacade eidaFileFacade = new EidaFileFacade();
+
     DllService dllService;
-    TableRepository tableRepository;
     TableService tableService;
-    SchemeRepository schemeRepository;
     SchemeService schemeService;
-    ShardMappingRepository shardMappingRepository;
     ShardMappingService shardMappingService;
     Partitioner partitioner;
 
@@ -35,24 +27,14 @@ class DllServiceTest {
 
     @BeforeEach
     void setup() {
-        tableRepository = new TableMapRepository();
-        tableService = new TableService(tableRepository);
+        tableService = new TableService(null, eidaFileFacade);
+        schemeService = new SchemeService(null, eidaFileFacade);
+        shardMappingService = new ShardMappingService(null, eidaFileFacade);
 
-        schemeRepository = new SchemeMockRepository();
-        schemeService = new SchemeService(schemeRepository);
-
-        shardMappingRepository = new ShardMappingMockRepository();
-        shardMappingService = new ShardMappingService(shardMappingRepository);
-
-        partitioner = new Partitioner(tableRepository, shardMappingRepository);
+        partitioner = new Partitioner(tableService, shardMappingService);
         dllService = new DllService(tableService, shardMappingService, schemeService, partitioner);
 
         schemeService.save("Team", header);
-    }
-
-    @AfterEach
-    void clear() {
-        tableRepository.clear();
     }
 
 
@@ -63,10 +45,9 @@ class DllServiceTest {
         shardMappingService.appendRow("localhost:10832");
         String tableName = "Team";
 
-        Table table = new Table(tableName);
-        table.appendRow("1", "1");
-        table.appendRow("2", "2");
-        tableRepository.save(table);
+        tableService.create(tableName);
+        tableService.appendRow(tableName, "1", "1");
+        tableService.appendRow(tableName, "2", "2");
 
         String[] response = dllService.getShardUrlsAndScheme(tableName).split("\n");
         List<String> shardUrls = Arrays.stream(response[0].split(",")).collect(toList());
@@ -81,9 +62,8 @@ class DllServiceTest {
         shardMappingService.appendRow("localhost:10830");
         shardMappingService.appendRow("localhost:10831");
 
-        Table table = new Table(tableName);
-        table.appendRow("e1", "1");
-        tableRepository.save(table);
+        tableService.create(tableName);
+        tableService.appendRow(tableName, "e1", "1");
 
         partitioner.init();
 
@@ -98,9 +78,8 @@ class DllServiceTest {
         String tableName = "Team";
         String id = "1";
 
-        Table table = new Table(tableName);
-        table.appendRow(id, "1");
-        tableRepository.save(table);
+        tableService.create(tableName);
+        tableService.appendRow(tableName, id, "1");
 
         String[] response = dllService.getShardUrlsAndScheme(tableName).split("\n");
         List<String> shardUrls = Arrays.stream(response[0].split(",")).collect(toList());
@@ -117,9 +96,8 @@ class DllServiceTest {
         String shardId = "1";
         shardMappingService.appendRow(shardUrl);
 
-        Table table = new Table(tableName);
-        table.appendRow(id, shardId);
-        tableRepository.save(table);
+        tableService.create(tableName);
+        tableService.appendRow(tableName, id, shardId);
 
         partitioner.init();
 
@@ -139,9 +117,9 @@ class DllServiceTest {
         String id = "1";
         String shardId = "1";
 
-        Table table = new Table(tableName);
-        table.appendRow(id, shardId);
-        tableRepository.save(table);
+        tableService.create(tableName);
+        tableService.appendRow(tableName, id, shardId);
+
         shardMappingService.appendRow(shardUrl);
 
         partitioner.init();
