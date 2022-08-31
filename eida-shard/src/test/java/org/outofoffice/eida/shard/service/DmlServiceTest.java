@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.outofoffice.eida.common.exception.RowNotFoundException;
 import org.outofoffice.eida.common.io.EidaFileFacade;
+import org.outofoffice.eida.common.io.EidaTestFileFacade;
 import org.outofoffice.eida.common.table.TableService;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,8 +20,9 @@ class DmlServiceTest {
 
     @BeforeEach
     void setUp() {
-        eidaFileFacade = new EidaFileFacade();
-        tableService = new TableService("./test", eidaFileFacade);
+        eidaFileFacade = new EidaTestFileFacade();
+
+        tableService = new TableService("/Table", eidaFileFacade);
 
         dmlService = new DmlService(tableService);
     }

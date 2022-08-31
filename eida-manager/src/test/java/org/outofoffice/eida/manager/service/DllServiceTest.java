@@ -3,6 +3,7 @@ package org.outofoffice.eida.manager.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.outofoffice.eida.common.io.EidaFileFacade;
+import org.outofoffice.eida.common.io.EidaTestFileFacade;
 import org.outofoffice.eida.common.table.TableService;
 
 import java.util.Arrays;
@@ -14,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class DllServiceTest {
 
-    EidaFileFacade eidaFileFacade = new EidaFileFacade();
+    EidaFileFacade eidaFileFacade = new EidaTestFileFacade();
 
     DllService dllService;
     TableService tableService;
@@ -27,9 +28,12 @@ class DllServiceTest {
 
     @BeforeEach
     void setup() {
-        tableService = new TableService(null, eidaFileFacade);
-        schemeService = new SchemeService(null, eidaFileFacade);
-        shardMappingService = new ShardMappingService(null, eidaFileFacade);
+        eidaFileFacade.create("/scheme-path-file");
+        eidaFileFacade.create("/shard-mapping-file");
+
+        tableService = new TableService("/table-directory", eidaFileFacade);
+        schemeService = new SchemeService("/scheme-path-file", eidaFileFacade);
+        shardMappingService = new ShardMappingService("/shard-mapping-file", eidaFileFacade);
 
         partitioner = new Partitioner(tableService, shardMappingService);
         dllService = new DllService(tableService, shardMappingService, schemeService, partitioner);

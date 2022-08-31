@@ -70,7 +70,7 @@ public class EidaFileFacade {
     public void appendLine(String filePath, String line) {
         try {
             Path path = Paths.get(filePath);
-            Files.write(path, line.getBytes(), APPEND);
+            Files.write(path, List.of(line), APPEND);
         } catch (NoSuchFileException e) {
             throw new EidaFileNotFoundException(filePath);
         } catch (IOException e) {

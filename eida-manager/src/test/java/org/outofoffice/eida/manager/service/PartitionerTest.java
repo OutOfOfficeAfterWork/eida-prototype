@@ -3,6 +3,7 @@ package org.outofoffice.eida.manager.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.outofoffice.eida.common.io.EidaFileFacade;
+import org.outofoffice.eida.common.io.EidaTestFileFacade;
 import org.outofoffice.eida.common.table.TableService;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,14 +12,15 @@ class PartitionerTest {
 
     Partitioner partitioner;
 
-    EidaFileFacade eidaFileFacade;
+    EidaFileFacade eidaFileFacade = new EidaTestFileFacade();
     TableService tableService;
     ShardMappingService shardMappingService;
 
     @BeforeEach
     void setup() {
-        tableService = new TableService(null, eidaFileFacade);
-        shardMappingService = new ShardMappingService(null, eidaFileFacade);
+        eidaFileFacade.create("/shard-mapping-file");
+        tableService = new TableService("/table-directory", eidaFileFacade);
+        shardMappingService = new ShardMappingService("/shard-mapping-file", eidaFileFacade);
         partitioner = new Partitioner(tableService, shardMappingService);
     }
 
@@ -28,7 +30,6 @@ class PartitionerTest {
         String tableName = "TestTable";
         // shard1 : e1, e2
         // shard2 :
-
         shardMappingService.appendRow("localhost:10830");
         shardMappingService.appendRow("localhost:10831");
 
