@@ -2,6 +2,7 @@ package org.outofoffice.eida.testing;
 
 import lombok.*;
 import org.outofoffice.lib.core.ui.EidaEntity;
+import org.outofoffice.lib.core.ui.Id;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -10,6 +11,7 @@ import static lombok.AccessLevel.PRIVATE;
 @AllArgsConstructor(access = PRIVATE)
 public class Entity implements EidaEntity<Long> {
 
+    @Id
     Long id;
     String key;
     String value;
