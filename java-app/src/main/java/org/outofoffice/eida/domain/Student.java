@@ -14,14 +14,4 @@ public class Student implements EidaEntity<String> {
     private String birthDate;
     private String gender;
     private Major major;
-
-    @Override
-    public String getId() {
-        return studentCode;
-    }
-
-    @Override
-    public void setId(String s) {
-        this.studentCode = s;
-    }
 }

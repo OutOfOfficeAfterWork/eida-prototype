@@ -10,7 +10,6 @@ import org.outofoffice.lib.core.ui.Id;
 @AllArgsConstructor
 public class Team implements EidaEntity<Long> {
     @Id
-    @Getter @Setter
     private Long id;
     @Setter
     private String teamName;

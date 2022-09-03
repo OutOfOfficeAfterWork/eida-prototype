@@ -12,14 +12,4 @@ public class Enrollment implements EidaEntity<String> {
     private String enrollmentId;
     private Student student;
     private Subject subject;
-
-    @Override
-    public String getId() {
-        return enrollmentId;
-    }
-
-    @Override
-    public void setId(String s) {
-        enrollmentId = s;
-    }
 }

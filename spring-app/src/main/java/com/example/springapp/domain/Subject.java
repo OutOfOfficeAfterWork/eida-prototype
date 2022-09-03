@@ -14,14 +14,4 @@ public class Subject implements EidaEntity<String> {
     private String subjectName;
     private String englishName;
     private Major major;
-
-    @Override
-    public String getId() {
-        return subjectName;
-    }
-
-    @Override
-    public void setId(String s) {
-        subjectName = s;
-    }
 }

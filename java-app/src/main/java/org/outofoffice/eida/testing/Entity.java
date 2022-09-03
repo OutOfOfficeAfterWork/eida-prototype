@@ -16,16 +16,6 @@ public class Entity implements EidaEntity<Long> {
     String key;
     String value;
 
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public static Entity of(String key, String value) {
         return new Entity(null, key, value);
     }
