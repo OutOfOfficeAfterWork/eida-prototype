@@ -5,16 +5,14 @@ import org.outofoffice.common.exception.EidaException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
-import static org.outofoffice.lib.util.StringUtils.getterName;
-import static org.outofoffice.lib.util.StringUtils.setterName;
 
 @Slf4j
 public class EidaSerializer {
@@ -36,8 +34,8 @@ public class EidaSerializer {
 
     private <T extends EidaEntity<ID>, ID> Object getValue(T entity, Field field) {
         try {
-            Method getter = entity.getClass().getMethod(getterName(field.getName()));
-            Object value = getter.invoke(entity);
+            field.setAccessible(true);
+            Object value = field.get(entity);
             if (value instanceof EidaEntity<?>) {
                 value = ((EidaEntity<?>) value).getId();
             }
@@ -59,55 +57,42 @@ public class EidaSerializer {
     private <T extends EidaEntity<ID>, ID> List<T> doDeserialize(String schemeString, String tableString, Class<T> entityClass) throws Exception {
         if (tableString.isEmpty()) return emptyList();
 
+        List<T> entityList = new ArrayList<>();
+
+        String[] lines = tableString.split("\n");
         String[] columns = schemeString.split(",");
 
-        List<Method> setters = new ArrayList<>();
-        List<Class<?>> types = new ArrayList<>();
-        for (String column : columns) {
-            Class<?> fieldType = entityClass.getDeclaredField(column).getType();
-            Method setter = entityClass.getMethod(setterName(column), fieldType);
-
-            setters.add(setter);
-            types.add(fieldType);
-        }
-
-        Constructor<T> constructor = entityClass.getDeclaredConstructor();
-        constructor.setAccessible(true);
-
-        List<T> entityList = new ArrayList<>();
-        String[] lines = tableString.split("\n");
         for (String line : lines) {
             String[] values = line.split(",");
 
-            T entity = constructEntity(setters, types, constructor, values);
+            T entity = constructEntity(entityClass, columns, values);
             entityList.add(entity);
         }
+
         return entityList;
     }
 
-    private <T extends EidaEntity<ID>, ID> T constructEntity(List<Method> setters, List<Class<?>> types, Constructor<T> constructor, String[] values) throws Exception {
+    private <T extends EidaEntity<ID>, ID> T constructEntity(Class<T> entityClass, String[] columns, String[] values) throws Exception {
+        if (columns.length != values.length) throw new IllegalStateException("invalid kv mapping");
+
+        Constructor<T> constructor = entityClass.getDeclaredConstructor();
+        constructor.setAccessible(true);
         T entity = constructor.newInstance();
-        for (int j = 0; j < values.length; j++) {
-            if (values[j].equals(NULL_STRING)) continue;
 
-            Method setter = setters.get(j);
-            Class<?> type = types.get(j);
+        int n = columns.length;
+        for (int i = 0; i < n; i++) {
+            if (values[i].equals(NULL_STRING)) continue;
 
-            if (type.equals(Long.class)) {
-                setter.invoke(entity, Long.parseLong(values[j]));
-            } else if (type.equals(String.class)) {
-                setter.invoke(entity, String.valueOf(values[j]));
-            } else {
-                Constructor<? extends EidaEntity> fieldClassConstructor = (Constructor<? extends EidaEntity>) type.getConstructor();
-                EidaEntity linkedEntity = fieldClassConstructor.newInstance();
-                Class<?> id = linkedEntity.getClass().getDeclaredMethod("getId").getReturnType();
-                if (id.equals(Long.class)) {
-                    linkedEntity.setId(Long.parseLong(values[j]));
-                } else if (id.equals(String.class)) {
-                    linkedEntity.setId(values[j]);
-                }
-                setter.invoke(entity, linkedEntity);
-            }
+            String column = columns[i];
+            String value = values[i];
+            Field field = entityClass.getDeclaredField(column);
+            field.setAccessible(true);
+
+            Class<?> type = field.getType();
+
+            Function<String, ?> castFunction = EidaSerializationMap.get(type, entity);
+            Object object = castFunction.apply(value);
+            field.set(entity, object);
         }
         return entity;
     }

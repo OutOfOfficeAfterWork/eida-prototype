@@ -13,8 +13,6 @@ import java.util.function.Predicate;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
-import static org.outofoffice.lib.util.StringUtils.getterName;
-import static org.outofoffice.lib.util.StringUtils.setterName;
 
 
 public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
@@ -119,7 +117,9 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
         Class<? extends EidaEntity> entityClass = entity.getClass();
 
         try {
-            J emptyTarget = (J) entityClass.getDeclaredMethod(getterName(fieldName)).invoke(entity);
+            Field field = entityClass.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            J emptyTarget = (J) field.get(entity);
             if (emptyTarget == null) return entity;
 
             FK targetId = emptyTarget.getId();
@@ -128,7 +128,8 @@ public abstract class EidaRepository<T extends EidaEntity<ID>, ID> {
             EidaRepository<J, FK> joinTargetRepository = (EidaRepository<J, FK>) EidaContext.getRepository(joinTargetClass);
 
             J foundTarget = joinTargetRepository.find(targetId).orElse(null);
-            entityClass.getDeclaredMethod(setterName(fieldName), joinTargetClass).invoke(entity, foundTarget);
+            field.set(entity, foundTarget);
+
             return entity;
         } catch (Exception e) {
             throw new EidaException(e);
