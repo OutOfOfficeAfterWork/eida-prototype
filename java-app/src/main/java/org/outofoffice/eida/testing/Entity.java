@@ -1,11 +1,13 @@
 package org.outofoffice.eida.testing;
 
 import lombok.*;
+import org.outofoffice.lib.TestAnnotation;
 import org.outofoffice.lib.core.ui.EidaEntity;
 import org.outofoffice.lib.core.ui.Id;
 
 import static lombok.AccessLevel.PRIVATE;
 
+@TestAnnotation
 @Data
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor(access = PRIVATE)
