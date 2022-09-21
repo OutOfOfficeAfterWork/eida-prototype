@@ -8,6 +8,15 @@ import java.lang.reflect.ParameterizedType;
 
 public class ClassUtils {
 
+    public static Class<?> classForName(String className) {
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+
     public static <T extends EidaEntity<ID>, ID> String toTableName(Class<T> entityClass) {
         return entityClass.getSimpleName();
     }
