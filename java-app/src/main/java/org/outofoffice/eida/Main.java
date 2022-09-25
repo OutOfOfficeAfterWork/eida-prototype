@@ -54,7 +54,7 @@ public class Main {
     public static void main(String[] args) {
         while (true) {
             System.out.println("############################");
-            System.out.println("수행할 액션을 선택하세요(중로:-1)");
+            System.out.println("수행할 액션을 선택하세요(종료:-1)");
             System.out.println("1. 전공등록, 2. 과목등록, 3. 학생등록, 4. 수강신청등록, 5. 수강신청내역(학생), 6. 수강신청내역(과목)");
             System.out.print("=>");
             int i = scanner.nextInt();

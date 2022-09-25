@@ -1,20 +1,20 @@
 package org.outofoffice.eida.testing;
 
-import lombok.*;
-import org.outofoffice.lib.TestAnnotation;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.outofoffice.lib.core.ui.EidaEntity;
-import org.outofoffice.lib.core.ui.Id;
+import org.outofoffice.lib.core.annotation.Id;
 
 import static lombok.AccessLevel.PRIVATE;
 
-@TestAnnotation
 @Data
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor(access = PRIVATE)
 public class Entity implements EidaEntity<Long> {
 
     @Id
-    Long id;
+    Long id = 100L;
     String key;
     String value;
 

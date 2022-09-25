@@ -2,10 +2,7 @@ package org.outofoffice.lib.example;
 
 import lombok.*;
 import org.outofoffice.lib.core.ui.EidaEntity;
-import org.outofoffice.lib.core.ui.Id;
-
-import static lombok.AccessLevel.PRIVATE;
-import static lombok.AccessLevel.PUBLIC;
+import org.outofoffice.lib.core.annotation.Id;
 
 
 @NoArgsConstructor(access = AccessLevel.PUBLIC)

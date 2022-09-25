@@ -2,7 +2,7 @@ package org.outofoffice.lib.example;
 
 import lombok.*;
 import org.outofoffice.lib.core.ui.EidaEntity;
-import org.outofoffice.lib.core.ui.Id;
+import org.outofoffice.lib.core.annotation.Id;
 
 @Builder
 @EqualsAndHashCode

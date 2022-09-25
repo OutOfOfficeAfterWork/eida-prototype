@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.outofoffice.lib.core.ui.EidaEntity;
-import org.outofoffice.lib.core.ui.Id;
+import org.outofoffice.lib.core.annotation.Id;
 
 @Data
 @NoArgsConstructor
