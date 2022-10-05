@@ -88,7 +88,7 @@ public class Main {
 
         String selectedMajor = "";
         while (!majorNames.contains(selectedMajor)) {
-            if (!selectedMajor.equals("")) System.out.println("정신차리세요");
+            if (!selectedMajor.equals("")) System.out.println("올바르지 않은 전공입니다.");
             selectedMajor = scanner.nextLine();
         }
 
@@ -116,7 +116,7 @@ public class Main {
 
         String selectedMajor = "";
         while (!majorNames.contains(selectedMajor)) {
-            if (!selectedMajor.equals("")) System.out.println("정신차리세요");
+            if (!selectedMajor.equals("")) System.out.println("올바르지 않은 전공입니다");
             selectedMajor = scanner.nextLine();
         }
 
@@ -166,7 +166,7 @@ public class Main {
         String selectedSubject = "";
 
         while (!subjectNames.contains(selectedSubject)) {
-            if (!selectedSubject.equals("")) System.out.println("정신차리세요");
+            if (!selectedSubject.equals("")) System.out.println("올바르지 않은 과목입니다.");
             selectedSubject = scanner.nextLine();
         }
 
@@ -207,7 +207,7 @@ public class Main {
         String selectedSubject = "";
 
         while (!subjectNames.contains(selectedSubject)) {
-            if (!selectedSubject.equals("")) System.out.println("정신차리세요");
+            if (!selectedSubject.equals("")) System.out.println("올바르지 않은 과목입니다.");
             selectedSubject = scanner.nextLine();
         }
 

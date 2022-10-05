@@ -41,7 +41,6 @@ public class AuthController {
 
     @PostMapping("/signup")
     public String signupSubmit(SignUpForm f) {
-        System.out.println(f);
         studentService.save(f.getStudentCode(), f.getName(), f.getBirthDate(), f.getGender(), f.getMajorName());
         return "redirect:" + ("/");
     }
