@@ -1,6 +1,7 @@
 package org.outofoffice.lib.core.ui;
 
 import org.outofoffice.common.exception.EidaException;
+import org.outofoffice.lib.core.annotation.Id;
 import org.outofoffice.lib.util.ClassUtils;
 
 import java.lang.reflect.Field;
